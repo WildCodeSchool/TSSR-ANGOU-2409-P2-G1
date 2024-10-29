@@ -12,7 +12,7 @@
 
 | | Théophile | Fabrice | Dylan | Axel | Bastien |
 | :-: | :-: | :-: | :-: | :-: | :-: |
-| Semaine 1 | 
+| Semaine 1 | Techos | Techos | Scrum MAster | Product Owner | Techos |
 | Semaine 2 | 
 | Semaine 3 |
 | Semaine 4 |
