@@ -1,5 +1,4 @@
 <div align="center"><H1> Projet Scripting Groupe 1 </H1></div>
-_______
 
 #### Présentation du projet et des objectifs finaux
 _______
