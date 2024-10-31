@@ -2,9 +2,9 @@
 
 #### Prérequis techniques
 
-> Accès adminsitrateur sur les machines (utilisateur root ou membre du groupe sudo)
-> Connexion internet pour télécharger les paquets
-> Pare-feu désactivé
+> Accès adminsitrateur sur les machines (utilisateur root ou membre du groupe sudo)  
+> Connexion internet pour télécharger les paquets  
+> Pare-feu désactivé  
 
 
 #### Étapes d'installation et de conf. : instruction étape par étape
