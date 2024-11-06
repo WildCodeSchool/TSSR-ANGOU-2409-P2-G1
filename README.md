@@ -1,6 +1,6 @@
-<div align="center"><H1> Projet Scripting Groupe 1 </H1></div>
+<div align="center"><H1> ![210px-WildCodeSchool_logo_pink_background_400x220.png](https://upload.wikimedia.org/wikipedia/fr/thumb/e/e4/WildCodeSchool_logo_pink_background_400x220.png/210px-WildCodeSchool_logo_pink_background_400x220.png) </H1></div>
 
-![210px-WildCodeSchool_logo_pink_background_400x220.png](https://upload.wikimedia.org/wikipedia/fr/thumb/e/e4/WildCodeSchool_logo_pink_background_400x220.png/210px-WildCodeSchool_logo_pink_background_400x220.png)
+<div align="center"><H1> Projet Scripting Groupe 1 </H1></div>
 
 ## Présentation du projet et des objectifs finaux
 _______
