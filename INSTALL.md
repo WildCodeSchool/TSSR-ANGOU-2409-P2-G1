@@ -41,7 +41,7 @@ su <utilisateur>
 
 * Installation de OpenSSH
 
-Dans un premier temps, **sudo apt update** va mettre à jour les paquets, puis **sudo apt install -y openssh-server** va installer le paquet openssh pour permettre la mise en place du serveur SSH : 
+Dans un premier temps, **sudo apt update** va mettre à jour les paquets, puis **sudo apt install -y openssh-server** va installer le paquet openssh pour permettre la mise en place du service SSH : 
 
 ```bash
 sudo apt update && sudo apt install -y openssh-server
@@ -92,7 +92,7 @@ _____________________
  
 * Installation de OpenSSH
 
-Dans un premier temps, **sudo apt update** va mettre à jour les paquets, puis **sudo apt install -y openssh-server** va installer le paquet openssh pour permettre la mise en place du serveur SSH : 
+Dans un premier temps, **sudo apt update** va mettre à jour les paquets, puis **sudo apt install -y openssh-server** va installer le paquet openssh pour permettre la mise en place du service SSH : 
 
 ```bash
 sudo apt update && sudo apt install -y openssh-server
