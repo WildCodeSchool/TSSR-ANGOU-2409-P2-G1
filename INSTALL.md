@@ -19,7 +19,6 @@ _____________________
 >  Mot de passe : Azerty1*  
 >  Adresse IP : 172.16.10.10/24  
 
-
 * Ajouter un utilisateur au groupe sudo :
 
 Pour ajouter un nouvel utilisateur au groupe sudo, utiliser cette commande :
@@ -90,8 +89,6 @@ _____________________
  > Compte : wilder1  
  > Mot de passe : Azerty1*  
  > Adresse IP fixe : 172.16.10.30/24  
-
-  * Installation de sudo :
  
 * Installation de OpenSSH
 
@@ -124,8 +121,6 @@ Pour seulement le redémarrer :
 ```bash
 sudo systemctl restart sshd
 ```
-
-  * 
 
 _____________________
 ## FAQ : solutions aux problèmes connus et communs liés à l’installation et à la configuration
