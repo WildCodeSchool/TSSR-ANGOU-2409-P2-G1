@@ -32,7 +32,7 @@ _______
 _______
 Pour ce projet, nous avons mis en place 4 machines virtuelles :
 
-Un client Windows et un Linux, ainsi qu'un serveur Windows et un Linux.
+Un client et un serveur Windows ainsi qu'un client et un serveur Linux.
 
 > Pour le **client Windows** :  
 >       OS : Microsoft Windows ; Version : Windows 10 - Pro  
