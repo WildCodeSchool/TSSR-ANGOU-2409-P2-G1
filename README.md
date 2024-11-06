@@ -34,10 +34,14 @@ Pour ce projet, nous avons mis en place 4 machines virtuelles :
 
 Un client Windows et un Linux, ainsi qu'un serveur Windows et un Linux.
 
-> Pour le client Windows : OS --> Microsoft Windows ; Version --> Windows 10 - Pro ;  
-> Pour le client Linux : OS --> Linux ; Version --> Ubuntu 24.04 LTS ;  
-> Pour le serveur Windows : OS -->  ; Version --> Windows Server 2022 ;  
-> Pour le serveur Linux : Os --> Debian ; Version --> Debian 12 Bookworn (64-bit).  
+> Pour le client Windows :
+>       OS : Microsoft Windows ; Version : Windows 10 - Pro  
+> Pour le client Linux :
+>       OS : Linux ; Version : Ubuntu 24.04 LTS  
+> Pour le serveur Windows :
+>       OS : Windows ; Version : Windows Server 2022  
+> Pour le serveur Linux :
+>       Os : Debian ; Version : Debian 12 Bookworn (64-bit).  
 
 _______
 ## Difficultés rencontrées : problèmes techniques rencontrés
