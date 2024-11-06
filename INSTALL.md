@@ -1,5 +1,4 @@
 <div align="center"><H1> Documentation administrateur </H1></div>
-_____________________
 
 ## Prérequis techniques
 _____________________
