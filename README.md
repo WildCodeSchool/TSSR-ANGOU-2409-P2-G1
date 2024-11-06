@@ -3,13 +3,13 @@
 ## Présentation du projet et des objectifs finaux
 _______
 
-Le projet consiste à créer un script qui s’exécute sur une machine et effectue des tâches sur des machines distantes.
-L’ensemble des machines sont sur le même réseau.
+Le projet consiste à créer un script qui s’exécute sur une machine et effectue des tâches sur des machines distantes. Deux versions du script sont attendues : une version en bash et une seconde en PowerShell. Dans l'ensemble, le script doit réaliser des tâches comme des actions ou de simples requêtes d'information. Ce projet se réalise en équipe, avec la rédaction d'une documentation de toutes les étapes et une démonstration est attendue pour la réalisation finale. 
 
-Les tâches sont des actions ou des requêtes d’information.
-
-
-Tout d'abord, la mise en place d'une architecture client/serveur. Un client Windows 10 et un Windows Server 2022 puis un client Linux sous Ubuntu 24.04 LTS et un serveur Debian 12. Ensuite la création d'un script qui s'exécute sur une machine et effectue des tâches sur des machines distantes. Pour se faire, les machines doivent être sur le même réseau, de plus, deux versions du script sont attendues : une version en bash et une seconde en PowerShell. Dans l'ensemble, le script doit réaliser des tâches comme des actions ou de simples requêtes d'information. Ce projet se réalise en équipe, avec la rédaction d'une documentation de toutes les étapes et une démonstration est attendue pour la réalisation finale.
+L’ensemble des machines sont sur le même réseau avec la mise en place d'une architecture client/serveur : 
+> Debian 12 Bookworm x Ubuntu 24.04 LTS  
+> Windows Server 2022 x Windows 10 Pro  
+> Debian 12 Bookworm x Windows 10 Pro  
+> Windows Server 2022 x Ubuntu 24.04 LTS  
 
 _______
 ## Introduction : mise en contexte
