@@ -71,6 +71,14 @@ Pour seulement le redémarrer :
 sudo systemctl restart sshd
 ```
 
+* Prise de main à distance du serveur sur le client
+
+Pour cette commande, **utilisateur** doit être celui présent sur la machine client cible et **monserveur** doit être remplacé par l'IP de la machine cliente : 
+
+```bash
+ssh utilisateur@monserveur
+```
+
 **Serveur Windows Server 2022**
 _____________________
 
