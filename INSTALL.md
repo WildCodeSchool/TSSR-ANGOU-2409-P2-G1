@@ -79,6 +79,12 @@ Pour cette commande, **utilisateur** doit être celui présent sur la machine cl
 ssh utilisateur@monserveur
 ```
 
+Pour sortir de la prise à distance :
+
+```bash
+exit
+```
+
 **Serveur Windows Server 2022**
 _____________________
 
