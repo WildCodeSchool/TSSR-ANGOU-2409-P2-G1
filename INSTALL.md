@@ -74,10 +74,24 @@ sudo systemctl restart sshd
 **Serveur Windows Server 2022**
 _____________________
 
+* Configurer les paramètres de la machine serveur :
+
+>  Nom : SRVWIN01  
+>  Système d'exploitation : Windows Server 2022  
+>  Compte : root  
+>  Mot de passe : Azerty1*  
+>  Adresse IP : 172.16.10.5/24  
 
 **Client Windows 10**
 _____________________
 
+* Configurer les paramètres de la machine serveur :
+
+>  Nom : CLIWIN01  
+>  Système d'exploitation : Windows 10 Pro  
+>  Compte : root  
+>  Mot de passe : Azerty1*  
+>  Adresse IP : 172.16.10.20/24  
 
 **Client Ubuntu 24.04 LTS**
 _____________________
