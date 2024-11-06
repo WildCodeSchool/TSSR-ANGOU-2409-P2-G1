@@ -20,7 +20,7 @@
 >  Adresse IP : 172.16.10.10/24  
 
 
-_* Ajouter autre compte que root au groupe sudo :_
+* _Ajouter autre compte que root au groupe sudo :_
 
 * Installation de OpenSSH
 
