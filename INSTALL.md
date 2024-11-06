@@ -1,14 +1,14 @@
 <div align="center"><H1> Documentation administrateur </H1></div>
 _____________________
 
-#### Prérequis techniques
+## Prérequis techniques
 _____________________
 > Accès adminsitrateur sur les machines (utilisateur root ou membre du groupe sudo)  
 > Connexion internet pour télécharger les paquets  
 > Pare-feu désactivé  
 
 _____________________
-#### Étapes d'installation et de conf. : instruction étape par étape
+## Étapes d'installation et de conf. : instruction étape par étape
 _____________________
 **Serveur Debian 12**
 _____________________
@@ -69,5 +69,5 @@ _____________________
   * 
 
 _____________________
-#### FAQ : solutions aux problèmes connus et communs liés à l’installation et à la configuration
+## FAQ : solutions aux problèmes connus et communs liés à l’installation et à la configuration
 _____________________
