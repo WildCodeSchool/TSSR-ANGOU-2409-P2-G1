@@ -19,7 +19,7 @@ _____________________
 >  Mot de passe : Azerty1*  
 >  Adresse IP : 172.16.10.10/24  
 
-* Ajouter un utilisateur au groupe sudo :
+* Ajouter un utilisateur au groupe sudo
 
 Pour ajouter un nouvel utilisateur au groupe sudo, utiliser cette commande :
 
@@ -74,7 +74,7 @@ sudo systemctl restart sshd
 **Serveur Windows Server 2022**
 _____________________
 
-* Configurer les paramètres de la machine serveur :
+* Configurer les paramètres de la machine serveur
 
 >  Nom : SRVWIN01  
 >  Système d'exploitation : Windows Server 2022  
@@ -82,10 +82,12 @@ _____________________
 >  Mot de passe : Azerty1*  
 >  Adresse IP : 172.16.10.5/24  
 
+* Installation de OpenSSH
+
 **Client Windows 10**
 _____________________
 
-* Configurer les paramètres de la machine serveur :
+* Configurer les paramètres de la machine serveur
 
 >  Nom : CLIWIN01  
 >  Système d'exploitation : Windows 10 Pro  
@@ -96,7 +98,7 @@ _____________________
 **Client Ubuntu 24.04 LTS**
 _____________________
 
-* Configurer les paramètres du client :
+* Configurer les paramètres du client
 
  > Nom : CLILIN01  
  > Système d'exploitation : Ubuntu 24.04 LTS  
