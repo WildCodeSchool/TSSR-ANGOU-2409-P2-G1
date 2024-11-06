@@ -93,7 +93,37 @@ _____________________
 
   * Installation de sudo :
  
-  * Installation de OpenSSH : 
+* Installation de OpenSSH
+
+Dans un premier temps, **sudo apt update** va mettre à jour les paquets, puis **sudo apt install -y openssh-server** va installer le paquet openssh pour permettre la mise en place du serveur SSH : 
+
+```bash
+sudo apt update && sudo apt install -y openssh-server
+```
+
+Pour vérifier si le service SSH est bien actif, taper : 
+
+```bash
+sudo systemctl status ssh
+```
+
+Pour le démarrer dans le cas où il serait inactif :
+
+```bash
+sudo systemctl start sshd
+```
+
+Pour le stopper :
+
+```bash
+sudo systemctl stop sshd
+```
+
+Pour seulement le redémarrer :
+
+```bash
+sudo systemctl restart sshd
+```
 
   * 
 
