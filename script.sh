@@ -1,5 +1,15 @@
 #!/bin/bash
 
+co_ssh () {
+# Connexion en SSH sur le poste client pour les actions
+read -p "Indiquez l'utilisateur sur lequel vous connecter : " utilisateur
+sleep .5s
+read -p "Indiquez l'ip du poste client : " ip
+
+ssh $utilisateur@$ip "mkdir crabouille"
+
+
+}
 menu_action () {
 # Menu des actions, choix à faire pour intéragir sur un compte utilisateur ou sur une machine directement
 
@@ -37,10 +47,11 @@ esac
 gestion_user() {
 clear
 read -p "Sur quel utilisateur souhaitez-vous intervenir ? " wilder
-id -u $wilder > /dev/null
 
-if [ $? = "0" ]
-then	
+sudo ssh $utilisateur@$ip "id -u $wilder > /dev/null"
+
+if sudo ssh $utilisateur@$ip $? = "0" 
+then
 	clear
 	echo "
 ========================================================
@@ -48,7 +59,7 @@ then
 ========================================================
 |       1 : Création d'un compte utilisateur           |
 |       2 : Modification du mot de passe               |
-|       3 : Suppression d'un compte utilisateur	       |	
+|       3 : Suppression d'un compte utilisateur	       |
 |	4 : Désactivation d'un compte utilisateur      |
 ========================================================
 "
@@ -66,8 +77,8 @@ case $choix_gestion in
 		sleep 1s
 		;;
 	3)
-		userdel $wilder
-		sleep 1s
+		mkdir $wilder
+		sleep 2s
 		;;
 	4)
 
@@ -102,14 +113,14 @@ create_user () {
 
 read -p "Veuillez renseigner le nom de l'utilisateur à créer : " wilder
 
-id -u $wilder > /dev/null
+ssh $utilisateur@$ip "id -u $wilder > /dev/null"
 
-if [ $? = "1" ]
+if ssh $utilisateur@$ip "$? = "1" "
 then
-	sudo useradd $wilder
+	ssh $utilisateur@$ip "sudo useradd $wilder"
 	echo "$(date +%F-%X) - $USER - Utilisateur $wilder créé" >> /var/log/log_evt.txt
 	echo " $wilder vient d'être créer."
-	sudo passwd $wilder
+	ssh $utilisateur@$ip "passwd $wilder"
 	echo "$(date +%F-%X) - $USER - Mot de passe de $wilder établi" >> /var/log/log_evt.txt
 	sleep 1s
 else 
@@ -163,7 +174,7 @@ esac
 
 info_user () {
 # Menu des informations sur l'utilisateur
-	clear
+clear
 echo "
 =========================================================
 |		Menu Information Utilisateur		|
@@ -172,8 +183,7 @@ echo "
 |	2 : Groupe d'appartenance de l'utilisateur	|
 |	3 : Historique des commandes de l'utilisateur	|
 |	4 : Droits et permissions de l'utilisateur	|
-=========================================================
-"
+========================================================="
 read -p " Faites votre choix : " choix_info
 
 case $choix_info in
@@ -245,17 +255,23 @@ $(date +%F-%X) - $USER - *******Start Script*******" >> /var/log/log_evt.txt
 while true
 do
 	clear
-	echo " -- Menu --
-		1 : Demander une info
-		2 : Effectuer une action
-		3 : Quitter le menu"
-	read -p "Faites votre choix : " choix
-
+echo "
+=========================================================
+|               Menu Principal			        |
+=========================================================
+|       1 : Obtenir une informations		        |
+|       2 : Effectuer une action		        |
+|       3 : Connexion SSH avec le client	        |
+|       4 : Quitter			                |
+=========================================================
+"
+read -p "Faites votre choix : " choix
+ 
 	case $choix in
 
 		1)
 			echo "$(date +%F-%X) - $USER - Redirection vers menu informations" >> /var/log/log_evt.txt
-			menu_info 
+			menu_info
 			;;
 		2)
 			echo "$(date +%F-%X) - $USER - Redirection vers le menu des actions" >> /var/log/log_evt.txt
@@ -263,6 +279,11 @@ do
 			;;
 
 		3)
+			echo "$(date +%F-%X) - $USER - Connexion à un poste client" >> /var/log/log_evt.txt
+			co_ssh
+			;;
+
+		4)
 			echo "$(date +%F-%X) - $USER - *******Stop Script*******" >> /var/log/log_evt.txt
 			exit
 			;;
