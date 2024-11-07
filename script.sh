@@ -36,6 +36,12 @@ esac
 
 gestion_user() {
 clear
+read -p "Sur quel utilisateur souhaitez-vous intervenir ? " wilder
+id -u $wilder > /dev/null
+
+if [ $? = "0" ]
+then	
+	clear
 	echo "
 ========================================================
 |              Menu Gestion utilisateur                |
@@ -48,17 +54,72 @@ clear
 "
 read -p "Faites votre choix : " choix_gestion
 
+
 case $choix_gestion in
 	1)
 		echo "$(date +%F-%X) - $USER - Création d'utilisateur" >> /var/log/log_evt.txt
 		create_user
 		;;
 	2)
-		passwd $USER
+		passwd $wilder
+		echo "$(date +%F-%X) - $USER - Changement de mot de passe de $wilder établi" >> /var/log/log_evt.txt
+		sleep 1s
 		;;
+	3)
+		userdel $wilder
+		sleep 1s
+		;;
+	4)
+
 esac
+
+else
+	echo "$(date +%F-%X) - $USER - L'utilisateur renseigné n'existe pas" >> /var/log/log_evt.txt
+	read -p "$wilder n'existe pas. Voulez vous le créer ? " noexist
+	case $noexist in
+		o|O|y|Y|Oui|oui|yes|Yes)
+			echo "Redirection vers la création d'utilisateur"
+			echo "$(date +%F-%X) - $USER - Créer cet utilisateur" >> /var/log/log_evt.txt
+			create_user
+			;;
+		N|n|No|no|Non|non)
+			echo "Retour au menu gestion utilisateur"
+			echo "$(date +%F-%X) - $USER - Ne créer pas cet utilisateur, redirection menu gestion utilisateur" >> /var/log/log_evt.txt
+			gestion_user
+			;;
+		*)
+			echo "$(date +%F-%X) - $USER - Retour au menu principale" >> /var/log/log_evt.txt
+			echo "Erreur, retour au menu principal"
+			;;
+	esac
+fi
+
+
+
 }
 
+create_user () {
+
+read -p "Veuillez renseigner le nom de l'utilisateur à créer : " wilder
+
+id -u $wilder > /dev/null
+
+if [ $? = "1" ]
+then
+	sudo useradd $wilder
+	echo "$(date +%F-%X) - $USER - Utilisateur $wilder créé" >> /var/log/log_evt.txt
+	echo " $wilder vient d'être créer."
+	sudo passwd $wilder
+	echo "$(date +%F-%X) - $USER - Mot de passe de $wilder établi" >> /var/log/log_evt.txt
+	sleep 1s
+else 
+	echo "$wilder existe déjà"
+	sleep 1s
+fi
+
+
+
+}
 
 
 
