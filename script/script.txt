@@ -118,3 +118,52 @@ esac
 }
 
 activité_ordi
+
+Fabridge
+
+
+#!/bin/bash
+
+
+  		2) echo "$(date +%F-%X) - $USER - Afficher les informations partitions par disques" >> /var/log/log_evt.txt
+  		ssh $utilisateur@$ip " df-h"
+  		;;
+  		
+  		3) echo "$(date +%F-%X) - $USER - Afficher l'espace disque restant" >> /var/log/log_evt.txt
+  		ssh $utilisateur@$ip " df"
+  		;;
+  		
+  		4) echo "$(date +%F-%X) - $USER - Afficher le nom espace disque d'un dossier" >> /var/log/log_evt.txtinfo_disque () {
+
+
+echo "1 - Afficher nombre de disque"
+echo "2 - Afficher les informations partitions par disque"
+echo "3 - Afficher l'espace disque restant"
+echo "4 - Afficher le nom et l'espace disque d'un dossier"
+echo "5 - Afficher les lecteurs montés"
+echo "* - Erreur"
+
+read -p "Veuillez renseigner le disque à consulter : " choix_disque
+
+ case $choix_disque in 
+ 
+  		1)  echo "$(date +%F-%X) - $USER - Afficher le nombre de disques" >> /var/log/log_evt.txt
+  		ssh $utilisateur@$ip "fdisk -l $choix_disque" 
+  		;;
+  		
+
+  		ssh $utilisateur@$ip "df -k"
+  		;;
+  		
+  		5) echo "$(date +%F-%X) - $USER - Afficher les lecteurs montés" >> /var/log/log_evt.txt
+  		ssh $utilisateur@$ip "lsblk"
+  		;;
+  		
+  		*) echo "Erreur"
+  		;;
+  		
+esac  			
+
+}
+
+info_disque
