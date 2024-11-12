@@ -1,5 +1,6 @@
 
-#FAIT PAR DD
+**DualLAN**
+
 fonction_droits_utilisateur() {
     echo "1 - Droits utilisateur fichier"
          "2 - Droits utilisateur dossier"
@@ -32,3 +33,88 @@ fonction_droits_utilisateur() {
 
 # Appel de la fonction
 fonction_droits_utilisateur
+
+
+**Powerxell**
+
+#!/bin/bash
+
+utilisateur=wilder
+ip=172.16.10.30
+
+version_os () {
+
+
+	ssh $utilisateur@$ip "cat /etc/*release"
+	sleep 3s
+
+
+}
+
+version_os
+
+#!/bin/bash
+
+utilisateur=wilder
+ip=172.16.10.30
+
+groupe_user () {
+
+	ssh $utilisateur@$ip "sudo -S groups $utilisateur"
+	sleep 3s
+
+}
+
+groupe_user
+
+#!/bin/bash
+
+utilisateur=wilder
+ip=172.16.10.30
+
+info_ram () {
+
+	ssh $utilsateur@$ip "free -h -m"
+	sleep 3s
+
+}
+
+info_ram
+
+#!/bin/bash
+
+utilisateur=wilder
+ip=172.16.10.30
+
+activité_ordi () {
+
+echo "
+1 - Liste des applications / paquets installés
+2 - Liste des services en cours d'exécution
+3 - Liste des utilisateurs locaux
+"
+
+read choix_activité
+
+case $choix_activité in
+
+	1) 
+		ssh $utilisateur@$ip "dpkg --list"
+		sleep 3s
+
+	2) 
+		ssh $utilsateur@$ip "ps"
+		sleep 3s
+
+	3)
+	
+		ssh $utilisateur@$ip "cat /etc/passwd"
+		sleep 3s
+
+	*)
+
+esac
+
+}
+
+activité_ordi
