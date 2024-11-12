@@ -1,0 +1,34 @@
+
+#FAIT PAR DD
+fonction_droits_utilisateur() {
+    echo "1 - Droits utilisateur fichier"
+         "2 - Droits utilisateur dossier"
+    read -p "Choisissez une option : " droits_utilisateur
+
+    case $droits_utilisateur in
+        1)
+            read -p "Entrez le nom du fichier : " nom_fichier
+            if [[ -f $nom_fichier ]]; then
+                echo "Droits attribués au fichier $nom_fichier :"
+                ls -l "$nom_fichier"
+            else
+                echo "Le fichier $nom_fichier n'existe pas."
+            fi
+            ;;
+        2)
+            read -p "Entrez le nom du dossier : " nom_dossier
+            if [[ -d $nom_dossier ]]; then
+                echo "Droits attribués au dossier $nom_dossier :"
+                ls -ld "$nom_dossier"
+            else
+                echo "Le dossier $nom_dossier n'existe pas."
+            fi
+            ;;
+        *)
+            echo "Erreur : option invalide" | tee -a droits_utilisateur.log
+            ;;
+    esac
+}
+
+# Appel de la fonction
+fonction_droits_utilisateur
