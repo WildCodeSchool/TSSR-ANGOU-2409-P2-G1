@@ -1,5 +1,5 @@
 
-**DualLAN**
+DualLAN
 
 fonction_droits_utilisateur() {
     echo "1 - Droits utilisateur fichier"
@@ -35,7 +35,7 @@ fonction_droits_utilisateur() {
 fonction_droits_utilisateur
 
 
-**Powerxell**
+Powerxell
 
 #!/bin/bash
 
