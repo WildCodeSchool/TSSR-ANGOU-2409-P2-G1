@@ -155,19 +155,19 @@ echo "
 =========================================================
 "
 
-read groupe
+read choix_groupe
 
-case $groupe in
+case $choix_groupe in
 
 	1)
-		echo "$(date +%F-%X) - $USER - Ajout de l'utilisateur : $utilisateur au groupe administrateur" >> /var/log/log_evt.txt
+		echo "$(date +%F-%X) - $USER - Utilisateur - Action - Ajout de l'utilisateur : $utilisateur au groupe administrateur" >> /var/log/log_evt.txt
 		ssh $utilisateur@$ip "usermod -aG sudo $utilisateur"
 		sleep 3s
 		return
 		;;
 
 	2)
-		echo "$(date +%F-%X) - $USER - Ajout de l'utilisateur : $utilisateur au groupe : $groupe" >> /var/log/log_evt.txt
+		echo "$(date +%F-%X) - $USER - Utilisateur - Action - Ajout de l'utilisateur : $utilisateur au groupe : $groupe" >> /var/log/log_evt.txt
 		read -p "Renseignez le groupe auquel vous souhaitez ajouter l'utilisateur : " groupe
 		ssh $utilisateur@$ip "usermod -aG $groupe $utilisateur"
 		sleep 3s
@@ -175,7 +175,7 @@ case $groupe in
 		;;
 
 	3)
-		echo "$(date +%F-%X) - $USER - Suppression de l'utilisateur : $utilisateur du groupe : $groupe" >> /var/log/log_evt.txt
+		echo "$(date +%F-%X) - $USER - Utilisateur - Action Suppression de l'utilisateur : $utilisateur du groupe : $groupe" >> /var/log/log_evt.txt
 		read -p "Renseignez le groupe auquel vous souhaitez ajouter l'utilisateur : " 	groupe
 		ssh $utilisateur@$ip "usermod -G $groupe $ utilisateur"
 		sleep 3s
