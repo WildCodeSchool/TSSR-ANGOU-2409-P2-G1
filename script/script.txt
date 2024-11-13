@@ -291,34 +291,34 @@ esac
 
 ===========================================================================================================================================================
 
-Fabridge
-
 #!/bin/bash
+
+gestion_alim() {
+
 
 echo "1 - Arrêt Ordinateur"
 echo "2 - Redemarrage Ordinateur"
 echo "3 - Vérrouillage Ordinateur"
 echo "4 - Exit"
 
-gestion_alim() {
 
 read -p "Quelle action voulez-vous réaliser : " choix_computer
 
 case $choix_computer in
 	1)
-		echo "$(date +%F-%X) - $USER - Arret Ordinateur" >> /var/log/log_evt.txt
-		ssh $utilisateur@$ip "sudo s shutdown now"
+		echo "$(date +%F-%X) - $USER - Ordinateur - Action - Arret Ordinateur" >> /var/log/log_evt.txt
+		ssh $utilisateur@$ip "sudo -S shutdown now"
 		co_ssh
 		;;
 	2)
 	
-		echo "$(date +%F-%X) - $USER - Redemarrage Ordinateur" >> /var/log/log_evt.txt
-		ssh $utilisateur@$ip "sudo s shutdown -r now"
+		echo "$(date +%F-%X) - $USER - Ordinateur - Action - Redemarrage Ordinateur" >> /var/log/log_evt.txt
+		ssh $utilisateur@$ip "sudo -S shutdown -r now"
 		;;
 		
 	3)
-		echo "$(date +%F-%X) - $USER - Verrouillage Ordinateur" >> /var/log/log_evt.txt
-		ssh $utilisateur@$ip "sudo s gnome-screensaver-command -l"
+		echo "$(date +%F-%X) - $USER - Ordinateur - Action - Verrouillage Ordinateur" >> /var/log/log_evt.txt
+		ssh $utilisateur@$ip "sudo -S gnome-screensaver-command -l"
 		;;
 		
 		
@@ -335,4 +335,3 @@ esac
 }
 
 gestion_alim
-
