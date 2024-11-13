@@ -225,6 +225,7 @@ case $groupe in
 		echo "$(date +%F-%X) - $USER - Ajout de l'utilisateur : $utilisateur au groupe administrateur" >> /var/log/log_evt.txt
 		ssh $utilisateur@$ip "usermod -aG sudo $utilisateur"
 		sleep 3s
+		return
 		;;
 
 	2)
@@ -232,6 +233,7 @@ case $groupe in
 		read -p "Renseignez le groupe auquel vous souhaitez ajouter l'utilisateur : " groupe
 		ssh $utilisateur@$ip "usermod -aG $groupe $utilisateur"
 		sleep 3s
+		return
 		;;
 
 	3)
@@ -239,6 +241,7 @@ case $groupe in
 		read -p "Renseignez le groupe auquel vous souhaitez ajouter l'utilisateur : " 	groupe
 		ssh $utilisateur@$ip "usermod -G $groupe $ utilisateur"
 		sleep 3s
+		return
 		;;
 
 esac
