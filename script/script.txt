@@ -176,7 +176,7 @@ case $choix_groupe in
 		;;
 
 	3)
-		echo "$(date +%F-%X) - $USER - Utilisateur - Action Suppression de l'utilisateur : $utilisateur du groupe : $groupe" >> /var/log/log_evt.txt
+		echo "$(date +%F-%X) - $USER - Utilisateur - Action - Suppression de l'utilisateur : $utilisateur du groupe : $groupe" >> /var/log/log_evt.txt
 		read -p "Renseignez le groupe auquel vous souhaitez ajouter l'utilisateur : " 	groupe
 		ssh $utilisateur@$ip "usermod -G $groupe $ utilisateur"
 		sleep 3s
