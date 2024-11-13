@@ -304,4 +304,48 @@ esac
 }
 
 mise_a_jour
+____________________________________________________________________________________________________________________________________________________________________________
+#!/bin/bash
 
+utilisateur=wilder
+ip=172.16.10.30
+
+gestion_firewall () {
+
+echo "
+=========================================================
+|		Gestion du pare-feu			|
+=========================================================
+| 1 - Activer le pare-feu				|
+| 2 - Désactiver le pare-feu				|
+| x - Menu précédent
+=========================================================
+"
+
+read choix
+
+case $choix in 
+
+	1)
+		echo "$(date +%F-%X) - $USER - Activation du pare-feu" >> /var/log/log_evt.txt
+		ssh $utilisateur@$ip "sudo ufw enbale"
+		sleep 3s
+		return
+		;;
+	2)
+		echo "$(date +%F-%X) - $USER - Désactivation du pare-feu" >> /var/log/log_evt.txt
+		ssh $utilisateur@$ip "sudo ufw disable"
+		sleep 3s
+		return
+		;;
+
+	x|X)
+		
+		;;
+	*)
+		gestion_firewall
+		;;
+
+esac
+
+}
