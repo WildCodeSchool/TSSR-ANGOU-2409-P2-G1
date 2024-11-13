@@ -86,6 +86,29 @@ info_ram
 utilisateur=wilder
 ip=172.16.10.30
 
+list_app () {
+
+	read -p "Quel filtre souhaitez-vous appliquer ?" filtre
+	ssh $utilisateur@$ip "dpkg --list | grep $filtre"
+	sleep 3s
+
+}
+
+list_services () {
+
+	read -p "Quel filtre souhaitez-vous appliquer ?" filtre
+	ssh $utilisateur@$ip "ps | grep $filtre
+	sleep 3s
+
+}
+
+list_users () {
+
+	ssh $utilisateur@$ip "cat /etc/passwd"
+	sleep 3s
+
+}
+
 activité_ordi () {
 
 echo "
@@ -99,20 +122,22 @@ read choix_activité
 case $choix_activité in
 
 	1) 
-		ssh $utilisateur@$ip "dpkg --list"
+		list_app
 		sleep 3s
+		;;
 
 	2) 
-		ssh $utilsateur@$ip "ps"
+		list_services
 		sleep 3s
+		;;
 
 	3)
-	
-		ssh $utilisateur@$ip "cat /etc/passwd"
+		list_users
 		sleep 3s
+		;;
 
 	*)
-
+		exit
 esac
 
 }
