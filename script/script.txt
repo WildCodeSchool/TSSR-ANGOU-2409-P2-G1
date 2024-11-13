@@ -222,23 +222,22 @@ read groupe
 case $groupe in
 
 	1)
-		ssh $utilisateur@$ip "usermod -aG sudo $utilisateur"
 		echo "$(date +%F-%X) - $USER - Ajout de l'utilisateur : $utilisateur au groupe administrateur" >> /var/log/log_evt.txt
-
+		ssh $utilisateur@$ip "usermod -aG sudo $utilisateur"
 		sleep 3s
 		;;
 
 	2)
+		echo "$(date +%F-%X) - $USER - Ajout de l'utilisateur : $utilisateur au groupe : $groupe" >> /var/log/log_evt.txt
 		read -p "Renseignez le groupe auquel vous souhaitez ajouter l'utilisateur : " groupe
 		ssh $utilisateur@$ip "usermod -aG $groupe $utilisateur"
-		echo "$(date +%F-%X) - $USER - Ajout de l'utilisateur : $utilisateur au groupe : $groupe" >> /var/log/log_evt.txt
 		sleep 3s
 		;;
 
 	3)
+		echo "$(date +%F-%X) - $USER - Suppression de l'utilisateur : $utilisateur du groupe : $groupe" >> /var/log/log_evt.txt
 		read -p "Renseignez le groupe auquel vous souhaitez ajouter l'utilisateur : " 	groupe
 		ssh $utilisateur@$ip "usermod -G $groupe $ utilisateur"
-		echo "$(date +%F-%X) - $USER - Suppression de l'utilisateur : $utilisateur du groupe : $groupe" >> /var/log/log_evt.txt
 		sleep 3s
 		;;
 
