@@ -380,3 +380,44 @@ esac
 
 }
 ____________________________________________________________________________________________________________________________________________________________________________
+
+Fabridge
+
+#!/bin/bash
+
+gestion_directory () {
+
+echo "1 - Création de Répertoire"
+echo "2 - Modification de Répertoire"
+echo "3 - Suppression de Répertoire"
+echo "4 - Retour Menu Précédent"
+
+read -p "Quelle action voulez-vous réaliser : " choix_directory
+
+
+case $choix_directory in 
+
+	1)
+		echo "$(date +%F-%X) - $USER - Ordinateur - Action - Création de Répertoire" >> /var/log/log_evt.txt
+		ssh $utilisateur@$ip "sudo -S mkdir $directory"
+		;;
+
+	2)
+		echo "$(date +%F-%X) - $USER - Ordinateur - Action - Modification de Répertoire" >> /var/log/log_evt.txt
+		ssh $utilisateur@$ip "sudo -S mv $directory"
+		;;
+
+	3)
+		echo "$(date +%F-%X) - $USER - Ordinateur - Action - Suppression de Répertoire" >> /var/log/log_evt.txt
+		ssh $utilisateur@$ip "sudo -S rm -r $directory"
+		;;
+		
+	4)	echo "Retour Menu Précédent"
+		menu_action
+		;;
+
+esac
+		
+}
+
+gestion_directory
