@@ -247,3 +247,60 @@ case $groupe in
 esac
 
 }
+
+
+# mise_jour_system 
+
+theofile
+
+# CODE MIS A JOUR D'UN  OS
+
+mise_a_jour () {
+
+# Mise à jour des dépôts de paquets
+
+ echo "Mise à jour des dépôts de paquets..."
+
+ssh $utilisateur@$ip "sudo -S apt update"
+
+# Mise à jour des paquets installés
+
+echo "Mise à jour des paquets installés..."
+
+ssh $utilisateur@$ip "sudo -S apt upgrade -y "
+
+# Nettoyage des paquets obsolètes
+
+echo "Nettoyage des paquets obsolètes..."
+
+ssh $utilisateur@$ip "sudo -S apt autoremove -y apt autoclean "
+
+# Mise à jour du noyau (exemple pour une distribution utilisant apt)
+
+echo "Mise à jour du noyau..."
+
+ssh $utilisateur@$ip "sudo -S apt install --install-recommends linux-generic "
+
+# Redémarrage pour appliquer les mises à jour du noyau
+
+echo "Le système doit être redémarré pour appliquer les mises à jour du noyau."
+
+read -p " voulez-vous redémarrer votre ordinateur ?" restart
+
+case $restart in
+
+        o|O|y|Y|Oui|oui|yes|Yes)
+                restart
+                ;;
+        *)
+                echo "Pensez à redémarrer votre ordinateur pour l'applications des paquets installés."
+                echo "Retour au menu principal"
+                sleep 2s
+                ;;
+esac
+
+
+}
+
+mise_a_jour
+
