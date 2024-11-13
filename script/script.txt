@@ -273,13 +273,13 @@ read choix
 case $choix in 
 
 	1)
-		echo "$(date +%F-%X) - $USER - Activation du pare-feu" >> /var/log/log_evt.txt
+		echo "$(date +%F-%X) - $USER - Ordinateur - Action - Activation du pare-feu" >> /var/log/log_evt.txt
 		ssh $utilisateur@$ip "sudo ufw enbale"
 		sleep 3s
 		return
 		;;
 	2)
-		echo "$(date +%F-%X) - $USER - Désactivation du pare-feu" >> /var/log/log_evt.txt
+		echo "$(date +%F-%X) - $USER - Ordinateur - Action - Désactivation du pare-feu" >> /var/log/log_evt.txt
 		ssh $utilisateur@$ip "sudo ufw disable"
 		sleep 3s
 		return
