@@ -299,16 +299,18 @@ esac
 
 ____________________________________________________________________________________________________________________________________________________________________________
 
-#!/bin/bash
-
 gestion_alim() {
 
-
-echo "1 - Arrêt Ordinateur"
-echo "2 - Redemarrage Ordinateur"
-echo "3 - Vérrouillage Ordinateur"
-echo "4 - Exit"
-
+echo "
+=========================================================
+|		Gestion de l'alimentation		|
+=========================================================
+| 1 - Arrêt ordinateur					|
+| 2 - Redémarer l'ordinateur				|
+| 3 - Verrouiller l'ordinateur				|
+| x - Menu précédent					|
+=========================================================
+"
 
 read -p "Quelle action voulez-vous réaliser : " choix_computer
 
@@ -330,26 +332,19 @@ case $choix_computer in
 		;;
 		
 		
-	4)      echo "Exit"
-		menu action
+	x|X)    
+		
 		;;
 		
 		
-	*)      echo "Erreur"
+	*)      
+		gestion_alim
 		;;
 		
 esac
 
 }
-
-gestion_alim
-
 ____________________________________________________________________________________________________________________________________________________________________________
-
-#!/bin/bash
-
-utilisateur=wilder
-ip=172.16.10.30
 
 gestion_logiciel () {
 
