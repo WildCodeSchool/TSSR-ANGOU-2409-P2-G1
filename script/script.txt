@@ -421,59 +421,58 @@ esac
 }
 
 gestion_directory
-
-!/bin/bash
-
+____________________________________________________________________________________________________________________________________________________________________________
 
 activite_utilisateur () {
 
 echo "
-
 ===========================================================
 |        INFORMATION ACTIVITE UTILISATEUR                 |
 ===========================================================
-| 1 - Date des dernière connexions de l'utilisateur       |
-| 2 - Date des dernière changements de mot de passe       |
+| 1 - Date des dernières connexions de l'utilisateur       |
+| 2 - Date des dernières changements de mot de passe       |
 | 3 - Liste des sessions ouvertes pour l'utilisateur      |
 | x - Menu précédent                                      |
 ===========================================================
 "
 
 
-read -p " Veuillez choisir une option : " choix_user
+read -p "Veuillez choisir une option : " choix_user
 
 case $choix_user in
 
-                1) read -p " Nom d'utilisateur " user
-                   echo " Date de dernière connexion pour $user :"
-                   lastlog -u $user
-                ;;
+                1) 
+			echo "$(date +%F-%X) - $USER - Utilisateur - Information - Modification de Répertoire" >> /var/log/log_evt.txt
+			read -p "Nom d'utilisateur " user
+              		echo " Date de dernière connexion pour $user :"
+                	lastlog -u $user
+               		;;
 
-                2) read -p " Nom d'utilisateur " user
-                   echo -e "Date de dernière modification du mot de passe pour >
-                   grep 'passwd' /var/log/auth.log
-                ;;
+                2) 
+			echo "$(date +%F-%X) - $USER - Utilisateur - Information - Modification de Répertoire" >> /var/log/log_evt.txt
+			read -p "Nom d'utilisateur " user
+	                echo -e "Date de dernière modification du mot de passe pour >
+                   	grep 'passwd' /var/log/auth.log
+                	;;
 
-                3) read -p " Nom d'utilisateur " user
-                   echo -e "\nListe des sessions ouvertes pour l'utlisateur $us>
-                   who | grep $user || echo 'Aucune session ouverte pour $user.'
-                ;;
+                3) 
+			echo "$(date +%F-%X) - $USER - Utilisateur - Information - Modification de Répertoire" >> /var/log/log_evt.txt
+			read -p "Nom d'utilisateur " user
+                 	echo -e "\nListe des sessions ouvertes pour l'utlisateur $us>
+                	who | grep $user || echo 'Aucune session ouverte pour $user.'
+                	;;
 
                 x|X)
-                ;;
+                	;;
 
 
                 *)
-
-
-                activite_utilisateur
-                ;;
+                	activite_utilisateur
+                	;;
 
 esac
 
 }
-
-
 
 activite_utilisateur
 
