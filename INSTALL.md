@@ -1,157 +1,161 @@
 <div align="center"><H1> Documentation administrateur </H1></div>
 
-## Prérequis techniques
-_____________________
-> Accès adminsitrateur sur les machines (utilisateur root ou membre du groupe sudo)  
-> Connexion internet pour télécharger les paquets  
-> Pare-feu désactivé  
+## Prérequis Techniques
 
-_____________________
-## Étapes d'installation et de conf. : instruction étape par étape
-_____________________
-**Serveur Debian 12**
-_____________________
-* Configurer les paramètres de la machine serveur :
+- Accès administrateur sur les machines (utilisateur root ou membre du groupe sudo)
+- Connexion internet pour télécharger les paquets
+- Pare-feu désactivé temporairement pour faciliter l'installation et la configuration initiale
 
->  Nom : SRVLX01  
->  Système d'exploitation : Debian 12 Bookworm  
->  Compte : root  
->  Mot de passe : Azerty1*  
->  Adresse IP : 172.16.10.10/24  
+## Étapes d'Installation et de Configuration : Instructions Pas-à-Pas
 
-* Ajouter un utilisateur au groupe sudo
+### Serveur Debian 12
 
-Pour ajouter un nouvel utilisateur au groupe sudo, utiliser cette commande :
+1. **Configuration des paramètres de la machine serveur :**
+   - Nom : **SRVLX01**
+   - Système d'exploitation : **Debian 12 Bookworm**
+   - Compte : **root**
+   - Mot de passe : **Azerty1***
+   - Adresse IP : **172.16.10.10/24**
 
-```bash
-usermod -aG sudo <utilisateur>
-```
+2. **Ajouter un utilisateur au groupe sudo :**
+   - Pour ajouter un nouvel utilisateur au groupe sudo :
+     ```bash
+     usermod -aG sudo <utilisateur>
+     ```
+   - Pour vérifier que l'utilisateur appartient au groupe sudo :
+     ```bash
+     groups <utilisateur>
+     ```
+   - Pour changer d'utilisateur :
+     ```bash
+     su <utilisateur>
+     ```
 
-Pour vérifier que l'utilisateur ajouté précédemment appartient bien au groupe sudo, taper :
+3. **Installation de OpenSSH :**
+   - Mettre à jour les paquets et installer le service SSH :
+     ```bash
+     sudo apt update && sudo apt install -y openssh-server
+     ```
+   - Vérifier l'état du service SSH :
+     ```bash
+     sudo systemctl status ssh
+     ```
+   - Démarrer, arrêter ou redémarrer le service SSH :
+     ```bash
+     sudo systemctl start ssh
+     sudo systemctl stop ssh
+     sudo systemctl restart ssh
+     ```
 
-```bash
-groups <utilisateur>
-```
+4. **Connexion à distance au serveur depuis un client :**
+   - Pour se connecter au serveur via SSH :
+     ```bash
+     ssh utilisateur@<IP_du_serveur>
+     ```
+   - Pour sortir de la session SSH :
+     ```bash
+     exit
+     ```
 
-Pour changer d'utilisateur :
+### Serveur Windows Server 2022
 
-```bash
-su <utilisateur>
-```
+1. **Configuration des paramètres de la machine serveur :**
+   - Nom : **SRVWIN01**
+   - Système d'exploitation : **Windows Server 2022**
+   - Compte : **root**
+   - Mot de passe : **Azerty1***
+   - Adresse IP : **172.16.10.5/24**
 
-* Installation de OpenSSH
+2. **Installation de OpenSSH via PowerShell :**
+   - **Étapes pour installer et configurer OpenSSH** :
+     1. **Installation d'OpenSSH** :
+        ```powershell
+        Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+        ```
+     2. **Démarrage du service SSH** :
+        ```powershell
+        Start-Service -Name sshd
+        ```
+     3. **Vérification de l'état du service SSH** :
+        ```powershell
+        Get-Service -Name sshd
+        ```
+     4. **Configurer le démarrage automatique du service SSH** :
+        ```powershell
+        Set-Service -Name sshd -StartupType 'Automatic'
+        ```
 
-Dans un premier temps, **sudo apt update** va mettre à jour les paquets, puis **sudo apt install -y openssh-server** va installer le paquet openssh pour permettre la mise en place du service SSH : 
+3. **Connexion à distance vers un serveur Windows via SSH :**
+   - Utilisez la commande suivante depuis un terminal compatible SSH (par exemple, PowerShell sur le client) :
+     ```powershell
+     ssh utilisateur@<IP_du_serveur>
+     ```
+   - Pour fermer la session SSH :
+     ```powershell
+     exit
+     ```
 
-```bash
-sudo apt update && sudo apt install -y openssh-server
-```
+### Client Windows 10 Pro
 
-Pour vérifier si le service SSH est bien actif, taper : 
+1. **Configuration des paramètres de la machine client :**
+   - Nom : **CLIWIN01**
+   - Système d'exploitation : **Windows 10 Pro**
+   - Compte : **root**
+   - Mot de passe : **Azerty1***
+   - Adresse IP : **172.16.10.20/24**
 
-```bash
-sudo systemctl status ssh
-```
+2. **Installation de OpenSSH via PowerShell :**
+   - **Étapes pour installer et configurer OpenSSH** :
+     1. **Installation d'OpenSSH** :
+        ```powershell
+        Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+        ```
+     2. **Démarrage du service SSH** :
+        ```powershell
+        Start-Service -Name sshd
+        ```
+     3. **Vérification de l'état du service SSH** :
+        ```powershell
+        Get-Service -Name sshd
+        ```
+     4. **Configurer le démarrage automatique du service SSH** :
+        ```powershell
+        Set-Service -Name sshd -StartupType 'Automatic'
+        ```
 
-Pour le démarrer dans le cas où il serait inactif :
+### Client Ubuntu 24.04 LTS
 
-```bash
-sudo systemctl start sshd
-```
+1. **Configuration des paramètres du client :**
+   - Nom : **CLILIN01**
+   - Système d'exploitation : **Ubuntu 24.04 LTS**
+   - Compte : **wilder1**
+   - Mot de passe : **Azerty1***
+   - Adresse IP fixe : **172.16.10.30/24**
 
-Pour le stopper :
+2. **Installation de OpenSSH :**
+   - Mise à jour des paquets et installation d'OpenSSH :
+     ```bash
+     sudo apt update && sudo apt install -y openssh-server
+     ```
+   - Vérification de l'état du service SSH :
+     ```bash
+     sudo systemctl status ssh
+     ```
+   - Commandes pour démarrer, arrêter ou redémarrer le service SSH :
+     ```bash
+     sudo systemctl start sshd
+     sudo systemctl stop sshd
+     sudo systemctl restart sshd
+     ```
 
-```bash
-sudo systemctl stop sshd
-```
+## FAQ : Solutions aux Problèmes Connus et Courants
 
-Pour seulement le redémarrer :
+- **Problème : Erreur de connexion SSH depuis un client vers le serveur.**
+  - Solution : Vérifiez que le service SSH est bien démarré sur le serveur et que le pare-feu autorise le port 22.
 
-```bash
-sudo systemctl restart sshd
-```
+- **Problème : L'utilisateur ajouté n'a pas les droits sudo sur Debian.**
+  - Solution : Vérifiez que l'utilisateur fait bien partie du groupe sudo en utilisant la commande `groups <utilisateur>`.
 
-* Prise de main à distance du serveur sur le client
+- **Problème : OpenSSH n'est pas disponible dans les fonctionnalités Windows.**
+  - Solution : Assurez-vous que votre version de Windows est compatible et que votre système est à jour.
 
-Pour cette commande, **utilisateur** doit être celui présent sur la machine client cible et **monserveur** doit être remplacé par l'IP de la machine cliente : 
-
-```bash
-ssh utilisateur@monserveur
-```
-
-Pour sortir de la prise à distance :
-
-```bash
-exit
-```
-
-**Serveur Windows Server 2022**
-_____________________
-
-* Configurer les paramètres de la machine serveur
-
->  Nom : SRVWIN01  
->  Système d'exploitation : Windows Server 2022  
->  Compte : root  
->  Mot de passe : Azerty1*  
->  Adresse IP : 172.16.10.5/24  
-
-* Installation de OpenSSH
-
-**Client Windows 10**
-_____________________
-
-* Configurer les paramètres de la machine serveur
-
->  Nom : CLIWIN01  
->  Système d'exploitation : Windows 10 Pro  
->  Compte : root  
->  Mot de passe : Azerty1*  
->  Adresse IP : 172.16.10.20/24  
-
-**Client Ubuntu 24.04 LTS**
-_____________________
-
-* Configurer les paramètres du client
-
- > Nom : CLILIN01  
- > Système d'exploitation : Ubuntu 24.04 LTS  
- > Compte : wilder1  
- > Mot de passe : Azerty1*  
- > Adresse IP fixe : 172.16.10.30/24  
- 
-* Installation de OpenSSH
-
-Dans un premier temps, **sudo apt update** va mettre à jour les paquets, puis **sudo apt install -y openssh-server** va installer le paquet openssh pour permettre la mise en place du service SSH : 
-
-```bash
-sudo apt update && sudo apt install -y openssh-server
-```
-
-Pour vérifier si le service SSH est bien actif, taper : 
-
-```bash
-sudo systemctl status ssh
-```
-
-Pour le démarrer dans le cas où il serait inactif :
-
-```bash
-sudo systemctl start sshd
-```
-
-Pour le stopper :
-
-```bash
-sudo systemctl stop sshd
-```
-
-Pour seulement le redémarrer :
-
-```bash
-sudo systemctl restart sshd
-```
-
-_____________________
-## FAQ : solutions aux problèmes connus et communs liés à l’installation et à la configuration
-_____________________
