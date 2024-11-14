@@ -2,11 +2,21 @@
 DualLAN
 
 fonction_droits_utilisateur() {
-    echo "1 - Droits utilisateur fichier"
-         "2 - Droits utilisateur dossier"
-    read -p "Choisissez une option : " droits_utilisateur
+
+echo "
+=========================================================
+|		Gestion droits utilisateur		|
+=========================================================
+| 1 - Droits utilisateur fichier			|
+| 2 - Droits utilisateur dossier			|
+| x - Menu précédent					|
+=========================================================
+"
+
+read -p "Quels informations souhaitez-vous ? " choix_utilisateur
 
     case $droits_utilisateur in
+
         1)
             read -p "Entrez le nom du fichier : " nom_fichier
             if [[ -f $nom_fichier ]]; then
@@ -25,8 +35,13 @@ fonction_droits_utilisateur() {
                 echo "Le dossier $nom_dossier n'existe pas."
             fi
             ;;
+
+	x|X)
+
+		;;
+	
         *)
-            echo "Erreur : option invalide" | tee -a droits_utilisateur.log
+            fonction_droits_utilisateur
             ;;
     esac
 }
