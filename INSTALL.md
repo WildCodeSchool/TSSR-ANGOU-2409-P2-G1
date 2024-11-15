@@ -68,6 +68,7 @@
 
 2. **Installation de OpenSSH via PowerShell :**
    - **Étapes pour installer et configurer OpenSSH** :
+   
      1. **Installation d'OpenSSH** :
         ```powershell
         Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
