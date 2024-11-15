@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 co_ssh () {
@@ -25,20 +24,20 @@ read -p "Faites votre choix : " choix_action
 
 case $choix_action in
 	1)
-		echo "$(date +%F-%X) - $USER - Vers la gestion utilisateur" >> /var/log/log_evt.txt
+		echo "$(date +%F-%X) - $USER - Action - Vers la gestion utilisateur" >> /var/log/log_evt.txt
 		gestion_user
 		;;
 	2)
-		echo "$(date +%F-%X) - $USER - Vers la gestion ordinateur" >> /var/log/log_evt.txt
+		echo "$(date +%F-%X) - $USER - Action - Vers la gestion ordinateur" >> /var/log/log_evt.txt
 		gestion_computer
 		;;
 
 	3)
-		echo "$(date +%F-%X) - $USER - Prise de main à distance de $ip sous l'utilisateur $utilisateur" >> /var/log/log_evt.txt
+		echo "$(date +%F-%X) - $USER - Action - Prise de main à distance de $ip sous l'utilisateur $utilisateur" >> /var/log/log_evt.txt
 		ssh $utilisateur@$ip
 		;;
 	x|X)
-		echo "$(date +%F -%X) - $USER - Retour au menu principal" >> /var/log/log_evt.txt
+		echo "$(date +%F-%X) - $USER - Retour au menu principal" >> /var/log/log_evt.txt
 		echo "Retour au menu principal."
 		sleep 1s
 		;;
@@ -52,7 +51,7 @@ gestion_computer () {
 clear
 echo "
 =========================================================
-|              Menu action ordinateur                   |
+|              Menu Gestion Ordinateur                  |
 =========================================================
 |       1 : Gestion de l'alimentation                   |
 |       2 : Gestion des répertoires                     |
@@ -91,10 +90,97 @@ case $choix_computer in
 		;;
 	p|P)
 		echo "$(date +%F-%X) - $USER - Retour au menu principal" >> /var/log/log_evt.txt
+		;;
+esac
+}
+gestion_alim() {
+clear
+echo "
+=========================================================
+|		Gestion de l'alimentation		|
+=========================================================
+| 	1 - Arrêt ordinateur				|
+| 	2 - Redémarer l'ordinateur			|
+| 	3 - Verrouiller l'ordinateur			|
+| 	x - Menu précédent				|
+=========================================================
+"
 
+read -p "Faites votre choix : " choix_computer
+
+case $choix_computer in
+	1)
+		echo "$(date +%F-%X) - $USER - Ordinateur - Action - Arret Ordinateur" >> /var/log/log_evt.txt
+		ssh $utilisateur@$ip "sudo -S shutdown now"
+		co_ssh
+		;;
+	2)
+		echo "$(date +%F-%X) - $USER - Ordinateur - Action - Redemarrage Ordinateur" >> /var/log/log_evt.txt
+		ssh $utilisateur@$ip "sudo -S shutdown -r now"
+		;;
+	3)
+		echo "$(date +%F-%X) - $USER - Ordinateur - Action - Verrouillage Ordinateur" >> /var/log/log_evt.txt
+		ssh $utilisateur@$ip "sudo -S gnome-screensaver-command -l"
+		;;
+	x|X)
+		echo "$(date +%F-%X) - $USER - Retour au menu précédent" >> /var/log/log_evt.txt
+		gestion_computer
+		;;
+	*)
+		gestion_alim
+		;;
+
+esac
+}
+gestion_directory () {
+
+echo "1 - Création de Répertoire"
+echo "2 - Modification de Répertoire"
+echo "3 - Suppression de Répertoire"
+echo "x - Retour Menu Précédent"
+
+read -p "Faites votre choix : " choix_directory
+
+
+case $choix_directory in 
+
+	1)
+		read -p "Quel dossier souhaitez-vous créer ?(Chemin absolu)" directory
+		echo "$(date +%F-%X) - $USER - Ordinateur - Action - Création de Répertoire $directory" >> /var/log/log_evt.txt
+		ssh $utilisateur@$ip "sudo -S mkdir $directory"
+		echo "Création de $directory effectuée."
+		sleep 1s
+		return
+		;;
+
+	2)
+		read -p "Quel dossier souhaitez vous modifier ?(Chemin absolu)" directory
+		read -p "Quel est le nouveau nom souhaitez ?" dir_name
+		echo "$(date +%F-%X) - $USER - Ordinateur - Action - Modification de Répertoire $directory" >> /var/log/log_evt.txt
+		ssh $utilisateur@$ip "sudo -S mv $directory $dir_name"
+		echo "Modification de $directory en $dir_name effectuée."
+		sleep 1s
+		gestion_directory
+		;;
+
+	3)
+		read -p "Quel dossier souhaitez-vous supprimer ? " directory
+		echo "$(date +%F-%X) - $USER - Ordinateur - Action - Suppression de Répertoire" >> /var/log/log_evt.txt
+		ssh $utilisateur@$ip "sudo -S rm -r $directory"
+		echo "Suppression de $directory effectuée."
+		sleep 1s
+		gestion_directory
+		;;
+		
+	x|X)	
+		echo "$(date +%F-%X) - $USER - Retour au menu précédent" >> /var/log/log_evt.txt	
+		echo "Retour Menu Précédent"
+		menu_action
+		;;
+esac		
 }
 gestion_firewall () {
-
+clear
 echo "
 =========================================================
 |		Gestion du pare-feu			|
@@ -105,20 +191,22 @@ echo "
 =========================================================
 "
 
-read choix
+read -p "Faites votre choix : " choix_firewall
 
-case $choix in 
+case $choix_firewall in 
 
 	1)
 		echo "$(date +%F-%X) - $USER - Ordinateur - Action - Activation du pare-feu" >> /var/log/log_evt.txt
-		ssh $utilisateur@$ip "sudo ufw enbale"
-		sleep 3s
+		ssh $utilisateur@$ip "sudo -S ufw enable"
+		echo "Pare-feu activé !"
+		sleep 8s
 		return
 		;;
 	2)
 		echo "$(date +%F-%X) - $USER - Ordinateur - Action - Désactivation du pare-feu" >> /var/log/log_evt.txt
-		ssh $utilisateur@$ip "sudo ufw disable"
-		sleep 3s
+		ssh $utilisateur@$ip "sudo -S ufw disable"
+		echo "Pare-feu désactivé !"
+		sleep 1s
 		return
 		;;
 
@@ -134,23 +222,53 @@ case $choix in
 		;;
 
 esac
-
 }
 
+maj_system () {
+
+# Mise à jour des dépôts de paquets
+echo "Mise à jour des dépôts de paquets"
+ssh $utilisateur@$ip "sudo -S apt update"
+
+# Mise à jour des paquets installés
+echo "Mise à jour des paquets installés"
+ssh $utilisateur@$ip "sudo -S apt upgrade -y "
+
+# Nettoyage des paquets obsolètes
+echo "Nettoyage des paquets obsolètes"
+ssh $utilisateur@$ip "sudo -S apt autoremove -y apt autoclean "
+
+# Mise à jour du noyau (exemple pour une distribution utilisant apt)
+echo "Mise à jour du noyau"
+ssh $utilisateur@$ip "sudo -S apt install --install-recommends linux-generic "
+
+# Redémarrage pour appliquer les mises à jour du noyau
+
+echo "Le système doit être redémarré pour appliquer les mises à jour du noyau."
+
+read -p "Voulez-vous redémarrer votre ordinateur ?" restart
+
+case $restart in
+
+        o|O|y|Y|Oui|oui|yes|Yes)
+		echo "$(date +%F-%X) - $USER - Ordinateur - Action - Redémarrage du système." >> /var/log/log_evt.txt
+                ssh $utilisateur@$ip 'sudo -S restart'
+                ;;
+        *)
+                echo "Pensez à redémarrer votre ordinateur pour l'applications des paquets installés."
+                echo "Retour au menu principal"
+                sleep 2s
+                ;;
+esac
+}
 groupe_user () {
 
-	ssh $utilisateur@$ip "sudo -S groups $utilisateur"
-	sleep 3s
+	read -p "De quel utilisateur souhaitez vous voir les groupes ?" wilder
+	ssh $utilisateur@$ip "sudo -S groups $wilder"
+	sleep 5s
 
 }
 gestion_user() {
-clear
-read -p "Sur quel utilisateur souhaitez-vous intervenir ? " wilder
-
-sudo ssh $utilisateur@$ip "id -u $wilder > /dev/null"
-
-if sudo ssh $utilisateur@$ip $? = "0" 
-then
 	clear
 	echo "
 ========================================================
@@ -174,12 +292,13 @@ case $choix_gestion in
 		create_user
 		;;
 	2)
+		read -p "De quel utilisateur souhaitez vous modifier le mot de passe ? " wilder
 		ssh $utilisateur@$ip 'sudo -S passwd $wilder'
 		echo "$(date +%F-%X) - $USER - Utilisateur - Action - Changement de mot de passe de $wilder établi" >> /var/log/log_evt.txt
 		sleep 1s
 		;;
 	3)
-		
+				
 		sleep 2s
 		;;
 	4)
@@ -197,56 +316,83 @@ case $choix_gestion in
 	p|P)
 		echo "$(date +%F-%X) - $USER - Retour au menu principal" >> /var/log/log_evt.txt
 		echo "Retour au menu principal"
-		sleep 1s
+		sleep .5s
 		;;
 	*)
 		gestion_user
 		;;
 esac
-
-else
-	echo "$(date +%F-%X) - $USER - L'utilisateur renseigné n'existe pas" >> /var/log/log_evt.txt
-	read -p "$wilder n'existe pas. Voulez vous le créer ? " noexist
-	case $noexist in
-		o|O|y|Y|Oui|oui|yes|Yes)
-			echo "Redirection vers la création d'utilisateur"
-			echo "$(date +%F-%X) - $USER - Créer cet utilisateur" >> /var/log/log_evt.txt
-			create_user
-			;;
-		N|n|No|no|Non|non)
-			echo "Retour au menu gestion utilisateur"
-			echo "$(date +%F-%X) - $USER - Ne créer pas cet utilisateur, redirection menu gestion utilisateur" >> /var/log/log_evt.txt
-			gestion_user
-			;;
-		*)
-			echo "$(date +%F-%X) - $USER - Retour au menu principale" >> /var/log/log_evt.txt
-			echo "Erreur, retour au menu principal"
-			;;
-	esac
-fi
-
-
-
 }
 
 create_user () {
 
 read -p "Veuillez renseigner le nom de l'utilisateur à créer : " wilder
 
-ssh $utilisateur@$ip "id -u $wilder > /dev/null"
-
-if ssh $utilisateur@$ip "$? = "1" "
-then
-	ssh $utilisateur@$ip "sudo -S useradd $wilder"
-	echo "$(date +%F-%X) - $USER - Utilisateur $wilder créé" >> /var/log/log_evt.txt
-	echo " $wilder vient d'être créé"
-	ssh $utilisateur@$ip "sudo -S passwd $wilder"
-	echo "$(date +%F-%X) - $USER - Utilisateur - Action - Mot de passe de $wilder établi" >> /var/log/log_evt.txt
-	sleep 1s
-else 
+if ssh $utilisateur@$ip "getent passwd $wilder > /dev/null 2>&1"
+then	 
 	echo "$wilder existe déjà"
 	sleep 1s
+	gestion_user
+else
+       	ssh $utilisateur@$ip "sudo -S useradd $wilder"
+        echo "$(date +%F-%X) - $USER - Utilisateur $wilder créé" >> /var/log/log_evt.txt
+        echo " $wilder vient d'être créé"
+        ssh $utilisateur@$ip "sudo -S passwd $wilder"
+        echo "$(date +%F-%X) - $USER - Utilisateur - Action - Mot de passe de $wilder établi" >> /var/log/log_evt.txt
+        sleep 1s
 fi
+}
+gestion_groupe () {
+clear
+echo "
+=========================================================
+|		Gestion des groupes			|
+=========================================================
+| 1 - Ajout à un groupe d'administration		|
+| 2 - Ajout à un groupe local				|
+| 3 - Sortie d'un groupe local				|
+| x - Menu précédent					|
+=========================================================
+"
+
+read -p "Faites votre chox : " choix_groupe
+
+case $choix_groupe in
+
+	1)
+		read -p "Indiquez quel utilisateur à ajouter au groupe d'administration : " wilder
+		echo "$(date +%F-%X) - $USER - Utilisateur - Action - Ajout de l'utilisateur : $wilder au groupe administrateur" >> /var/log/log_evt.txt
+		ssh $utilisateur@$ip "sudo -S usermod -aG sudo $wilder"
+		sleep 1s
+		return
+		;;
+
+	2)
+		echo "$(date +%F-%X) - $USER - Utilisateur - Action - Ajout de l'utilisateur : $utilisateur au groupe : $groupe" >> /var/log/log_evt.txt
+		read -p "Renseignez le groupe auquel vous souhaitez ajouter l'utilisateur : " groupe
+		ssh $utilisateur@$ip "sudo -S usermod -aG $groupe $utilisateur"
+		sleep 1s
+		return
+		;;
+
+	3)
+		echo "$(date +%F-%X) - $USER - Utilisateur - Action - Suppression de l'utilisateur : $utilisateur du groupe : $groupe" >> /var/log/log_evt.txt
+		read -p "Renseignez le groupe auquel vous souhaitez ajouter l'utilisateur : " 	groupe
+		ssh $utilisateur@$ip "sudo -S usermod -G $groupe $ utilisateur"
+		sleep 1s
+		return
+		;;
+
+	x|X)
+		echo "$(date +%F-%X) - $USER - Retour au menu précédent" >> /var/log/log_evt.txt
+		gestion_user
+		;;
+
+	*)
+		gestion_groupe
+		;;
+
+esac
 }
 menu_info () {
 # Menu des informations, choix à faire pour consulter des info sur l'utilisateur, l'ordinateur ou les logs !
@@ -406,9 +552,9 @@ esac
 
 info_computer () {
 
-
+clear
 echo "
-|=======================================================|
+=========================================================
 | 		Information Ordinateur 			|
 |=======================================================|
 |       1 : Version du système d'exploitation           |
@@ -421,19 +567,19 @@ read -p "Faites votre choix : " choix_computer
 
 case $choix_computer in
 	1)
-		echo "$(date +%F-%X) - $USER - Version du système d'exploitation" >> /var/log/log_evt.txt
+		echo "$(date +%F-%X) - $USER - Ordinateur - Info - Version du système d'exploitation" >> /var/log/log_evt.txt
 		version_os
 		;;
 	2)
-		echo "$(date +%F-%X) - $USER - Informations des disques" >> /var/log/log_evt.txt
+		echo "$(date +%F-%X) - $USER - Ordinateur - Info - Informations des disques" >> /var/log/log_evt.txt
 		info_disk
 		;;
 	3)
-		echo "$(date +%F-%X) - $USER - Activité de l'ordinateur" >> /var/log/log_evt.txt
+		echo "$(date +%F-%X) - $USER - Ordinateur - Info - Activité de l'ordinateur" >> /var/log/log_evt.txt
 		activite_ordi
 		;;
 	4)
-		echo "$(date +%F-%X) - $USER - Information sur la RAM" >> /var/log/log_evt.txt
+		echo "$(date +%F-%X) - $USER - Ordinateur - Info - Information sur la RAM" >> /var/log/log_evt.txt
 		info_ram
 		;;
 	*)
@@ -443,7 +589,12 @@ case $choix_computer in
 esac
 
 }
+version_os () {
 
+	echo "$(date +%F-%X) - $USER - Ordinateur - Info - Version de l'OS" >> /var/log/log_evt.txt
+	ssh $utilisateur@$ip "cat /etc/*release"
+	sleep 3s
+}
 info_disk () {
 clear
 echo "
@@ -458,7 +609,7 @@ echo "
 | 	P : Retour au menu principal		 	     |
 =============================================================="
 
-read -p "Veuillez renseigner le disque à consulter : " choix_disque
+read -p "Faites votre choix : " choix_disque
 
  case $choix_disque in 
  
@@ -468,27 +619,33 @@ read -p "Veuillez renseigner le disque à consulter : " choix_disque
   		sleep 5s
 		;;
   		2) echo "$(date +%F-%X) - $USER - Ordinateur - Info - Afficher les informations partitions par disques" >> /var/log/log_evt.txt
-  		ssh $utilisateur@$ip "sudo -S df-h"
+  		ssh $utilisateur@$ip "sudo -S df -h"
   		sleep 5s
 		;;
-  		3) echo "$(date +%F-%X) - $USER - Ordinateur - Info - Afficher l'espace disque restant" >> /var/log/log_evt.txt
-  		ssh $utilisateur@$ip "sudo -S df"
-  		sleep 5s
-		;;
-  		4) echo "$(date +%F-%X) - $USER - Ordinateur - Info - Afficher le nom espace disque d'un dossier" >> /var/log/log_evt.txt
-  		ssh $utilisateur@$ip "sudo -S df -k"
-  		sleep 5s
-		;;
-  		5) echo "$(date +%F-%X) - $USER - Ordinateur - Info - Afficher les lecteurs montés" >> /var/log/log_evt.txt
-  		ssh $utilisateur@$ip "sudo -S lsblk"
-  		sleep 5s
-		;;
-		p | P) echo "$(date +%F-%X) - $USER - Retour au menu principal" >> /var/log/log_evt.txt
-		sleep 1s
-		;;
-  		*) echo "Erreur"
-  		info_disk
-		;;
+  		3) 
+			echo "$(date +%F-%X) - $USER - Ordinateur - Info - Afficher l'espace disque restant" >> /var/log/log_evt.txt
+  			ssh $utilisateur@$ip "sudo -S df"
+  			sleep 5s
+			;;
+  		4) 
+			echo "$(date +%F-%X) - $USER - Ordinateur - Info - Afficher le nom et l'espace disque d'un dossier" >> /var/log/log_evt.txt
+  			read -p "Indiquez le dossier sur lequel le disque est monté" disk
+			ssh $utilisateur@$ip "sudo -S df -k $disk"
+  			sleep 5s
+			;;
+  		5)	
+		       	echo "$(date +%F-%X) - $USER - Ordinateur - Info - Afficher les lecteurs montés" >> /var/log/log_evt.txt
+  			ssh $utilisateur@$ip "sudo -S lsblk"
+  			sleep 5s
+			;;
+		p|P)
+		       	echo "$(date +%F-%X) - $USER - Retour au menu principal" >> /var/log/log_evt.txt
+			sleep 1s
+			;;
+  		*)
+		       	echo "Erreur"
+  			info_disk
+			;;
   		
 esac  			
 }
@@ -556,6 +713,12 @@ case $choix_activite in
 		activite_ordi
 		;;
 esac
+
+}
+info_ram () {
+
+	ssh $utilisateur@$ip "sudo -S free -h -m"
+	sleep 3s
 
 }
 # Menu principal, avec le début de l'enregistrement des logs.
