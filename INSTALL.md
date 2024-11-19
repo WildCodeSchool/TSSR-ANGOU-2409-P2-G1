@@ -172,7 +172,7 @@
 - **Problème :  Erreur lors de la connetctions en ssh sur le port 22.**
   - _Solution :  taper la commmande pour ouvire le port 22 :_ 
 
-   **PowerShell**
+   `**PowerShell**`
   ```powershell
   New-NetFirewallRule -DisplayName "Allow SSH" -Direction Inbound -Protocol TCP -LocalPort 22 -Action Allow
   ```   
