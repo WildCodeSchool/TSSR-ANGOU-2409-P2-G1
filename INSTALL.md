@@ -151,12 +151,28 @@
 
 ## FAQ : Solutions aux Problèmes Connus et Courants
 
-- **Problème : Erreur de connexion SSH depuis un client vers le serveur.**
-  - Solution : Vérifiez que le service SSH est bien démarré sur le serveur et que le pare-feu autorise le port 22.
+- **Problème : Erreur de connexion SSH depuis un client vers le serveur.** 
+  - _Solution : Vérifiez que le service SSH est bien démarré sur le serveur et que le pare-feu autorise le port 22._
+
+----
 
 - **Problème : L'utilisateur ajouté n'a pas les droits sudo sur Debian.**
-  - Solution : Vérifiez que l'utilisateur fait bien partie du groupe sudo en utilisant la commande `groups <utilisateur>`.
+  - _Solution : Vérifiez que l'utilisateur fait bien partie du groupe sudo en utilisant la commande `groups <utilisateur>`._
+
+----
 
 - **Problème : OpenSSH n'est pas disponible dans les fonctionnalités Windows.**
-  - Solution : Assurez-vous que votre version de Windows est compatible et que votre système est à jour.
+  - _Solution : Assurez-vous que votre version de Windows est compatible et que votre système est à jour._
 
+- **Problème : Comment ce conecter en SSH.**
+  - _Solution : Voir le `Uuer_Guide`._
+
+---- 
+
+- **Problème :  Erreur lors de la connetctions en ssh sur le port 22.**
+  - _Solution :  taper la commmande pour ouvire le port 22 :_ 
+
+   **PowerShell**
+  ```powershell
+  New-NetFirewallRule -DisplayName "Allow SSH" -Direction Inbound -Protocol TCP -LocalPort 22 -Action Allow
+  ```   
