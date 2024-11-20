@@ -13,7 +13,7 @@
 1. **Configuration des paramètres de la machine serveur :**
    - Nom : **SRVLX01**
    - Système d'exploitation : **Debian 12 Bookworm**
-   - Compte : **root**
+   - Compte : **Administrateur**
    - Mot de passe : **Azerty1***
    - Adresse IP : **172.16.10.10/24**
 
