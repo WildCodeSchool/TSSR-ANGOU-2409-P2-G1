@@ -1,1 +1,57 @@
+function Gestion-Alimentation {
+    Clear-Host
+    Write-Host "
+=========================================================
+|               Gestion de l'alimentation               |
+=========================================================
+|     1 - Arrêter l'ordinateur                          |
+|     2 - Redémarrer l'ordinateur                       |
+|     3 - Verrouiller l'ordinateur                      |
+|     X - Menu précédent                                |
+=========================================================
+"
+    $choix = Read-Host "Faites votre choix"
+
+    switch ($choix) {
+        1 {
+            $confirm = Read-Host "Êtes-vous sûr de vouloir arrêter l'ordinateur ? (o/n)"
+            if ($confirm -match '^(o|O)$') {
+                $log = "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Ordinateur - Action - Arrêt Ordinateur"
+                Add-Content -Path "C:\Logs\log_evt.txt" -Value $log
+                Stop-Computer -Force
+            } else {
+                Write-Host "Action annulée."
+                Start-Sleep -Seconds 1
+                Gestion-Alimentation
+            }
+        }
+        2 {
+            $confirm = Read-Host "Êtes-vous sûr de vouloir redémarrer l'ordinateur ? (o/n)"
+            if ($confirm -match '^(o|O)$') {
+                $log = "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Ordinateur - Action - Redémarrage Ordinateur"
+                Add-Content -Path "C:\Logs\log_evt.txt" -Value $log
+                Restart-Computer -Force
+            } else {
+                Write-Host "Action annulée."
+                Start-Sleep -Seconds 1
+                Gestion-Alimentation
+            }
+        }
+        3 {
+            $log = "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Ordinateur - Action - Verrouillage Ordinateur"
+            Add-Content -Path "C:\Logs\log_evt.txt" -Value $log
+            rundll32.exe user32.dll, LockWorkStation
+        }
+        { "x"; "X" } {
+            $log = "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Retour au menu précédent"
+            Add-Content -Path "C:\Logs\log_evt.txt" -Value $log
+            Write-Host "Retour au menu précédent." # Ajoute la commande pour aller au menu précédent ici
+        }
+        default {
+            Write-Host "Option invalide. Veuillez réessayer."
+            Start-Sleep -Seconds 1
+            Gestion-Alimentation
+        }
+    }
+}
 
