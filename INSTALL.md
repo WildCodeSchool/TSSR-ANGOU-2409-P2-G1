@@ -63,13 +63,13 @@
    - Nom : **SRVWIN01**
    - Système d'exploitation : **Windows Server 2022**
    - Compte : **root**
-   - Mot de passe : **Azerty1***
+   - Mot de passe : **Azerty1**
    - Adresse IP : **172.16.10.5/24**
 
 2. **Installation de OpenSSH via PowerShell :**
    - **Étapes pour installer et configurer OpenSSH** :
    
-     1. **Installation d'OpenSSH** :
+     1. **Installation de OpenSSH** :
         ```powershell
         Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
         ```
@@ -107,7 +107,7 @@
 
 2. **Installation de OpenSSH via PowerShell :**
    - **Étapes pour installer et configurer OpenSSH** :
-     1. **Installation d'OpenSSH** :
+     1. **Installation de OpenSSH** :
         ```powershell
         Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
         ```
@@ -164,12 +164,12 @@
 - **Problème : OpenSSH n'est pas disponible dans les fonctionnalités Windows.**
   - _Solution : Assurez-vous que votre version de Windows est compatible et que votre système est à jour._
 
-- **Problème : Comment ce conecter en SSH.**
+- **Problème : Comment ce connecter en SSH.**
   - _Solution : Voir le `Uuer_Guide`._
 
 ---- 
 
-- **Problème :  Erreur lors de la connetctions en ssh sur le port 22.**
+- **Problème :  Erreur lors de la connections en ssh sur le port 22.**
   - _Solution :  taper la commmande pour ouvire le port 22 :_ 
 
    `**PowerShell**`
