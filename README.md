@@ -49,10 +49,9 @@ _______
 ## Difficultés rencontrées : problèmes techniques rencontrés
 _______
 
-Bash :
-- Demande du mot de passe récurrente
-- Modification du mot de passe (passwd)
-
+Bash :  
+- Demande du mot de passe récurrente  
+- Modification du mot de passe (passwd)  
 PowerShell :
 - 
 
