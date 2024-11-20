@@ -215,6 +215,9 @@ case $choix_directory in
 		echo "Retour Menu Précédent"
 		menu_action
 		;;
+  	*)
+   		gestion_directory
+     		;;
 esac		
 }
 gestion_firewall () {
