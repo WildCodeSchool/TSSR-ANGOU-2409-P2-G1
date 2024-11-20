@@ -55,3 +55,43 @@ function Gestion-Alimentation {
     }
 }
 
+______________________________________________________________________________________________________________________________________________________________________________
+function gestion_directory {
+    Clear-Host
+    Write-Output "=================================="
+    Write-Output "|   Gestion des répertoires      |"
+    Write-Output "=================================="
+    Write-Output "| 1 - Création de répertoire     |"
+    Write-Output "| 2 - Modification de répertoire |"
+    Write-Output "| 3 - Suppression de répertoire  |"
+    Write-Output "| x - Menu précédent             |"
+    Write-Output "=================================="
+    
+    $Choix_Directory = Read-Host "Faites votre choix : "
+  
+    switch ($Choix_Directory) {
+  
+      1 {$pathdir = Read-Host "Quel est le chemin du dossier que vous souhaitez créer ?" ; 
+      $directory = Read-Host "Quel dossier souhaitez-vous créer à partir de $pathdir ?" ; 
+      New-Item -Path $pathdir\ -ItemType Directory -Name $directory ;
+      Write-Output "Création de $directory effectuée."}
+      
+      2 {$pathdir = Read-Host "Quel est le chemin du dossier que vous souhaitez modifier ?" ;
+      $directory = Read-Host "Quel est le nom du dossier que vous souhaitez modifier ?" ;
+      $dir_name = Read-Host "Quel nouveau nom souhaitez lui donner ?" ;
+      Rename-Item -Path $pathdir\$directory -NewName $dir_name ;
+      Write-Output "Modification de $directory en $dir_name effectuée."}
+      
+      3 {$pathdir = Read-Host "Quel est le chemin du dossier que vous souhaitez supprimer ?" ; 
+      $directory = Read-Host "Quel dossier souhaitez-vous supprimer ?" ;
+      Remove-Item -Path $pathdir\$directory ;
+      Write-Output "Suppression de $directory effectuée"}
+      
+     # x|X {Write-Host "Retour Menu Précédent" ; menu_action}
+      
+      Default {Write-Output "Erreur retour au choix" ; gestion_directory}
+    }
+  
+  
+  }
+  gestion_directory
