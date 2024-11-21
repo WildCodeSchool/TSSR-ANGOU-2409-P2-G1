@@ -59,7 +59,7 @@ ________________________________________________________________________________
 function gestion_directory {
     Clear-Host
     Write-Output "=================================="
-    Write-Output "|   Gestion des répertoires      |"
+    Write-Output "|     Gestion des répertoires    |"
     Write-Output "=================================="
     Write-Output "| 1 - Création de répertoire     |"
     Write-Output "| 2 - Modification de répertoire |"
