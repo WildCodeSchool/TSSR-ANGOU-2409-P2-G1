@@ -1,3 +1,8 @@
+FONCTION ACTION
+_____________________________________________________________________________________________________________________________________________________________________________
+
+# Fonction pour la gestion de l'alimentation du PC cible
+
 function Gestion-Alimentation {
     Clear-Host
     Write-Host "
@@ -13,6 +18,8 @@ function Gestion-Alimentation {
     $choix = Read-Host "Faites votre choix"
 
     switch ($choix) {
+
+        # Arrêter l'ordinateur cible
         1 {
             $confirm = Read-Host "Êtes-vous sûr de vouloir arrêter l'ordinateur ? (o/n)"
             if ($confirm -match '^(o|O)$') {
@@ -25,6 +32,8 @@ function Gestion-Alimentation {
                 Gestion-Alimentation
             }
         }
+
+        # Redémarrer l'ordinateur cible
         2 {
             $confirm = Read-Host "Êtes-vous sûr de vouloir redémarrer l'ordinateur ? (o/n)"
             if ($confirm -match '^(o|O)$') {
@@ -37,16 +46,22 @@ function Gestion-Alimentation {
                 Gestion-Alimentation
             }
         }
+
+        # Verrouiller l'ordinateur cible
         3 {
             $log = "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Ordinateur - Action - Verrouillage Ordinateur"
             Add-Content -Path "C:\Logs\log_evt.txt" -Value $log
             rundll32.exe user32.dll, LockWorkStation
         }
+
+        # Retour au menu précédent
         { "x"; "X" } {
             $log = "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Retour au menu précédent"
             Add-Content -Path "C:\Logs\log_evt.txt" -Value $log
             Write-Host "Retour au menu précédent." # Ajoute la commande pour aller au menu précédent ici
         }
+
+        # En cas d'erreur, retour au menu de la fonction
         default {
             Write-Host "Option invalide. Veuillez réessayer."
             Start-Sleep -Seconds 1
@@ -55,7 +70,7 @@ function Gestion-Alimentation {
     }
 }
 
-______________________________________________________________________________________________________________________________________________________________________________
+# Fonction pour la gestion de répertoires
 function gestion_directory {
     Clear-Host
     Write-Output "=================================="
@@ -70,32 +85,60 @@ function gestion_directory {
     $Choix_Directory = Read-Host "Faites votre choix : "
   
     switch ($Choix_Directory) {
-  
+
+      # Créer le répertoire à partir du nom et du chemin renseignés
       1 {$pathdir = Read-Host "Quel est le chemin du dossier que vous souhaitez créer ?" ; 
       $directory = Read-Host "Quel dossier souhaitez-vous créer à partir de $pathdir ?" ; 
       New-Item -Path $pathdir\ -ItemType Directory -Name $directory ;
       Write-Output "Création de $directory effectuée."}
-      
+
+      # Modifier le répertoire à partir du nom, du chemin et du nouveau nom renseignés
       2 {$pathdir = Read-Host "Quel est le chemin du dossier que vous souhaitez modifier ?" ;
       $directory = Read-Host "Quel est le nom du dossier que vous souhaitez modifier ?" ;
       $dir_name = Read-Host "Quel nouveau nom souhaitez lui donner ?" ;
       Rename-Item -Path $pathdir\$directory -NewName $dir_name ;
       Write-Output "Modification de $directory en $dir_name effectuée."}
-      
+
+      # Supprimer le répertoire à partir du nom et du chemin renseignés
       3 {$pathdir = Read-Host "Quel est le chemin du dossier que vous souhaitez supprimer ?" ; 
       $directory = Read-Host "Quel dossier souhaitez-vous supprimer ?" ;
       Remove-Item -Path $pathdir\$directory ;
       Write-Output "Suppression de $directory effectuée"}
-      
+
+      # Retour au menu précédent
       x {Write-Host "Retour Menu Précédent" ; 
         menu_action}
 
+      # Retour au menu précédent
       X {Write-Host "Retour Menu Précédent" ; 
         menu_action}
 
+      # En cas d'erreur, retour au menu de la fonction
       Default {Write-Output "Erreur retour au choix" ; gestion_directory}
     }
   
   
   }
   gestion_directory
+_____________________________________________________________________________________________________________________________________________________________________________
+FONCTION INFORMATION
+
+# Fonction pour obtenir la version de l'OS
+
+function version_OS {
+    Clear-Host
+    Get-WmiObject Win32_OperatingSystem | findstr /C:"Version"
+    
+}
+
+version_OS
+
+# Fonction pour obtenir les informations RAM (/!\ Pas fonctionnel sur VM /!\ Solution à trouver)
+
+function info_ram {
+    Clear-Host
+    Get-CimInstance -ClassName Win32_PhysicalMemory
+
+}
+
+info_ram
