@@ -132,50 +132,63 @@ function info_ram {
     Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - RAM"
     Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object FreePhysicalMemory, TotalVisibleMemorySize
 }
-_____________________________________________________________________________________________________________________________________________________________________________
+___________________________________________________________________________________________________________________________________________________________________________
 FONCTON ACTIVITE ORDI
 
-# Fonction pour obtenir l'Activité de l'ordinateur
+## Menu de l'activité de l'ordinateur cible
 
 function activite_ordi {
 
     Clear-Host
     Write-Host "
     ==================================================
-    | 		Activité ordinateur		              |
+    | 		Activité ordinateur	             |
     | 1 : Liste des applications / paquets installés |
     | 2 : Liste des services en cours d'exécution    |
-    | 3 : Liste des utilisateurs locaux		          |
-    | X : Retour au menu précédent		          |
+    | 3 : Liste des utilisateurs locaux		     |
+    | X : Retour au menu précédent		     |
     ==================================================
         "
 
 
     $choix_activite = Read-Host "Faites votre choix"
 
+
+# Affichage de la liste des applications/ paquets installés sur l'ordinateur cible
+
     Switch ($choix_activite) {
         1 {
-            Write-Host "Liste des applications / paquets installées :"
+            Write-Host "Ordinateur - Info - Liste des applications / paquets installées :"
             Get-Package
+	    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc
             Start-Sleep -Seconds 3
             activite_ordi
+
+
+# Affichage de la liste des services en cours d'exécution
 
         }
         2 { 
-            Write-Host "Liste des services en cours d'execution :"
+            Write-Host "Ordinateur - Info - Liste des services en cours d'execution :"
             Get-Service | Where-Object { $_.Status -eq "Running" }
+	    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc
             Start-Sleep -Seconds 3
             activite_ordi
 
+
+# Affichage de la liste des utilisateurs locaux
 
         }
 
         3 { 
-            Write-Host "Liste des utilisateurs locaux :"
+            Write-Host "Ordinateur - Info - Liste des utilisateurs locaux :"
             Get-LocalUser | Format-Table -AutoSize
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc
             Start-Sleep -Seconds 3
             activite_ordi
         }
+
+# Retour au menu précédent
 
         x {Write-Host "Retour Menu Précédent" ; 
         menu_action}
@@ -190,6 +203,7 @@ function activite_ordi {
 
 activite_ordi
 
+__________________________________________________________________________________________________________________________________________________________________________
 
 function search_log {
 $logc = "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - $env:COMPUTERNAME"
