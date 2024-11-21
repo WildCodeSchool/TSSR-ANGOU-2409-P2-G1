@@ -130,7 +130,7 @@ function version_OS {
 function info_ram {
     Clear-Host
     Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - RAM"
-    Get-CimInstance -ClassName Win32_OperatingSystem | select FreePhysicalMemory, TotalVisibleMemorySize
+    Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object FreePhysicalMemory, TotalVisibleMemorySize
 }
 _____________________________________________________________________________________________________________________________________________________________________________
 FONCTON ACTIVITE ORDI
