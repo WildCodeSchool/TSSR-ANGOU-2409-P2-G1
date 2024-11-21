@@ -119,24 +119,19 @@ ________________________________________________________________________________
 FONCTION INFORMATION
 
 # Fonction pour obtenir la version de l'OS
-
 function version_OS {
     Clear-Host
+    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Version de l'OS"
     Get-WmiObject Win32_OperatingSystem | findstr /C:"Version"
     
 }
 
-version_OS
-
 # Fonction pour obtenir les informations RAM (/!\ Pas fonctionnel sur VM /!\ Solution à trouver)
-
 function info_ram {
     Clear-Host
+    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - RAM"
     Get-CimInstance -ClassName Win32_OperatingSystem | select FreePhysicalMemory, TotalVisibleMemorySize
 }
-
-info_ram
-
 _____________________________________________________________________________________________________________________________________________________________________________
 FONCTON ACTIVITE ORDI
 
