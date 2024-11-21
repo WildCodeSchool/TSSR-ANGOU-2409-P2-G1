@@ -134,3 +134,63 @@ function info_ram {
 }
 
 info_ram
+
+_____________________________________________________________________________________________________________________________________________________________________________
+FONCTON ACTIVITE ORDI
+
+# Fonction pour obtenir l'Activité de l'ordinateur
+
+function activite_ordi {
+
+    Clear-Host
+    Write-Host "
+    ==================================================
+    | 		Activité ordinateur		              |
+    | 1 : Liste des applications / paquets installés |
+    | 2 : Liste des services en cours d'exécution    |
+    | 3 : Liste des utilisateurs locaux		          |
+    | X : Retour au menu précédent		          |
+    ==================================================
+        "
+
+
+    $choix_activite = Read-Host "Faites votre choix"
+
+    Switch ($choix_activite) {
+        1 {
+            Write-Host "Liste des applications / paquets installées :"
+            Get-Package
+            Start-Sleep -Seconds 3
+            activite_ordi
+
+        }
+        2 { 
+            Write-Host "Liste des services en cours d'execution :"
+            Get-Service | Where-Object { $_.Status -eq "Running" }
+            Start-Sleep -Seconds 3
+            activite_ordi
+
+
+        }
+
+        3 { 
+            Write-Host "Liste des utilisateurs locaux :"
+            Get-LocalUser | Format-Table -AutoSize
+            Start-Sleep -Seconds 3
+            activite_ordi
+        }
+
+        x {Write-Host "Retour Menu Précédent" ; 
+        menu_action}
+
+         X {Write-Host "Retour Menu Précédent" ; 
+        menu_action}
+
+        Default {Write-Output "Erreur retour au choix" ; activite_ordi}
+    }
+
+}
+
+activite_ordi
+
+
