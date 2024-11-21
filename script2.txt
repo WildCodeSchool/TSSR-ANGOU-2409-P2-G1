@@ -66,7 +66,7 @@ function Gestion-Alim {
 function gestion_directory {
     Clear-Host
     Write-Output "=================================="
-    Write-Output "|     Gestion des répertoires    |"
+    Write-Output "|   Gestion des répertoires      |"
     Write-Output "=================================="
     Write-Output "| 1 - Création de répertoire     |"
     Write-Output "| 2 - Modification de répertoire |"
@@ -77,41 +77,46 @@ function gestion_directory {
     $Choix_Directory = Read-Host "Faites votre choix : "
   
     switch ($Choix_Directory) {
-
-      # Créer le répertoire à partir du nom et du chemin renseignés
-      1 {$pathdir = Read-Host "Quel est le chemin du dossier que vous souhaitez créer ?" ; 
-      $directory = Read-Host "Quel dossier souhaitez-vous créer à partir de $pathdir ?" ; 
-      New-Item -Path $pathdir\ -ItemType Directory -Name $directory ;
-      Write-Output "Création de $directory effectuée."}
-
-      # Modifier le répertoire à partir du nom, du chemin et du nouveau nom renseignés
-      2 {$pathdir = Read-Host "Quel est le chemin du dossier que vous souhaitez modifier ?" ;
-      $directory = Read-Host "Quel est le nom du dossier que vous souhaitez modifier ?" ;
-      $dir_name = Read-Host "Quel nouveau nom souhaitez lui donner ?" ;
-      Rename-Item -Path $pathdir\$directory -NewName $dir_name ;
-      Write-Output "Modification de $directory en $dir_name effectuée."}
-
-      # Supprimer le répertoire à partir du nom et du chemin renseignés
-      3 {$pathdir = Read-Host "Quel est le chemin du dossier que vous souhaitez supprimer ?" ; 
-      $directory = Read-Host "Quel dossier souhaitez-vous supprimer ?" ;
-      Remove-Item -Path $pathdir\$directory ;
-      Write-Output "Suppression de $directory effectuée"}
-
-      # Retour au menu précédent
-      x {Write-Host "Retour Menu Précédent" ; 
-        menu_action}
-
-      # Retour au menu précédent
-      X {Write-Host "Retour Menu Précédent" ; 
-        menu_action}
-
-      # En cas d'erreur, retour au menu de la fonction
-      Default {Write-Output "Erreur retour au choix" ; gestion_directory}
+	# Créer le répertoire à partir du nom et du chemin renseignés
+        1 { $pathdir = Read-Host "Quel est le chemin du dossier que vous souhaitez créer ?" ; 
+            $directory = Read-Host "Quel dossier souhaitez-vous créer à partir de $pathdir ?" ; 
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Création de Répertoire $directoy" ;
+            New-Item -Path $pathdir\ -ItemType Directory -Name $directory ;
+            Write-Output "Création de $directory effectuée."
+        }
+    # Modifier le répertoire à partir du nom, du chemin et du nouveau nom renseignés
+        2 { $pathdir = Read-Host "Quel est le chemin du dossier que vous souhaitez modifier ?" ;
+            $directory = Read-Host "Quel est le nom du dossier que vous souhaitez modifier ?" ;
+            $dir_name = Read-Host "Quel nouveau nom souhaitez lui donner ?" ;
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Modification de Répertoire $directory" ;
+            Rename-Item -Path $pathdir\$directory -NewName $dir_name ;
+            Write-Output "Modification de $directory en $dir_name effectuée."
+        }
+    # Supprimer le répertoire à partir du nom et du chemin renseignés 
+        3 { $pathdir = Read-Host "Quel est le chemin du dossier que vous souhaitez supprimer ?" ; 
+            $directory = Read-Host "Quel dossier souhaitez-vous supprimer ?" ;
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Modification de Répertoire $directory" ;
+            Remove-Item -Path $pathdir\$directory ;
+            Write-Output "Suppression de $directory effectuée"
+        }
+    # Retour au menu précédent
+        x { Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu précédent $directory" ;
+            Write-Host "Retour Menu Précédent" ; 
+            menu_action
+        }
+	# Retour au menu précédent
+        X { Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu précédent $directory" ;
+            Write-Host "Retour Menu Précédent" ; 
+            menu_action
+        }
+    # En cas d'erreur, retour au menu de la fonction
+        Default { Write-Output "Erreur retour au choix" ; 
+            gestion_directory
+        }
     }
   
   
-  }
-  gestion_directory
+}
 _____________________________________________________________________________________________________________________________________________________________________________
 FONCTION INFORMATION
 
