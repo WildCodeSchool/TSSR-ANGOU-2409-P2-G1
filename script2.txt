@@ -129,8 +129,7 @@ version_OS
 
 function info_ram {
     Clear-Host
-    Get-CimInstance -ClassName Win32_PhysicalMemory
-
+    Get-CimInstance -ClassName Win32_OperatingSystem | select FreePhysicalMemory, TotalVisibleMemorySize
 }
 
 info_ram
