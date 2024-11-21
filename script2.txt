@@ -3,7 +3,7 @@ ________________________________________________________________________________
 
 # Fonction pour la gestion de l'alimentation du PC cible
 
-function Gestion-Alimentation {
+function Gestion-Alim {
     Clear-Host
     Write-Host "
 =========================================================
@@ -18,8 +18,6 @@ function Gestion-Alimentation {
     $choix = Read-Host "Faites votre choix"
 
     switch ($choix) {
-
-        # Arrêter l'ordinateur cible
         1 {
             $confirm = Read-Host "Êtes-vous sûr de vouloir arrêter l'ordinateur ? (o/n)"
             if ($confirm -match '^(o|O)$') {
@@ -29,11 +27,9 @@ function Gestion-Alimentation {
             } else {
                 Write-Host "Action annulée."
                 Start-Sleep -Seconds 1
-                Gestion-Alimentation
+                Gestion-Alim
             }
         }
-
-        # Redémarrer l'ordinateur cible
         2 {
             $confirm = Read-Host "Êtes-vous sûr de vouloir redémarrer l'ordinateur ? (o/n)"
             if ($confirm -match '^(o|O)$') {
@@ -43,32 +39,28 @@ function Gestion-Alimentation {
             } else {
                 Write-Host "Action annulée."
                 Start-Sleep -Seconds 1
-                Gestion-Alimentation
+                Gestion-Alim
             }
         }
-
-        # Verrouiller l'ordinateur cible
         3 {
             $log = "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Ordinateur - Action - Verrouillage Ordinateur"
             Add-Content -Path "C:\Logs\log_evt.txt" -Value $log
             rundll32.exe user32.dll, LockWorkStation
         }
-
-        # Retour au menu précédent
-        { "x"; "X" } {
+         X {
             $log = "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Retour au menu précédent"
-            Add-Content -Path "C:\Logs\log_evt.txt" -Value $log
-            Write-Host "Retour au menu précédent." # Ajoute la commande pour aller au menu précédent ici
+            Add-Content -Path "C:\PerfLogs\log_evt.log" -Value $log
+            Write-Host "Retour au menu précédent."
+            gestion_computer
         }
-
-        # En cas d'erreur, retour au menu de la fonction
-        default {
+        Default {
             Write-Host "Option invalide. Veuillez réessayer."
             Start-Sleep -Seconds 1
-            Gestion-Alimentation
-        }
+            Gestion-Alim
+            }
     }
 }
+
 
 # Fonction pour la gestion de répertoires
 function gestion_directory {
