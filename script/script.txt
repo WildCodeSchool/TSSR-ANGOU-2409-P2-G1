@@ -493,6 +493,106 @@ activite_utilisateur
 
 
 
+___________________________________________________________________________________________________________________________________________________________________
+
+
+Theofile
+
+
+#projet2.ps1
+function co_SSH {
+    # Demander nom utilisateur     
+    $utilisateur=Read-Host -Prompt  "indiquez l'utilisateur sur lequel vous connecter "                                                 
+    # Demander l'IP de l'utilisateur
+    $ip=Read-Host -Prompt "indiquer l'IP du poste client"
+    # nom de l'utilisateur
+     Write-Host "$utilisateur"
+     Write-Host "$ip"
+}
+
+co_SSH
+
+function menu_action {                                                
+
+    # Menu des actions, choix à faire pour intéragir sur un compte utilisateur ou sur une machine directement
+
+    Write-Host
+" 
+=========================================================
+     |  		   	Menu Action	                |
+=========================================================
+|       1 : Gestion de l'utilisateur	        |
+|       2 : Gestion de l'ordinateur			    |
+|       3 : Prise de main à distance			|
+|	    X : Retour au menu principal			|
+=========================================================   
+
+"
+$choix = Read-Host -Prompt "faites votre choix"
+
+
+
+
+switch ($choix){ 
+
+    '1' {
+    # definir le chemin du fichier de log
+
+        $logFilePath = "C:\Logs\log_evt.txt"
+
+    # obtenir la date et l'heure souhaitée
+
+        $date = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+
+    # Construire le message de log 
+
+      $message = "$date - $utilisateur - Action - Vers la gestion utilisateur"
+
+     # Écrire le message dans le fichier de log
+     
+       Add-Content -Path $logFilePath -Value $message
+ 
+    }
+ 
+    '2'{ 
+        # Construire le message de log 
+
+      $message = "$date - $utilisateur - Action - Vers la gestion de l'ordinateur"
+
+     # Écrire le message dans le fichier de log
+     
+       Add-Content -Path $logFilePath -Value $message
+    
+     }
+    
+    3 {  
+        
+        # Construire le message de log 
+
+         ssh "$utilisateur@$ip"
+        
+         $message = "$date - $utilisateur - Action - Prise de main à distance de $ip sous l'utilisateur $utilisateur" 
+
+		  # Écrire le message dans le fichier de log
+     
+          Add-Content -Path $logFilePath -Value $message
+      Write-Host "bonjour"
+        }
+
+   'X'{
+
+   $message = "$date - $utilisateur - Retour au menu principal" 
+
+   # Écrire le message dans le fichier de log
+     
+   Add-Content -Path $logFilePath -Value $message
+
+		Write-Host "Retour au menu principal."
+   }
+   
+}
+}
+   menu_action
 
 
 
