@@ -467,3 +467,48 @@ switch ($choix){
 }
 }
    menu_action
+
+
+___________________________________________________________________________________________________________________________________________________________________
+
+
+
+# Mise à jour du système 
+
+function maj_system {
+
+    # Installer toutes les mises à jour disponibles et redémarrer le système
+
+    Write-Host "Ordinateur - Action - Installation des Mises à jours :"
+    Get-WindowsUpdate -AcceptAll -Install 
+
+
+    Write-Host  "Le système doit être redémarré pour appliquer les mises à jour"
+
+    $choix_action = Read-Host "Voulez-vous redémarrer votre ordinateur ?"
+
+
+    Switch ($choix_action) {
+
+      # Oui pour redémarrer le système cible après la mise à jour
+      o|O|y|Y|Oui|oui|yes|Yes {
+      Write-Host "Ordinateur - Action - Redémarrage du système :"
+      Restart-Computer
+      Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc"
+      }
+     # Tout autre valeur pour ne pas redémarrer le système cible
+     
+     * {
+     Write-Host "Pensez à redémarrer votre ordinateur pour l'applications des Mises à Jours."
+     Write-Host "Retour au Menu Principal"
+     Start-Sleep -Seconds 2
+      }
+
+      }
+
+      }
+
+      maj_system
+      
+
+
