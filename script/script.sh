@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Barre de chargement (pur fake)
 progress_bar() {
 DURATION=25
 local progress=0
@@ -53,30 +54,35 @@ echo "
 read -p "Faites votre choix : " choix_action
 
 case $choix_action in
+	# Accès au menu gestion utilisateur
 	1)
 		echo "$(date +%F-%X) - $USER - Action - Vers la gestion utilisateur" >> /var/log/log_evt.txt
 		gestion_user
 		;;
+  	# Accès au menu gestion ordinateur
 	2)
 		echo "$(date +%F-%X) - $USER - Action - Vers la gestion ordinateur" >> /var/log/log_evt.txt
 		gestion_computer
 		;;
-
+	# Accès au menu Prise de main à distance
 	3)
 		echo "$(date +%F-%X) - $USER - Action - Prise de main à distance de $ip sous l'utilisateur $utilisateur" >> /var/log/log_evt.txt
 		ssh $utilisateur@$ip
 		;;
+  	# Retour au menu principal
 	x|X)
 		echo "$(date +%F-%X) - $USER - Retour au menu principal" >> /var/log/log_evt.txt
 		echo "Retour au menu principal."
 		sleep 1s
 		;;
-
+	# En cas d'erreur, retour au menu de la fonction
 	*)
 		menu_action
 		;;
 esac
 }
+
+# Menu de gestion de l'ordinateur
 gestion_computer () {
 clear
 echo "
@@ -95,36 +101,45 @@ echo "
 read -p "Faites votre choix : " choix_computer
 
 case $choix_computer in
+	# Accès au menu Gestion de l'alimentation de l'ordinateur cible
 	1)
 		echo "$(date +%F-%X) - $USER - Ordinateur - Action - Gestion de l'alimentation" >> /var/log/log_evt.txt
 		gestion_alim
 		;;
+  	# Accès au menu Gestion des répertoires de l'ordinateur cible
 	2)
 		echo "$(date +%F-%X) - $USER - Ordinateur - Action - Gestion des répertoires" >> /var/log/log_evt.txt
 		gestion_directory
 		;;
+  	# Accès au menu Gestion du pare-feu de l'ordinateur cible
 	3)
 		echo "$(date +%F-%X) - $USER - Ordinateur - Action - Gestion du pare-feu" >> /var/log/log_evt.txt
 		gestion_firewall
 		;;
+  	# Accès au menu Gestion des logiciels de l'ordinateur cible
 	4)
 		echo "$(date +%F-%x) - $USER - Ordinateur - Action - Gestion des logiciels" >> /var/log/log_evt.txt
 		gestion_logiciel
 		;;
+  	# Accès à la Mise à jour du système cible
 	5)
 		echo "$(date +%F-%x) - $USER - Ordinateur - Action - Mise à jour système" >> /var/log/log_evt.txt
 		maj_system
 		;;
+  	# Retour au menu précédent
 	x|X)
 		echo "$(date +%F-%X) - $USER - Retour au menu précédent" >> /var/log/log_evt.txt
 		menu_action
 		;;
+  	# Retour au menu principal
 	p|P)
 		echo "$(date +%F-%X) - $USER - Retour au menu principal" >> /var/log/log_evt.txt
 		sleep 1s
 		;;
 esac
 }
+
+# Menu de Gestion de l'alimentation
 gestion_alim() {
 clear
 echo "
@@ -141,30 +156,37 @@ echo "
 read -p "Faites votre choix : " choix_computer
 
 case $choix_computer in
+	# Arrêter l'ordinateur cible
 	1)
 		echo "$(date +%F-%X) - $USER - Ordinateur - Action - Arret Ordinateur" >> /var/log/log_evt.txt
 		ssh $utilisateur@$ip "sudo -S shutdown now"
 		co_ssh
 		;;
+  	# Redémarrer l'ordinateur cible
 	2)
 		echo "$(date +%F-%X) - $USER - Ordinateur - Action - Redemarrage Ordinateur" >> /var/log/log_evt.txt
 		ssh $utilisateur@$ip "sudo -S shutdown -r now"
 		progress_bar
 		;;
+  	# Verrouiller l'ordinateur cible
 	3)
 		echo "$(date +%F-%X) - $USER - Ordinateur - Action - Verrouillage Ordinateur" >> /var/log/log_evt.txt
 		ssh $utilisateur@$ip "sudo -S gnome-screensaver-command -l"
 		;;
+  	# Retour au menu précédent
 	x|X)
 		echo "$(date +%F-%X) - $USER - Retour au menu précédent" >> /var/log/log_evt.txt
 		gestion_computer
 		;;
+  	# En cas d'erreur, retour au menu de la fonction
 	*)
 		gestion_alim
 		;;
 
 esac
 }
+
+# Menu de Gestion des répertoires
 gestion_directory () {
 echo "
 =========================================================
@@ -181,7 +203,7 @@ read -p "Faites votre choix : " choix_directory
 
 
 case $choix_directory in 
-
+	# Création d'un répertoire
 	1)
 		read -p "Quel dossier souhaitez-vous créer ?(Chemin absolu)" directory
 		echo "$(date +%F-%X) - $USER - Ordinateur - Action - Création de Répertoire $directory" >> /var/log/log_evt.txt
