@@ -87,8 +87,12 @@ function gestion_directory {
       Remove-Item -Path $pathdir\$directory ;
       Write-Output "Suppression de $directory effectuée"}
       
-     # x|X {Write-Host "Retour Menu Précédent" ; menu_action}
-      
+      x {Write-Host "Retour Menu Précédent" ; 
+        menu_action}
+
+      X {Write-Host "Retour Menu Précédent" ; 
+        menu_action}
+
       Default {Write-Output "Erreur retour au choix" ; gestion_directory}
     }
   
