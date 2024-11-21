@@ -493,7 +493,7 @@ case $choix_groupe in
 	# Sortie de l'utilisateur cible d'un groupe local
 	3)
 		read -p "Renseignez l'utilisateur sur lequel travailler : " wilder
-		read -p "Renseignez le groupe auquel vous souhaitez ajouter l'utilisateur : " groupe
+		read -p "Renseignez le groupe auquel vous souhaitez supprimer l'utilisateur : " groupe
 		echo "$(date +%F-%X) - $USER - Utilisateur - Action - Suppression de l'utilisateur : $wilder du groupe : $groupe" >> /var/log/log_evt.txt
 		ssh $utilisateur@$ip "sudo -S usermod -G $groupe $wilder"
 		sleep 1s
