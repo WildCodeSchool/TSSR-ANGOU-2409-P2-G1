@@ -61,7 +61,7 @@ _______
 _______
 
 Bash :
-> ...
+> Pas de solution
 > ...
 
 PowerShell :
