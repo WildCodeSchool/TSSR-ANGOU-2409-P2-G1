@@ -60,6 +60,13 @@ _______
 ## Solutions trouvées : Solutions et alternatives trouvées
 _______
 
+Bash :
+> ...
+> ...
+
+PowerShell :
+> Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object FreePhysicalMemory, TotalVisibleMemorySize
+> ...
 _______
 ## Améliorations possibles : suggestions d’améliorations futures
 _______
