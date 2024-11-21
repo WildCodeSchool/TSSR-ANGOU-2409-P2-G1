@@ -77,7 +77,7 @@ function gestion_directory {
     $Choix_Directory = Read-Host "Faites votre choix : "
   
     switch ($Choix_Directory) {
-	# Créer le répertoire à partir du nom et du chemin renseignés
+    # Créer le répertoire à partir du nom et du chemin renseignés
         1 { $pathdir = Read-Host "Quel est le chemin du dossier que vous souhaitez créer ?" ; 
             $directory = Read-Host "Quel dossier souhaitez-vous créer à partir de $pathdir ?" ; 
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Création de Répertoire $directoy" ;
@@ -104,7 +104,7 @@ function gestion_directory {
             Write-Host "Retour Menu Précédent" ; 
             menu_action
         }
-	# Retour au menu précédent
+    # Retour au menu précédent
         X { Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu précédent $directory" ;
             Write-Host "Retour Menu Précédent" ; 
             menu_action
@@ -114,8 +114,6 @@ function gestion_directory {
             gestion_directory
         }
     }
-  
-  
 }
 _____________________________________________________________________________________________________________________________________________________________________________
 FONCTION INFORMATION
