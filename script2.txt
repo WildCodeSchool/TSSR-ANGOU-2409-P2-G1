@@ -194,3 +194,54 @@ function activite_ordi {
 activite_ordi
 
 
+function search_log {
+$logc = "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - $env:COMPUTERNAME"
+Clear-Host
+
+Write-Host "
+===========================================
+| 	     Type de recherche	              |
+===========================================
+|  1 : Recherche sur l'utilisateur        |
+|  2 : Recherche sur l'ordinateur         |
+|  3 : Recherche par mots-clefs		      |
+|  x : Retour au menu précédent           |
+===========================================
+    "
+
+$choix_log = Read-Host "Faites votre choix : "
+
+switch ($choix_log)
+{
+
+    1{
+        Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Logs - Recherche sur l'utilisateur"
+        Write-Host "Recherche par utilisateur"
+        $recherche = $env:USERNAME
+        Get-Content -Path .\log_evt.log | findstr "$recherche"
+        }
+    2{
+        Write-Host "Recherche par Ordinateur"
+        $recherche = $env:COMPUTERNAME
+        Get-Content -Path .\log_evt.log | findstr "$recherche"
+        }
+    3{
+        Write-Host "Recherche par mots-clefs"
+        $recherche = Read-Host "Renseignez le ou les mot(s) clef(s) "
+        Get-Content -Path .\log_evt.log | findstr "$recherche"
+        }
+    x {
+        Write-Host "Retour au menu précédent"
+        menu_info
+        }
+
+    default {
+        Write-Host "Erreur, réessayer"
+        sleep -Seconds 1
+        search_log
+        }
+
+
+}
+}
+search_log
