@@ -55,7 +55,7 @@ Bash :
 
 PowerShell : 
 > Get-CimInstance -ClassName Win32_PhysicalMemory ne fonctionne pas sur une VM
-> ...
+> PB SSH commandes
 _______
 ## Solutions trouvées : Solutions et alternatives trouvées
 _______
@@ -66,7 +66,7 @@ Bash :
 
 PowerShell :
 > Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object FreePhysicalMemory, TotalVisibleMemorySize
-> ...
+> Mise en place de WinRM et d'un AD
 _______
 ## Améliorations possibles : suggestions d’améliorations futures
 _______
