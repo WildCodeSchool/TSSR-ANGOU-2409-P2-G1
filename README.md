@@ -54,8 +54,8 @@ Bash :
 > Modification du mot de passe (passwd)
 
 PowerShell : 
-> Get-CimInstance -ClassName Win32_PhysicalMemory ne fonctionne pas sur une VM
-> PB SSH commandes
+> Get-CimInstance -ClassName Win32_PhysicalMemory ne fonctionne pas sur une VM  
+> PB SSH commandes  
 _______
 ## Solutions trouvées : Solutions et alternatives trouvées
 _______
