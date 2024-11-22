@@ -62,7 +62,7 @@ _______
 
 Bash :
 > Pas de solution  
-> ...
+> Faire attention à la syntaxe du mot de passe
 
 PowerShell :
 > Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object FreePhysicalMemory, TotalVisibleMemorySize
