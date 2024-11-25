@@ -89,6 +89,102 @@ menu_action
 FONCTION ACTION
 ________________________________________________________________________________________________________________________________________
 
+#activite_user.ps1
+
+# Menu Informations de l'activité de l'utilisateur
+function activite_user {
+    Clear-Host
+    Write-Host "=============================================================="
+    Write-Host "|           Information Activite Utilisateur                 |"
+    Write-Host "=============================================================="
+    Write-Host "| 1 - Date des dernières connexions de l'utilisateur         |"
+    Write-Host "| 2 - Date des dernières changements de mot de passe         |"
+    Write-Host "| 3 - Liste des sessions ouvertes pour l'utilisateur         |"
+    Write-Host "| x - Retour au menu précédent                               |"
+    Write-Host "=============================================================="
+
+    $choix_user = Read-Host "Faites votre choix : "
+
+    switch ($choix_user) {
+        # Informations sur les dernières connexions de l'utilisateur cible
+        1 {  
+            $wilder = Read-Host "Renseignez le nom de l'utilisateur cible : " ;
+            Write-Host "Dates des dernières connexions de l'utilisateur $wilder : " ;
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Dernières connexions de l'utilisateur" ;
+            Invoke-Command -ComputerName $ip -ScriptBlock {
+                $DCList = Get-ADDomainController -Filter * | Sort-Object Name | Select-Object Name
+                $TargetUser = $wilder
+                $TargetUserLastLogon = $null
+                Foreach($DC in $DCList){
+
+                    $DCName = $DC.Name
+             
+                    Try {
+                        
+                        # Récupérer la valeur de l'attribut lastLogon à partir d'un DC (chaque DC tour à tour)
+                        $LastLogonDC = Get-ADUser -Identity $TargetUser -Properties lastLogon -Server $DCName
+            
+                        # Convertir la valeur au format date/heure
+                        $LastLogon = [Datetime]::FromFileTime($LastLogonDC.lastLogon)
+            
+                        # Si la valeur obtenue est plus récente que celle contenue dans $TargetUserLastLogon
+                        # la variable est actualisée : ceci assure d'avoir le lastLogon le plus récent à la fin du traitement
+                        If ($LastLogon -gt $TargetUserLastLogon)
+                        {
+                            $TargetUserLastLogon = $LastLogon
+                        }
+             
+                        # Nettoyer la variable
+                        Clear-Variable LastLogon
+                        }
+            
+                    Catch {
+                        Write-Host $_.Exception.Message -ForegroundColor Red
+                    }
+            }
+            
+            Write-Host "Date de dernière connexion de $TargetUser :"
+            Write-Host $TargetUserLastLogon
+            } ;
+            Start-Sleep -Seconds 2
+        }
+
+        # Informations sur les derniers changements de mot de passe de l'utilisateur cible
+        2 {  
+            $wilder = Read-Host "Renseignez le nom de l'utilisateur cible : " ;
+            Write-Host "Dates des dernières modifications du mot de passe pour $wilder : " ;
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Derniers changements de mot de passe" ;
+            Invoke-Command -ComputerName $ip -ScriptBlock {Get-ADUser -filter $wilder -properties passwordlastset, passwordneverexpires |ft Name, passwordlastset, Passwordneverexpires} ;
+            Start-Sleep -Seconds 2
+        }
+
+        # Informations liste des sessions ouvertes de l'utilisateur cible
+        3 {
+            $wilder = Read-Host "Renseignez le nom de l'utilisateur cible : " ;
+            Write-Host "Liste des sessions ouvertes pour l'utilisateur $wilder" ;
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Liste des sessions ouvertes de l'utilisateur" ;
+            Invoke-Command -ComputerName $ip -ScriptBlock {Get-localUser -name $using:utilisateur | Select-Object Enabled} -Credential Get-Credential -Credential $utilisateur ;
+            Start-Sleep -Seconds 2
+        }
+        
+        # Retour au menu précédent
+        x {  
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu précédent" ;
+            Write-Host "Retour au menu précédent" ;
+            Start-Sleep -Seconds 2 ;
+            info_user
+        }
+
+        # En cas d'erreur, retour au menu de la fonction
+        Default {
+            activite_user
+        }
+    }
+
+}
+
+
+
 # Fonction pour la gestion de l'alimentation du PC cible
 
 function Gestion-Alim {
