@@ -599,6 +599,17 @@ function info_ram {
     Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - RAM"
     Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object FreePhysicalMemory, TotalVisibleMemorySize
 }
+
+# Fonction groupe d'appartenance de l'utilisateur cible
+function groupe_user {
+    
+    $wilder = Read-Host "Renseignez l'utilisateur cible : "
+    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Consultation groupe d'appartenance de $wilder"
+    Invoke-Command -ComputerName $ip -ScriptBlock { Get-ADUser -Identity $wilder -Properties memberof | Select-Object memberof -ExpandProperty memberof }
+    Start-Sleep -Seconds 5
+
+}
+
 ___________________________________________________________________________________________________________________________________________________________________________
 FONCTON ACTIVITE ORDI
 
