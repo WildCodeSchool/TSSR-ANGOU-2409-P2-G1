@@ -786,41 +786,51 @@ ________________________________________________________________________________
 
 
 # Mise à jour du système 
+function maj-system {
+# Vérifier si le module PSWindowsUpdate est installé
+    If (-Not (Get-Module -ListAvailable -Name PSWindowsUpdate)) {
+        Write-Host "Installation du module PSWindowsUpdate..." 
+        Install-Module -Name PSWindowsUpdate -Force -Scope CurrentUser
+    }
 
-function maj_system {
+    # Importer le module PSWindowsUpdate
+    Import-Module PSWindowsUpdate
 
-    # Installer toutes les mises à jour disponibles et redémarrer le système
+    # Installer les mises à jour disponibles
+    Write-Host "Ordinateur - Action : Installation des mises à jour..." 
+    Try {
+        Get-WindowsUpdate -AcceptAll -Install
+        Write-Host "Mises à jour installées avec succès." 
+    } Catch {
+        Write-Error "Une erreur est survenue lors de l'installation des mises à jour : $_"
+        Return
+    }
 
-    Write-Host "Ordinateur - Action - Installation des Mises à jours :"
-    Get-WindowsUpdate -AcceptAll -Install 
+    # Demander à l'utilisateur s'il souhaite redémarrer
+    Write-Host "Le système doit être redémarré pour appliquer certaines mises à jour." 
+    $choix_action = Read-Host "Voulez-vous redémarrer votre ordinateur ? (o/n)"
+
+    # Utilisation de conditions If pour éviter les erreurs de parsing
+    If ($choix_action -eq "o" -or $choix_action -eq "oui" -or $choix_action -eq "y" -or $choix_action -eq "yes") {
+        Write-Host "Ordinateur - Action : Redémarrage du système..." 
+        Restart-Computer
+    } Else {
+        Write-Host "Pensez à redémarrer votre ordinateur pour appliquer les mises à jour." 
+        Write-Host "Retour au menu principal." -ForegroundColor Cyan
+        Start-Sleep -Seconds 2
+    }
+
+    # Journalisation des actions
+    $log_file = "C:\PerfLogs\log_evt.log"
+    $log_message = "$(Get-Date): Mise à jour effectuée. Redémarrage demandé : $choix_action"
+    Add-Content -Path $log_file -Value $log_message
+    Write-Host "Journal des actions enregistré dans $log_file." 
+}
+
+# Exécuter la fonction
+maj-system
 
 
-    Write-Host  "Le système doit être redémarré pour appliquer les mises à jour"
-
-    $choix_action = Read-Host "Voulez-vous redémarrer votre ordinateur ?"
-
-
-    Switch ($choix_action) {
-
-      # Oui pour redémarrer le système cible après la mise à jour
-      o|O|y|Y|Oui|oui|yes|Yes {
-      Write-Host "Ordinateur - Action - Redémarrage du système :"
-      Restart-Computer
-      Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc"
-      }
-     # Tout autre valeur pour ne pas redémarrer le système cible
-     
-     * {
-     Write-Host "Pensez à redémarrer votre ordinateur pour l'applications des Mises à Jours."
-     Write-Host "Retour au Menu Principal"
-     Start-Sleep -Seconds 2
-      }
-
-      }
-
-      }
-
-      maj_system
       
 ___________________________________________________________________________________________________________________________
 
