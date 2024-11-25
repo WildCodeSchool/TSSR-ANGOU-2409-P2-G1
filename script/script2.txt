@@ -701,7 +701,7 @@ Show-DiskMenu
 
 __________________________________________________________________________________________________________________________________________________
 
-function info_disk {
+function droits_utilisateur {
     Write-Host "
 =========================================================
 |              Gestion droits utilisateur               |
@@ -738,7 +738,7 @@ function info_disk {
         }
         default {
             Write-Host "Option invalide, veuillez réessayer."
-            info_disk
+            droits_utilisateur
         }
     }
 }
