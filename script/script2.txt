@@ -810,7 +810,7 @@ function maj-system {
     Write-Host "Le système doit être redémarré pour appliquer certaines mises à jour." 
     $choix_action = Read-Host "Voulez-vous redémarrer votre ordinateur ? (o/n)"
 
-    # Utilisation de conditions If pour éviter les erreurs de parsing
+    # Utilisation de conditions If pour éviter les erreurs
     If ($choix_action -eq "o" -or $choix_action -eq "oui" -or $choix_action -eq "y" -or $choix_action -eq "yes") {
         Write-Host "Ordinateur - Action : Redémarrage du système..." 
         Restart-Computer
