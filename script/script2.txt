@@ -1,3 +1,46 @@
+MENU (PRINCIPAL/ACTION/INFO)
+# Début des logs avec le start script
+ Add-Content -Path C:\PerfLogs\log_evt.log -Value  "$logc - *******Start Script*******"
+ # Menu principal
+
+ While ($true) {
+ Clear-host
+ Write-Host 
+ "
+=========================================================
+|               Menu Principal			                |
+=========================================================
+|       1 : Obtenir une informations		            |
+|       2 : Effectuer une action		                |
+|       3 : Quitter			                            |
+========================================================="
+
+$choix = Read-Host "Faites votre choix"
+
+switch ($choix) {
+
+    1 { 
+   	  Add-Content -Path C:\PerfLogs\log_evt.log -Value  "$logc - Redirection vers menu information"
+   	  menu_info
+        }
+    2 {
+       	 Add-Content -Path C:\PerfLogs\log_evt.log -Value  "$logc - Redirection vers menu action"
+     	 menu_action
+        }
+    3 {
+       	 Add-Content -Path C:\PerfLogs\log_evt.log -Value  "$logc - *******Stop Script*******"
+     	 exit
+        }
+    default {
+        }
+    }
+}
+
+
+
+
+
+
 FONCTION ACTION
 _____________________________________________________________________________________________________________________________________________________________________________
 
