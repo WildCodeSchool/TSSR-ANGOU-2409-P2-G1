@@ -643,7 +643,7 @@ ________________________________________________________________________________
 $utilisateur = "Wilder"
 $ip = "172.16.10.10"
 
-function Show-DiskMenu {
+function info_disk {
     Write-Host "
 ==============================================================
 |              Information Disque                            |
@@ -692,12 +692,10 @@ function Show-DiskMenu {
         }
         default {
             Write-Host "Erreur : Option invalide."
-            Show-DiskMenu
+            info_disk
         }
     }
 }
-
-Show-DiskMenu
 
 __________________________________________________________________________________________________________________________________________________
 
