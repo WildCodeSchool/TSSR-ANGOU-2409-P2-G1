@@ -1,4 +1,6 @@
 MENU (PRINCIPAL/ACTION/INFO)
+________________________________________________________________________________________________________________________________________
+
 # Début des logs avec le start script
  Add-Content -Path C:\PerfLogs\log_evt.log -Value  "$logc - *******Start Script*******"
  # Menu principal
@@ -36,13 +38,56 @@ switch ($choix) {
     }
 }
 
+function menu_action {
+Clear-Host
+Write-Host
+"
+=========================================================
+|  		   	Menu Action	                                |
+=========================================================
+|       1 : Gestion de l'utilisateur	                |
+|       2 : Gestion de l'ordinateur			            |
+|       3 : Prise de main à distance	(CLI)         	|
+|	    X : Retour au menu principal		         	|
+=========================================================
+"
+$choix_action = Read-Host "Faites votre choix"
 
+switch ($choix_action) {
+
+    1 {
+        # Redirection vers la gestion d'utilisateur
+        Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Vers la gestion utilisateur"
+        gestion_user
+        }
+    2 {
+          # Redirection vers la gestion ordinateur
+          Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Vers la gestion ordinateur"
+          gestion_computer
+          }
+    3 {
+          # Prise de main à distance
+          Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Prise de main à distance"
+          }
+    X {
+          # Retour au menu principal
+          Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu principal"
+          Write-Host "Retour au menu principal"
+          Start-Sleep -Seconds 1
+          } 
+    default {
+            # Retour au menu en cours en cas d'erreur
+          menu_action
+          }
+  }
+}
+menu_action
 
 
 
 
 FONCTION ACTION
-_____________________________________________________________________________________________________________________________________________________________________________
+________________________________________________________________________________________________________________________________________
 
 # Fonction pour la gestion de l'alimentation du PC cible
 
