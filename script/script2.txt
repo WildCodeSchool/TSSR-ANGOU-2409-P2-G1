@@ -88,6 +88,50 @@ menu_action
 
 FONCTION ACTION
 ________________________________________________________________________________________________________________________________________
+#gestion_logicielle.ps1
+
+# Menu de Gestion logiciel
+function gestion_logiciel {
+    Clear-Host
+    Write-Host "================================"
+    Write-Host "|       Gestion logiciel       |"
+    Write-Host "================================"
+    Write-Host "| 1 - Installation logiciel    |"
+    Write-Host "| 2 - Désinstallation logiciel |"
+    Write-Host "| x - Menu précédent           |"
+    Write-Host "================================"
+    
+
+    switch ($choix_logiciel) {
+        # Installer le logiciel cible
+        1 {  
+            $app = Read-Host "Renseignez le nom de l'application à installer : " ;
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Installation du paquet $app" ;
+            Invoke-Command -ComputerName $ip -ScriptBlock {Install-Package -Name $app -Verbose}
+            Start-Sleep -Seconds 2
+        }
+        
+        # Désinstaller le logiciel cible
+        2 {  
+            $app = Read-Host "Renseignez le nom de l'application à installer : " ;
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Désinstallation du paquet $app" ;
+            Invoke-Command -ComputerName $ip -ScriptBlock {Uninstall-Package -Name $app -Verbose}
+            Start-Sleep -Seconds 2
+        }
+        
+        # Retour au menu précédent
+        x {  
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu précédent " ;
+            Write-Host "Retour au menu précédent" ;
+            Start-Sleep -Seconds 2
+        }
+        
+        # En cas d'erreur, retour au menu de la fonction
+        Default {
+            gestion_logiciel
+        }
+    }
+}
 
 #activite_user.ps1
 
