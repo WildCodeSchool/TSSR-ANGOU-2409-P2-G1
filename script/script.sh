@@ -575,8 +575,8 @@ echo "
 ===========================================
 | 	     Type de recherche	          |
 ===========================================
-|  1 : Recherche de prise d'information   |
-|  2 : Recherche d'action effectuée       |
+|  1 : Recherche par utilisateur	  |
+|  2 : Recherche par ordinateur 	  |
 |  3 : Recherche par mots-clefs		  |
 |  x : Retour au menu précédent           |
 ===========================================
@@ -584,23 +584,23 @@ echo "
 read -p " Faites votre choix : " choix_log
 
 case $choix_log in
-	# Accès à la recherche d'informations cibles
+	# Accès à la recherche d'utilisateur
 	1)
 		echo "$(date +%F-%X) - $USER - $HOSTNAME - Info - Logs - Recherche d'informations." >> /var/log/log_evt.txt
-		cat /var/log/log_evt.txt | grep Info
-		cat /var/log/log_evt.txt | grep Info > log_info.txt
+		cat /var/log/log_evt.txt | grep $USER
+		cat /var/log/log_evt.txt | grep $USER > log_info.txt
 		echo "
 		
 		Création d'un fichier log_info.txt dans le répertoire courant."
 		sleep 5s
 		;;
-  	# Accès à la recherche d'actions cibles
+  	# Accès à la recherche d'ordinateur
 	2)
 		echo "$(date +%F-%X) - $USER - $HOSTNAME - Info - Logs - Recherche d'actions." >> /var/log/log_evt.txt
-		cat /var/log/log_evt.txt | grep Action
-		cat /var/log/log_evt.txt | grep Action > log_action.txt
+		cat /var/log/log_evt.txt | grep $HOSTNAME
+		cat /var/log/log_evt.txt | grep $HOSTNAME > log_action.txt
 		echo "
-		
+  
 		Création d'un fichier log_action.txt dans le répertoire courant."
 		sleep 5s
 		search_log
