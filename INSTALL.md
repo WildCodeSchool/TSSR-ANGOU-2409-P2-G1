@@ -5,7 +5,7 @@
 - Accès administrateur sur les machines (utilisateur root ou membre du groupe sudo)
 - Connexion internet pour télécharger les paquets
 - Pare-feu désactivé temporairement pour faciliter l'installation et la configuration initiale
-- Avoir un Active Directory fonctionnel avec un utilisateur et des droits fonctionnels. Référez-vous à [_AD TUTO_](https://www.it-connect.fr/creer-un-domaine-ad-avec-windows-server-2016/).
+- Avoir un Active Directory fonctionnel avec un utilisateur et des droits fonctionnels. Référez-vous à ce [_lien_](https://www.it-connect.fr/creer-un-domaine-ad-avec-windows-server-2016/).
 
 ----------------------------------------------------------------------
  
