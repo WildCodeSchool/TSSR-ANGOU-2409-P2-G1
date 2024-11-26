@@ -1045,5 +1045,90 @@ function historique_de_commande {
             Get-History | Format-Table -AutoSize}
 }
 
+____________________________________________________________________________________________________________________________________________________________
+Theofile
 
+# Groupe d'appartenance de l'utilisateur
+function groupe_user  {
+
+ # executer la commande
+ 
+ $wilder = Read-Host " Renseignez l'utilisateur cible : "
+
+ Add-Content -Path C:\PerfLogs\log_evt.log -Value " $logc - Info - Consultation groupe appartenance $wilder "
+
+ Invoke-Command -ComputerName $ip -ScriptBlock {Get-ADUser -Identity $wilder  -Properties memberof | Select-Object memberof -ExpandProperty memberof}
+
+start sleep -3s
+
+}
+groupe_user
+
+__________________________________________________________________________________________________________________________________________________________________eTheofilr
+
+_# Menu des informations sur l'utilisateur
+
+function info_user {
+
+    Clear-Host
+Write-Host 
+
+"
+     =========================================================
+        |		Menu Information Utilisateur		|
+     =========================================================
+        |	1 : Activité de l'utilisateur			        |
+        |	2 : Groupe d'appartenance de l'utilisateur	    |
+        |	3 : Historique des commandes de l'utilisateur	|
+        |	4 : Droits et permissions de l'utilisateur	    |
+        | 	x : Retour au menu précédent			        |
+=========================================================
+
+"
+$choix_info = Read-Host "Faites votre choix"
+
+switch ($choix_info) {
+ 
+
+1 {
+    # Redirection vers l'activité d'utilisateur
+
+    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Observation de l'activité utilisateur"
+    
+    activité_user }
+
+
+    2   { # Redirection vers Groupe d'appartenance de l'utilisateur
+
+    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Groupes de l'utilisateur"
+
+    groupe_user }
+
+
+3  {  # Redirection  vers l' historique des commandes de l'utilisateur
+
+  Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Historique des commandes de l'utilisateur"
+
+  historique_cmd_user }
+
+4 {     # Redirection vers les Droits et permissions de l'utilisateur
+
+  Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Droits et permissions de l'utilisateur "
+
+  droits_user }
+x  
+  {  #  Retour au menu precedent
+
+
+  Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu precedent"
+  
+  Write-Host "Retour au menu precedent"
+
+  Start-Sleep -Seconds 1
+  menu_info
+}
+
+}
+}
+  info_user
 
