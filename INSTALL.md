@@ -5,7 +5,7 @@
 - Accès administrateur sur les machines (utilisateur root ou membre du groupe sudo)
 - Connexion internet pour télécharger les paquets
 - Pare-feu désactivé temporairement pour faciliter l'installation et la configuration initiale
-- Avoir un Active Directory fonctionnel avec un utilisateur et des droits fonctionnels. Référez-vous à ce [_lien_](https://www.it-connect.fr/creer-un-domaine-ad-avec-windows-server-2016/).
+- Avoir un Active Directory fonctionnel avec un utilisateur et des droits fonctionnels. Référez-vous à [_ce lien_](https://www.it-connect.fr/creer-un-domaine-ad-avec-windows-server-2016/).
 
 ----------------------------------------------------------------------
  
@@ -61,6 +61,37 @@
      exit
      ```
 </details>
+
+
+<details>
+<summary><stronge>Client Ubuntu 24.04 LTS
+</stronge></summary>
+
+1. **Configuration des paramètres du client :**
+   - Nom : **CLILIN01**
+   - Système d'exploitation : **Ubuntu 24.04 LTS**
+   - Compte : **wilder1**
+   - Mot de passe : **Azerty1***
+   - Adresse IP fixe : **172.16.10.30/24**
+
+2. **Installation de OpenSSH :**
+   - Mise à jour des paquets et installation d'OpenSSH :
+     ```bash
+     sudo apt update && sudo apt install -y openssh-server
+     ```
+   - Vérification de l'état du service SSH :
+     ```bash
+     sudo systemctl status ssh
+     ```
+   - Commandes pour démarrer, arrêter ou redémarrer le service SSH :
+     ```bash
+     sudo systemctl start sshd
+     sudo systemctl stop sshd
+     sudo systemctl restart sshd
+     ```
+</details> 
+
+------------------------------------------------------------------
 
 <details>
 <summary><stronge>Serveur Windows Server 2022</stronge></summary>
@@ -134,36 +165,47 @@
         ```
 </details>
 
-
 <details>
-<summary><stronge>Client Ubuntu 24.04 LTS
+<summary><stronge>Instalation et configuration de WinRM Client et Serveur 
 </stronge></summary>
+ 
+ 
+ 1) Vérifier si WinRM est activé
 
-1. **Configuration des paramètres du client :**
-   - Nom : **CLILIN01**
-   - Système d'exploitation : **Ubuntu 24.04 LTS**
-   - Compte : **wilder1**
-   - Mot de passe : **Azerty1***
-   - Adresse IP fixe : **172.16.10.30/24**
+Sous Windows Server, la « Gestion à distance » est activée par défaut, ce qui implique que WinRM est actif. Pour vous en assurer, contrôlez l’état du service **WinRM** avec la commande suivante :
 
-2. **Installation de OpenSSH :**
-   - Mise à jour des paquets et installation d'OpenSSH :
-     ```bash
-     sudo apt update && sudo apt install -y openssh-server
-     ```
-   - Vérification de l'état du service SSH :
-     ```bash
-     sudo systemctl status ssh
-     ```
-   - Commandes pour démarrer, arrêter ou redémarrer le service SSH :
-     ```bash
-     sudo systemctl start sshd
-     sudo systemctl stop sshd
-     sudo systemctl restart sshd
-     ```
-</details> 
+```powershell
+Get-Service WinRM
+```
+
+2) Activer WinRM
+
+Activez WinRM en démarrant le service avec la commande suivante :
+
+```powershell
+Start-Service WinRM
+```
+
+3) Tester WinRM
+
+Testez WinRM avec la commande suivante :
+
+```powershell
+Enter-PSSession -ComputerName PCTEST -Credential "NOMUTILISATEUR"
+```
+
+- `-ComputerName` : remplacez **PCTEST** par le nom de la machine distante.
+- `-Credential` : remplacez **NOMUTILISATEUR** par le nom de l'utilisateur ayant les droits d'accès à la machine distante.
+
+Notes supplémentaires
+
+- Vérifiez que le pare-feu autorise les connexions sur le port **5985** (HTTP) ou **5986** (HTTPS).
+- Utilisez `Enable-PSRemoting` si WinRM n'est pas configuré sur la machine.
+    
+</details>
 
 ----------------------------------------------------
+
 ### FAQ : Solutions aux Problèmes Connus et Courants
 
 - **Problème : Erreur de connexion SSH depuis un client vers le serveur.** 
@@ -185,8 +227,7 @@
 - **Problème :  Erreur lors de la connections en ssh sur le port 22.**
   - _Solution :  taper la commmande pour ouvire le port 22 :_ 
 
-
-   `**PowerShell**`
-  ```powershell
-  New-NetFirewallRule -DisplayName "Allow SSH" -Direction Inbound -Protocol TCP -LocalPort 22 -Action Allow
-  ```   
+  Bash
+  ```bash
+  sudo ufw allow 22/tcp comment 'Allow SSH'
+  ```
