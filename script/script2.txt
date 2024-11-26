@@ -37,7 +37,7 @@ switch ($choix) {
         }
     }
 }
-
+#Menu action
 function menu_action {
 Clear-Host
 Write-Host
@@ -82,7 +82,55 @@ switch ($choix_action) {
   }
 }
 menu_action
+# Menu info
+function menu_info {
+Clear-Host
+Write-Host "
+=========================================================
+|               Menu Information        		        |
+=========================================================
+|       1 : Information utilisateur		             	|
+| 	2 : Information ordinateur		                   	|
+|	3 : Consulter les logs                				|
+|	4 : Effectuer une recherche sur les logs          	|
+| 	5 : Retour au menu principal             			|
+=========================================================
+"
 
+$choix_info = Read-Host "Faites votre choix"
+
+switch($choix_info) {
+
+    1 {
+    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Information - Vers les informations utilisateur"
+    info_user
+    }
+    2 {
+    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Information - Vers les informations ordinateur"
+    info_computer
+    }
+    3 {
+    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Information - Consulation des logs"
+    Add-Content -Path C:\Users\Administrateur\log.txt -Value (Get-Content -Path C:\PerfLogs\log_evt.log)
+    Start-Sleep -Seconds 1
+    menu_info
+    }
+    4 {
+    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Information - Recherche d'évènements logs"
+    search_log
+    }
+    p {
+    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu principal"
+    Write-Host "Retour au menu principal"
+    Start-Sleep -Seconds 1
+    }
+    default {
+    Write-Host "Erreur, veuillez réessayer"
+    Start-Sleep -Seconds 1
+    menu_info
+    }
+    }    
+}
 
 
 
