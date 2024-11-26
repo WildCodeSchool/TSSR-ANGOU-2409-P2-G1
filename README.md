@@ -49,24 +49,26 @@ _______
 ## Difficultés rencontrées : problèmes techniques rencontrés
 _______
 
-Bash :
-> Demande du mot de passe récurrente  
-> Modification du mot de passe (passwd)
+1. Bash :
+> 1.1 Demande du mot de passe récurrente  
+> 1.2 Modification du mot de passe (passwd)
 
-PowerShell : 
-> Get-CimInstance -ClassName Win32_PhysicalMemory ne fonctionne pas sur une VM  
-> PB SSH commandes  
+2. PowerShell : 
+> 2.1 Get-CimInstance -ClassName Win32_PhysicalMemory, commande pour obtenir les informations RAM, ne fonctionne pas sur les VMs  
+> 2.2 Problèmes avec les commandes SSH dans l'exécution du script
+> 2.3 Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object FreePhysicalMemory, TotalVisibleMemorySize, affiche les informations RAM en octets et non en Go.
 _______
 ## Solutions trouvées : Solutions et alternatives trouvées
 _______
 
-Bash :
-> Pas de solution  
-> Faire attention à la syntaxe du mot de passe
+1. Bash :
+> 2.1 Pas de solution  
+> 2.2 Faire attention à la syntaxe du mot de passe
 
-PowerShell :
-> Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object FreePhysicalMemory, TotalVisibleMemorySize
-> Mise en place de WinRM et d'un AD
+2. PowerShell :
+> 2.1 Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object FreePhysicalMemory, TotalVisibleMemorySize, commande pour obtenir les informations RAM
+> 2.2 Mise en place de WinRM et d'un AD
+> 2.3 Pas de solution trouvée
 _______
 ## Améliorations possibles : suggestions d’améliorations futures
 _______
