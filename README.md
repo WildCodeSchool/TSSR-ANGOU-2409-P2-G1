@@ -72,6 +72,6 @@ _______
 _______
 
 - Trouver un moyen de ne pas avoir à taper le mot de passe à chaque action du script  
-- Trouver un moyen pour contourner le besoin d'un AD et de ses comandes
+- Trouver un moyen pour contourner le besoin d'un AD et de ses commandes
 - Plutôt que d'avoir toutes les fonctions dans le même script, établir un script qui appelle chaque action par le biais d'autres scripts
 
