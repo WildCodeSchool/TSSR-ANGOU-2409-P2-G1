@@ -10,6 +10,9 @@
 ----------------------------------------------------------------------
  
 ### Étapes d'Installation et de Configuration : Instructions Pas-à-Pas
+
+----------------------------------------------------------------------
+
 <details>
 <summary><strong>Serveur Debian 12
 </stronge></summary>
