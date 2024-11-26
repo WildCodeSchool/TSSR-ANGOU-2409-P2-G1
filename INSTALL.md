@@ -1,14 +1,18 @@
 <div align="center"><H1> Documentation administrateur </H1></div>
 
-## Prérequis Techniques
+### Prérequis Techniques
 
 - Accès administrateur sur les machines (utilisateur root ou membre du groupe sudo)
 - Connexion internet pour télécharger les paquets
 - Pare-feu désactivé temporairement pour faciliter l'installation et la configuration initiale
+- Avoir un Active Directory fonctionnel avec un utilisateur et des droits fonctionnels. Référez-vous à [_AD TUTO_](https://www.it-connect.fr/creer-un-domaine-ad-avec-windows-server-2016/).
 
-## Étapes d'Installation et de Configuration : Instructions Pas-à-Pas
-
-### Serveur Debian 12
+----------------------------------------------------------------------
+ 
+### Étapes d'Installation et de Configuration : Instructions Pas-à-Pas
+<details>
+<summary><strong>Serveur Debian 12
+</stronge></summary>
 
 1. **Configuration des paramètres de la machine serveur :**
    - Nom : **SRVLX01**
@@ -56,8 +60,10 @@
      ```bash
      exit
      ```
+</details>
 
-### Serveur Windows Server 2022
+<details>
+<summary><stronge>Serveur Windows Server 2022</stronge></summary>
 
 1. **Configuration des paramètres de la machine serveur :**
    - Nom : **SRVWIN01**
@@ -95,8 +101,11 @@
      ```powershell
      exit
      ```
+</details>
 
-### Client Windows 10 Pro
+<details>
+<summary><stronge>Client Windows 10 Pro
+</stronge></summary>   
 
 1. **Configuration des paramètres de la machine client :**
    - Nom : **CLIWIN01**
@@ -123,8 +132,12 @@
         ```powershell
         Set-Service -Name sshd -StartupType 'Automatic'
         ```
+</details>
 
-### Client Ubuntu 24.04 LTS
+
+<details>
+<summary><stronge>Client Ubuntu 24.04 LTS
+</stronge></summary>
 
 1. **Configuration des paramètres du client :**
    - Nom : **CLILIN01**
@@ -148,29 +161,30 @@
      sudo systemctl stop sshd
      sudo systemctl restart sshd
      ```
+</details> 
 
-## FAQ : Solutions aux Problèmes Connus et Courants
+----------------------------------------------------
+### FAQ : Solutions aux Problèmes Connus et Courants
 
 - **Problème : Erreur de connexion SSH depuis un client vers le serveur.** 
   - _Solution : Vérifiez que le service SSH est bien démarré sur le serveur et que le pare-feu autorise le port 22._
 
-----
 
 - **Problème : L'utilisateur ajouté n'a pas les droits sudo sur Debian.**
   - _Solution : Vérifiez que l'utilisateur fait bien partie du groupe sudo en utilisant la commande `groups <utilisateur>`._
 
-----
 
 - **Problème : OpenSSH n'est pas disponible dans les fonctionnalités Windows.**
   - _Solution : Assurez-vous que votre version de Windows est compatible et que votre système est à jour._
 
+
 - **Problème : Comment ce connecter en SSH.**
   - _Solution : Voir le `Uuer_Guide`._
 
----- 
 
 - **Problème :  Erreur lors de la connections en ssh sur le port 22.**
   - _Solution :  taper la commmande pour ouvire le port 22 :_ 
+
 
    `**PowerShell**`
   ```powershell
