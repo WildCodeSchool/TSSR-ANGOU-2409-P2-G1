@@ -19,7 +19,11 @@ ______
 
 Après vous être assurez du respect des prérequis vous pouvez :
 
-1. Ouvrir un invite de commande 
+1. Ouvrir un invite de commande sur la machine hôte
+2. Vous rendre dans le répertoire où se situe le script
+3. Exécution du script :
+   3.1 - Linux : > bash ./script.sh  
+   3.2 - PowerShell : > .\script.ps1  
 
 ______
 #### Utilisation avancée : comment utiliser au mieux les options
