@@ -279,7 +279,7 @@ function activite_user {
 
 # Fonction pour la gestion de l'alimentation du PC cible
 
-function Gestion-Alim {
+function gestion_alim {
     Clear-Host
     Write-Host "
 =========================================================
@@ -291,9 +291,9 @@ function Gestion-Alim {
 |     X - Menu précédent                                |
 =========================================================
 "
-    $choix = Read-Host "Faites votre choix"
+    $choix_computer = Read-Host "Faites votre choix"
 
-    switch ($choix) {
+    switch ($choix_computer) {
         1 {
             $confirm = Read-Host "Êtes-vous sûr de vouloir arrêter l'ordinateur ? (o/n)"
             if ($confirm -match '^(o|O)$') {
@@ -303,7 +303,7 @@ function Gestion-Alim {
             } else {
                 Write-Host "Action annulée."
                 Start-Sleep -Seconds 1
-                Gestion-Alim
+                gestion_alim
             }
         }
         2 {
@@ -315,7 +315,7 @@ function Gestion-Alim {
             } else {
                 Write-Host "Action annulée."
                 Start-Sleep -Seconds 1
-                Gestion-Alim
+                gestion_alim
             }
         }
         3 {
@@ -332,7 +332,7 @@ function Gestion-Alim {
         Default {
             Write-Host "Option invalide. Veuillez réessayer."
             Start-Sleep -Seconds 1
-            Gestion-Alim
+            gestion_alim
             }
     }
 }
