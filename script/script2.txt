@@ -1132,3 +1132,74 @@ x
 }
   info_user
 
+#menu_action_ordi.ps1
+
+# Menu de gestion de l'ordinateur
+function gestion_computer {
+    Clear-Host
+    Write-Host "
+    ======================================
+    |      Menu Gestion Ordinateur       |
+    ======================================
+    | 1 - Gestion de l'alimentation      |
+    | 2 - Gestion des répertoires        |
+    | 3 - Gestion du pare-feu            |
+    | 4 - Gestion des logiciels          |
+    | 5 - Mise à jour système            |
+    | x - Menu précédent                 |
+    | p - Menu principal                 |
+    ======================================
+    "
+    $choix_computer = Read-Host "Faites votre choix : "
+
+    switch ($choix_computer) {
+        # Accès au menu Gestion de l'alimentation de l'ordinateur cible
+        1 {
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value " $logc - Action - Gestion de l'alimentation " ;
+            gestion_alim
+        }
+
+        # Accès au menu Gestion des répertoires de l'ordinateur cible
+        2 {
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value " $logc - Action - Gestion de l'alimentation " ;
+            gestion_directory
+        }
+
+        # Accès au menu Gestion du pare-feu de l'ordinateur
+        3 {
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value " $logc - Action - Gestion de l'alimentation " ;
+            gestion_firewall
+        }
+
+        # Accès au menu Gestion des logiciels de l'ordinateur cible
+        4 {
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value " $logc - Action - Gestion de l'alimentation " ;
+            gestion_logiciel
+        }
+
+        # Accès à la Mise à jour du système cible
+        5 {
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value " $logc - Action - Gestion de l'alimentation " ;
+            maj_system
+        }
+
+        # Retour au menu précédent
+        x {
+            Write-Host "Retour au menu précédent" ;
+            Start-Sleep -Seconds 2 ;
+            menu_action
+        }
+
+        # Retour au menu principal
+        p {
+            Write-Host "Retour au menu principal" ;
+            Start-Sleep -Seconds 2
+        }
+        
+        # En cas d'erreur retour au menu de la fonction
+        Default {
+            gestion_computer
+        }
+    }
+
+}
