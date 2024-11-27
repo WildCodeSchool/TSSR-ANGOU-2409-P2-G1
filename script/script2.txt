@@ -1202,4 +1202,60 @@ function gestion_computer {
         }
     }
 
-}
+}_________________________________________________________________________________________________________________________________________________________________theofile
+
+# Menu information de l'ordinateur
+
+function info_computer {
+
+Clear-Host 
+Write-Host
+"
+===========================================
+| 		Informations Ordinateur 		        |
+===========================================
+| 1 - Version du système d'exploitation   |
+| 2 - Informations des disques	          |
+| 3 - Activité de l'ordinateur		        |
+| 4 - Informations sur la RAM             |
+| x - Retour au menu précédent		        |
+==========================================="
+
+$choix_computer = Read-Host "Faites votre choix : "
+
+switch ($choix_computer) {
+  # Accès aux informations sur la version du système d'exploitation du système cible
+    1  { 
+    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Version du système d'exploitation" ;
+    version_os 
+    }
+  
+  # Accès aux informations des diques du système cible
+    2 {  
+    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info -  Informations des disques" ;
+    info_disk
+    }
+
+  # Accès aux informations de l'activité du système cible
+    3 { 
+    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Activité de l'ordinateur" ;
+    activité_ordi
+    }
+  
+  # Accès aux informations de la RAM du système cible
+    4 { 
+    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Informations sur la RAM " ;
+    info_ram
+    }
+
+    x {
+      Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu précédent " ;
+      Start-Sleep -Seconds 2 ;
+      menu_info
+    }
+  # En cas d'erreur, retour au menu de la fonction
+    Default {
+      info_computer
+    }
+  }
+} 
