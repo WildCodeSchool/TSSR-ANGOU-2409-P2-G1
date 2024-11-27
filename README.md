@@ -55,7 +55,7 @@ _______
 
 2. PowerShell : 
 > 2.1 Get-CimInstance -ClassName Win32_PhysicalMemory, commande pour obtenir les informations RAM, ne fonctionne pas sur les VMs  
-> 2.2 Problèmes avec les commandes SSH dans l'exécution du script
+> 2.2 Problèmes avec les commandes SSH dans l'exécution du script  
 > 2.3 Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object FreePhysicalMemory, TotalVisibleMemorySize, affiche les informations RAM en Ko et non en Go ou Mo.
 _______
 ## Solutions trouvées : Solutions et alternatives trouvées
