@@ -48,27 +48,6 @@ switch ($choix_action) {
           }
   }
 }
-#gestion_user.ps1
-
-# Fonction pour la création d'un utilisateur
-#function create_user {
-#    
-#    $wilder = Read-Host "Veuillez renseigner le nom de l'utilisateur à créer : "
-#    # Si utilisateur existe déjà alors retour au menu gestion utilisateur
-#    if (Invoke-Command -ComputerName $ip -ScriptBlock {Get-LocalUser -Name $wilder - True}) {
-#        Read-Host "$wilder existe déjà" ;
-#        Start-Sleep -Seconds 2 ;
-#        gestion_user
-#    }
-# Sinon création de l'utilisateur
-#    else {
-#        Invoke-Command -ComputerName $ip -ScriptBlock {New-LocalUser -Name $wilder}
-#        Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Utilisateur $wilder créé" ;
-#        Start-Sleep -Seconds 2
-#    }
-#    
-#}
-
 
 # Menu de Gestion Utilisateur
 function gestion_user {
