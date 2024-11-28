@@ -437,6 +437,8 @@ function gestion_firewall {
     }
 }
 
+#gestion_logicielle.ps1
+
 # Menu de Gestion logiciel
 function gestion_logiciel {
     Clear-Host
@@ -444,34 +446,35 @@ function gestion_logiciel {
     Write-Host "|       Gestion logiciel       |"
     Write-Host "================================"
     Write-Host "| 1 - Installation logiciel    |"
-    Write-Host "| 2 - DÃ©sinstallation logiciel |"
-    Write-Host "| x - Menu prÃ©cÃ©dent           |"
+    Write-Host "| 2 - Désinstallation logiciel |"
+    Write-Host "| x - Menu précédent           |"
     Write-Host "================================"
     
 
     switch ($choix_logiciel) {
         # Installer le logiciel cible
         1 {  
-            $app = Read-Host "Renseignez le nom de l'application Ã  installer : " ;
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Installation du paquet $app" ;
-            Invoke-Command -ComputerName $ip -ScriptBlock {Install-Package -Name $app -Verbose}
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Installation d'un paquet" ;
+            Invoke-Command -ComputerName $ip -ScriptBlock {
+            $app = Read-Host "Renseignez le nom de l'application à installer : " ;
+            Install-Package -Name $app -Verbose }
             Start-Sleep -Seconds 2
         }
         
-        # DÃ©sinstaller le logiciel cible
+        # Désinstaller le logiciel cible
         2 {  
-            $app = Read-Host "Renseignez le nom de l'application Ã  installer : " ;
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - DÃ©sinstallation du paquet $app" ;
-            Invoke-Command -ComputerName $ip -ScriptBlock {Uninstall-Package -Name $app -Verbose}
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Désinstallation d'un paquet" ;
+            Invoke-Command -ComputerName $ip -ScriptBlock {
+            $app = Read-Host "Renseignez le nom de l'application à installer : " ;
+            Uninstall-Package -Name $app -Verbose } ;
             Start-Sleep -Seconds 2
         }
         
-        # Retour au menu prÃ©cÃ©dent
+        # Retour au menu précédent
         x {  
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu prÃ©cÃ©dent " ;
-            Write-Host "Retour au menu prÃ©cÃ©dent" ;
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu précédent " ;
+            Write-Host "Retour au menu précédent" ;
             Start-Sleep -Seconds 2
-	    gestion_computer
         }
         
         # En cas d'erreur, retour au menu de la fonction
