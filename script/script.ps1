@@ -856,13 +856,15 @@ switch ($choix_computer) {
   }
 } 
 
-# Fonction pour obtenir la version de l'OS
+# Afficher la version de l'OS
 function version_OS {
     Clear-Host
     Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Version de l'OS"
+    Invoke-Command -ComputerName $client -ScriptBlock {
     Get-WmiObject Win32_OperatingSystem | findstr /C:"Version"
-    
+    }
 }
+
 function info_disk {
     Write-Host "
 ==============================================================
