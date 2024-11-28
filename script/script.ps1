@@ -388,6 +388,8 @@ function gestion_directory {
 }
 
 
+#gestion_firewall.ps1
+
 # Menu de Gestion du pare-feu
 function gestion_firewall {
     Clear-Host
@@ -395,34 +397,39 @@ function gestion_firewall {
     Write-Host "|     Gestion du pare-feu    |"
     Write-Host "=============================="
     Write-Host "| 1 - Activer le pare-feu    |"
-    Write-Host "| 2 - DÃ©sactiver le pare-feu |"
-    Write-Host "| x - Menu prÃ©cÃ©dent         |"
+    Write-Host "| 2 - Désactiver le pare-feu |"
+    Write-Host "| x - Menu précédent         |"
     Write-Host "=============================="
 
     $choix_firewall = Read-Host "Faites votre choix : "
     
     switch ($choix_firewall) {
         # Activer le pare-feu
-        1{
+        1 {
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Activation du pare-feu" ;
-            Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled True ;
-            Write-Host "Pare-feu activÃ©" ;
+            Invoke-Command -ComputerName $client -ScriptBlock {
+            Set-NetFirewallProfile -Profile Domain, Public, Private -Enabled True ;
+            Write-Host "Pare-feu activé" ;
             Start-Sleep -Seconds 2
+            }
         }
-        # DÃ©sactiver le pare-feu
+        # Désactiver le pare-feu
         2 {
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - DÃ©sactivation du pare-feu" ;
-            Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False ;
-            Write-Host "Pare-feu dÃ©sactivÃ©" ;
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Désactivation du pare-feu" ;
+            Invoke-Command -ComputerName $client -ScriptBlock {
+            Set-NetFirewallProfile -Profile Domain, Public, Private -Enabled False ;
+            Write-Host "Pare-feu désactivé" ;
             Start-Sleep -Seconds 2
+            }
         }
-        # Retour au menu prÃ©cÃ©dent
+        # Retour au menu précédent
         x {
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu prÃ©cÃ©dent" ;
-            Write-Host "Retour au menu prÃ©cÃ©dent" ;
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu précédent" ;
+            Write-Host "Retour au menu précédent" ;
             Start-Sleep -Seconds 2 ;
             gestion_computer
         }
+
         # En cas d'erreur, retour au menu de la fonction
         Default {
             gestion_firewall
