@@ -211,26 +211,57 @@ Notes supplémentaires
 
 ### FAQ : Solutions aux Problèmes Connus et Courants
 
-- **Problème : Erreur de connexion SSH depuis un client vers le serveur.** 
+<details>
+<summary><strong>Problème : Erreur de connexion SSH depuis un client vers le serveur.
+</stronge></summary>
+
   - _Solution : Vérifiez que le service SSH est bien démarré sur le serveur et que le pare-feu autorise le port 22._
+    
+</details>
 
+-------
 
-- **Problème : L'utilisateur ajouté n'a pas les droits sudo sur Debian.**
+<details>
+<summary><strong>Problème : L'utilisateur ajouté n'a pas les droits sudo sur Debian.
+</stronge></summary>
+
   - _Solution : Vérifiez que l'utilisateur fait bien partie du groupe sudo en utilisant la commande `groups <utilisateur>`._
 
+</details>
 
-- **Problème : OpenSSH n'est pas disponible dans les fonctionnalités Windows.**
+------
+
+<details>
+<summary><strong>Problème : OpenSSH n'est pas disponible dans les fonctionnalités Windows.
+</stronge></summary>
+
   - _Solution : Assurez-vous que votre version de Windows est compatible et que votre système est à jour._
 
+</details>
 
-- **Problème : Comment ce connecter en SSH.**
+-----
+
+<details>
+<summary><strong>Problème : Comment ce connecter en SSH.
+</stronge></summary>
+
+
   - _Solution : Voir le `Uuer_Guide`._
 
+</details>
 
-- **Problème :  Erreur lors de la connections en ssh sur le port 22.**
+-----
+
+<details>
+<summary><strong>Problème :  Erreur lors de la connections en ssh sur le port 22.
+</stronge></summary>
+
   - _Solution :  taper la commmande pour ouvire le port 22 :_ 
 
   Bash
   ```bash
   sudo ufw allow 22/tcp comment 'Allow SSH'
   ```
+</details>
+
+-----
