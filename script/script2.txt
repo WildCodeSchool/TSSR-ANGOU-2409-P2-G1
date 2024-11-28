@@ -37,6 +37,7 @@ switch ($choix) {
         }
     }
 }
+
 #Menu action
 function menu_action {
 Clear-Host
@@ -630,7 +631,7 @@ function gestion_user {
     }
 }
 
-_____________________________________________________________________________________________________________________________________________________________________________
+____________________________________________________________________________________________________________________________________________________________________________
 FONCTION INFORMATION
 
 # Fonction pour obtenir la version de l'OS
@@ -658,11 +659,9 @@ function groupe_user {
 
 }
 
-___________________________________________________________________________________________________________________________________________________________________________
 FONCTON ACTIVITE ORDI
 
-## Menu de l'activité de l'ordinateur cible
-
+# Menu de l'activité de l'ordinateur cible
 function activite_ordi {
 
     Clear-Host
@@ -675,37 +674,26 @@ function activite_ordi {
     | X : Retour au menu précédent		     |
     ==================================================
         "
-
-
     $choix_activite = Read-Host "Faites votre choix"
 
-
-# Affichage de la liste des applications/ paquets installés sur l'ordinateur cible
-
     Switch ($choix_activite) {
+# Affichage de la liste des applications/ paquets installés sur l'ordinateur cible
         1 {
             Write-Host "Ordinateur - Info - Liste des applications / paquets installées :"
             Get-Package
 	    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc
             Start-Sleep -Seconds 3
             activite_ordi
-
-
-# Affichage de la liste des services en cours d'exécution
-
         }
+# Affichage de la liste des services en cours d'exécution
         2 { 
             Write-Host "Ordinateur - Info - Liste des services en cours d'execution :"
             Get-Service | Where-Object { $_.Status -eq "Running" }
 	    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc
             Start-Sleep -Seconds 3
             activite_ordi
-
-
-# Affichage de la liste des utilisateurs locaux
-
         }
-
+# Affichage de la liste des utilisateurs locaux
         3 { 
             Write-Host "Ordinateur - Info - Liste des utilisateurs locaux :"
             Get-LocalUser | Format-Table -AutoSize
@@ -713,21 +701,20 @@ function activite_ordi {
             Start-Sleep -Seconds 3
             activite_ordi
         }
-
 # Retour au menu précédent
+        x {
+	Write-Host "Retour Menu Précédent" ; 
+        menu_action
+	}
 
-        x {Write-Host "Retour Menu Précédent" ; 
-        menu_action}
-
-         X {Write-Host "Retour Menu Précédent" ; 
-        menu_action}
-
-        Default {Write-Output "Erreur retour au choix" ; activite_ordi}
+        Default {
+	Write-Output "Erreur retour au choix" ; 
+	activite_ordi
+	}
     }
-
 }
+___________________________________________________________________________________________________________________________________________________________________________
 
-activite_ordi
 
 __________________________________________________________________________________________________________________________________________________________________________
 
@@ -1066,12 +1053,10 @@ groupe_user
 
 __________________________________________________________________________________________________________________________________________________________________eTheofilr
 
-_# Menu des informations sur l'utilisateur
-
+# Menu des informations sur l'utilisateur
 function info_user {
-
-    Clear-Host
-Write-Host 
+	Clear-Host
+	Write-Host 
 
 "
      =========================================================
