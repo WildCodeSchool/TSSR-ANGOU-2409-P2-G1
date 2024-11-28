@@ -761,33 +761,39 @@ function historique_de_commande {
 function droits_user {
     Write-Host "
 =========================================================
-|              Gestion droits utilisateur               |
+|             Information droits utilisateur            |
 =========================================================
 | 	1 - Droits utilisateur fichier                  |
 |	2 - Droits utilisateur dossier                  |
-|	x - Menu prÃ©cÃ©dent                              |
+|	x - Menu précédent                              |
 ========================================================="
 
     $choix_utilisateur = Read-Host "Quels informations souhaitez-vous ?"
 
     switch ($choix_utilisateur) {
         1 {
-            $nom_fichier = Read-Host "Entrez le nom du fichier"
-            if (Test-Path -Path $nom_fichier -PathType Leaf) {
+	Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Information - Droits utilisateur fichier"
+            Invoke-Command -ComputerName $client -ScriptBlock {
+		$nom_fichier = Read-Host "Entrez le nom du fichier"
+           	if (Test-Path -Path $nom_fichier -PathType Leaf) {
                 Write-Host "Droits attribuÃ©s au fichier $nom_fichier :"
                 Get-Acl -Path $nom_fichier | Format-List
             } else {
                 Write-Host "Le fichier $nom_fichier n'existe pas."
             }
+	} -Credential $utilisateur
         }
         2 {
-            $nom_dossier = Read-Host "Entrez le nom du dossier"
+	Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Information - Droits utilisateur dossier"
+            Invoke-Command -ComputerName $client -Scriptblock {
+		$nom_dossier = Read-Host "Entrez le nom du dossier"
             if (Test-Path -Path $nom_dossier -PathType Container) {
                 Write-Host "Droits attribuÃ©s au dossier $nom_dossier :"
                 Get-Acl -Path $nom_dossier | Format-List
             } else {
                 Write-Host "Le dossier $nom_dossier n'existe pas."
             }
+	} -Credential $utilisateur
         }
         "x" { 
             # Retour au menu prÃ©cÃ©dent
