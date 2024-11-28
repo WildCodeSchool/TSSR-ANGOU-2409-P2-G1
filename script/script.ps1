@@ -76,7 +76,7 @@ function gestion_user {
                 $wilder = Read-Host "Veuillez renseigner le nom de l'utilisateur à créer : " ;
                 $motdepasse = Read-Host "Renseignez le mot de passe pour l'utilisateur à créer : " -AsSecureString ;
             }
-            Invoke-Command -ComputerName $ip -ScriptBlock $petit_script -ArgumentList $Nom, $motdepasse -Credential $credential ;
+            Invoke-Command -ComputerName $client -ScriptBlock $petit_script -ArgumentList $Nom, $motdepasse -Credential $credential ;
             Write-Host "Création de l'utilisateur local : $wilder" ;
             Start-Sleep -Seconds 2
             #           create_user
@@ -85,7 +85,7 @@ function gestion_user {
         # Modification du mot de passe de l'utilisateur cible
         2 {  
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Changement de mot de passe" ;
-            Invoke-Command -ComputerName $ip -ScriptBlock {
+            Invoke-Command -ComputerName $client -ScriptBlock {
             $wilder = Read-Host "De quel utilisateur souhaitez-vous modifier le mot de passe" ;
             $NewPwd = Read-Host -AsSecureString ; Get-LocalUser -Name $wilder | Set-LocalUser -Password $NewPwd ;
             Write-Host "Le mot de passe de $wilder a été modifié avec succès" }
@@ -95,7 +95,7 @@ function gestion_user {
         # Suppression de l'utilisateur cible
         3 {  
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Suppression d'un utilisateur'" ;
-            Invoke-Command -ComputerName $ip -ScriptBlock {
+            Invoke-Command -ComputerName $client -ScriptBlock {
             $wilder = Read-Host "Quel compte utilisateur souhaitez-vous supprimer ? " ;
             Remove-LocalUser -Name $wilder ;
             Write-Host "L'utilisateur $wilder a bien été supprimé" ;
@@ -105,7 +105,7 @@ function gestion_user {
         # Désactivation de l'utilisateur cible
         4 {  
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Désactivation d'un utilisateur" ;
-            Invoke-Command -ComputerName $ip -ScriptBlock {
+            Invoke-Command -ComputerName $client -ScriptBlock {
             $wilder = Read-Host "Quel compte utilisateur souhaitez-vous désactiver ? " ;
             Disable-LocalUser -Name "$wilder" ;
             Write-Host "Désactivation de $wilder réussie" ; }
@@ -452,7 +452,7 @@ function gestion_logiciel {
         # Installer le logiciel cible
         1 {  
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Installation d'un paquet" ;
-            Invoke-Command -ComputerName $ip -ScriptBlock {
+            Invoke-Command -ComputerName $client -ScriptBlock {
             $app = Read-Host "Renseignez le nom de l'application à installer : " ;
             Install-Package -Name $app -Verbose }
             Start-Sleep -Seconds 2
@@ -461,7 +461,7 @@ function gestion_logiciel {
         # Désinstaller le logiciel cible
         2 {  
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Désinstallation d'un paquet" ;
-            Invoke-Command -ComputerName $ip -ScriptBlock {
+            Invoke-Command -ComputerName $client -ScriptBlock {
             $app = Read-Host "Renseignez le nom de l'application à installer : " ;
             Uninstall-Package -Name $app -Verbose } ;
             Start-Sleep -Seconds 2
@@ -650,7 +650,7 @@ function activite_user {
         # Informations sur les derniÃ¨res connexions de l'utilisateur cible
         1 {  
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - DerniÃ¨res connexions de l'utilisateur" ;
-            Invoke-Command -ComputerName $ip -ScriptBlock {
+            Invoke-Command -ComputerName $client -ScriptBlock {
             $wilder = Read-Host "Renseignez le nom de l'utilisateur cible : " ;
             Write-Host "Dates des derniÃ¨res connexions de l'utilisateur $wilder : " ;
                 $DCList = Get-ADDomainController -Filter * | Sort-Object Name | Select-Object Name
@@ -693,7 +693,7 @@ function activite_user {
         # Informations sur les derniers changements de mot de passe de l'utilisateur cible
         2 {  
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Derniers changements de mot de passe" ;
-            Invoke-Command -ComputerName $ip -ScriptBlock {
+            Invoke-Command -ComputerName $client -ScriptBlock {
             $wilder = Read-Host "Renseignez le nom de l'utilisateur cible : " ;
             Write-Host "Dates des derniÃ¨res modifications du mot de passe pour $wilder : " ;
             Get-ADUser -filter $wilder -properties passwordlastset, passwordneverexpires |ft Name, passwordlastset, Passwordneverexpires} ;
@@ -703,7 +703,7 @@ function activite_user {
         # Informations liste des sessions ouvertes de l'utilisateur cible
         3 {
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Liste des sessions ouvertes de l'utilisateur" ;
-            Invoke-Command -ComputerName $ip -ScriptBlock {
+            Invoke-Command -ComputerName $client -ScriptBlock {
             $wilder = Read-Host "Renseignez le nom de l'utilisateur cible : " ;
             Write-Host "Liste des sessions ouvertes pour l'utilisateur $wilder" ;
             Get-localUser -name $using:utilisateur | Select-Object Enabled} -Credential Get-Credential -Credential $utilisateur ;
@@ -731,7 +731,7 @@ function groupe_user {
     
     $wilder = Read-Host "Renseignez l'utilisateur cible : "
     Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Consultation groupe d'appartenance de $wilder"
-    Invoke-Command -ComputerName $ip -ScriptBlock { Get-ADUser -Identity $wilder -Properties memberof | Select-Object memberof -ExpandProperty memberof }
+    Invoke-Command -ComputerName $client -ScriptBlock { Get-ADUser -Identity $wilder -Properties memberof | Select-Object memberof -ExpandProperty memberof }
     Start-Sleep -Seconds 5
 
 }
@@ -739,7 +739,7 @@ function groupe_user {
 function historique_cmd_user {
  # AccÃ¨s Ã  l'historique des commandes de l'utilisateur cible
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Utilisateur - Info - Historique des commandes de l'utilisateur"
-            Invoke-Command -ComputerName $ip -Credential $utilisateur -ScriptBlock {Write-Host "Consultation de l'historique des commandes de l'utilisateur en cours..."
+            Invoke-Command -ComputerName $client -Credential $utilisateur -ScriptBlock {Write-Host "Consultation de l'historique des commandes de l'utilisateur en cours..."
             Get-History | Format-Table -AutoSize}
 }
 function droits_user {
