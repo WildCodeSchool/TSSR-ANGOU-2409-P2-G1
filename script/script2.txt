@@ -38,7 +38,7 @@ switch ($choix) {
     }
 }
 
-#Menu action
+# Menu action
 function menu_action {
 Clear-Host
 Write-Host
@@ -76,13 +76,13 @@ switch ($choix_action) {
           Write-Host "Retour au menu principal"
           Start-Sleep -Seconds 1
           } 
-    default {
+    Default {
             # Retour au menu en cours en cas d'erreur
           menu_action
           }
-  }
+     }
 }
-menu_action
+
 # Menu info
 function menu_info {
 Clear-Host
@@ -490,12 +490,6 @@ function gestion_groupe {
             Start-Sleep -Seconds 2
         }
 
-        # Retour au menu précédent
-        X {  Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu précédent" ;
-            Write-Host "Retour au menu précédent" ;
-            Start-Sleep -Seconds 2
-        }
-
         # En cas d'erreur, retour au menu de la fonction
         Default {
             gestion_groupe
@@ -600,24 +594,8 @@ function gestion_user {
             menu_aciton
         }
 
-        # Retour au menu précédent
-        X {  
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu précédent " ;
-            Write-Host "Retour au menu précédent" ;
-            Start-Sleep -Seconds 2 ;
-            menu_aciton
-        }
-
         # Retour au menu principal
         p {  
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu principal " ;
-            Write-Host "Retour au menu principal" ;
-            Start-Sleep -Seconds 2 ;
-#           menu_principal
-        }
-
-        #Retour au menu principal
-        P {  
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu principal " ;
             Write-Host "Retour au menu principal" ;
             Start-Sleep -Seconds 2 ;
@@ -713,6 +691,77 @@ function activite_ordi {
 	}
     }
 }
+
+function info_disk {
+    Write-Host "
+==============================================================
+|              Information Disque                            |
+==============================================================
+|   1 : Afficher nombre de disque                            |
+|   2 : Afficher les informations partitions par disque      |
+|   3 : Afficher l'espace disque restant                     |
+|   4 : Afficher le nom et l'espace disque d'un dossier      |
+|   5 : Afficher les lecteurs montés                         |
+|   P : Retour au menu principal                             |
+=============================================================="
+
+    $choix_disque = Read-Host "Faites votre choix"
+
+    switch ($choix_disque) {
+        1 {
+            Add-Content -Path "C:\Perflogs\log_de.txt" -Value "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Ordinateur - Info - Afficher le nombre de disques"
+            $disque = Read-Host "Sur quel disque voulez-vous l'information ? (ex: C;)"
+            Invoke-Command -ComputerName $ip -Credential $utilisateur -ScriptBlock {  Get-Disk | Format-Table Number, FriendlyName, OperationalStatus, Size -AutoSize }
+            Start-Sleep -Seconds 5
+        }
+        2 {
+            Add-Content -Path "C:\Perflogs\log_de.txt" -Value "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Ordinateur - Info - Afficher les informations partitions par disques"
+            Invoke-Command -ComputerName $ip -Credential $utilisateur -ScriptBlock { Get-Partition | Format-Table DiskNumber, PartitionNumber, DriveLetter, Size -AutoSize }
+            Start-Sleep -Seconds 5
+        }
+        3 {
+            Add-Content -Path "C:\Perflogs\log_de.txt" -Value "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Ordinateur - Info - Afficher l'espace disque restant"
+            Invoke-Command -ComputerName $ip -Credential $utilisateur -ScriptBlock { Get-PSDrive -PSProvider FileSystem | Select-Object Name, @{Name='FreeSpace(GB)';Expression={[math]::round($_.Free/1GB,2)}}, @{Name='UsedSpace(GB)';Expression={[math]::round(($_.Used/1GB),2)}} | Format-Table -AutoSize }
+            Start-Sleep -Seconds 5
+        }
+        4 {
+            Add-Content -Path "C:\Perflogs\log_de.txt" -Value "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Ordinateur - Info - Afficher le nom et l'espace disque d'un dossier"
+            $disk = Read-Host "Indiquez le dossier sur lequel le disque est monté"
+            Invoke-Command -ComputerName $ip -Credential $utilisateur -ScriptBlock { Get-PSDrive -PSProvider FileSystem | Select-Object Name, @{Name='FreeSpace(GB)';Expression={[math]::round($_.Free/1GB,2)}}, @{Name='UsedSpace(GB)';Expression={[math]::round(($_.Used/1GB),2)}} | Format-Table -AutoSize }
+            Start-Sleep -Seconds 5
+        }
+        5 {
+            Add-Content -Path "C:\Perflogs\log_de.txt" -Value "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Ordinateur - Info - Afficher les lecteurs montés"
+            Invoke-Command -ComputerName $ip -Credential $utilisateur -ScriptBlock {  Get-Volume | Format-Table DriveLetter, FileSystemLabel, FileSystem, SizeRemaining, Size -AutoSiz }
+            Start-Sleep -Seconds 5
+        }
+        "P" {
+            Add-Content -Path "C:\Perflogs\log_de.txt" -Value "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Retour au menu principal"
+            Start-Sleep -Seconds 1
+        }
+        default {
+            Write-Host "Erreur : Option invalide."
+            info_disk
+        }
+    }
+}
+
+function historique_de_commande {
+ # Accès à l'historique des commandes de l'utilisateur cible
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Utilisateur - Info - Historique des commandes de l'utilisateur"
+            Invoke-Command -ComputerName $ip -Credential $utilisateur -ScriptBlock {Write-Host "Consultation de l'historique des commandes de l'utilisateur en cours..."
+            Get-History | Format-Table -AutoSize}
+}
+
+# Groupe d'appartenance de l'utilisateur
+function groupe_user  {
+
+$wilder = Read-Host " Renseignez l'utilisateur cible : "
+
+Add-Content -Path C:\PerfLogs\log_evt.log -Value " $logc - Info - Consultation groupe appartenance $wilder "
+Invoke-Command -ComputerName $ip -ScriptBlock {Get-ADUser -Identity $wilder  -Properties memberof | Select-Object memberof -ExpandProperty memberof}
+start sleep -3s
+}
 ___________________________________________________________________________________________________________________________________________________________________________
 
 
@@ -764,9 +813,7 @@ switch ($choix_log)
         sleep -Seconds 1
         search_log
         }
-
-
-}
+    }
 }
 search_log
 
@@ -868,15 +915,9 @@ switch ($choix){
    
 }
 }
-   menu_action
-
-
 ___________________________________________________________________________________________________________________________________________________________________
-
-
-
 # Mise à jour du système 
-function maj-system {
+function maj_system {
 # Vérifier si le module PSWindowsUpdate est installé
     If (-Not (Get-Module -ListAvailable -Name PSWindowsUpdate)) {
         Write-Host "Installation du module PSWindowsUpdate..." 
@@ -916,71 +957,6 @@ function maj-system {
     Add-Content -Path $log_file -Value $log_message
     Write-Host "Journal des actions enregistré dans $log_file." 
 }
-
-# Exécuter la fonction
-maj-system
-
-
-      
-___________________________________________________________________________________________________________________________
-
-$utilisateur = "Wilder"
-$ip = "172.16.10.10"
-
-function info_disk {
-    Write-Host "
-==============================================================
-|              Information Disque                            |
-==============================================================
-|   1 : Afficher nombre de disque                            |
-|   2 : Afficher les informations partitions par disque      |
-|   3 : Afficher l'espace disque restant                     |
-|   4 : Afficher le nom et l'espace disque d'un dossier      |
-|   5 : Afficher les lecteurs montés                         |
-|   P : Retour au menu principal                             |
-=============================================================="
-
-    $choix_disque = Read-Host "Faites votre choix"
-
-    switch ($choix_disque) {
-        1 {
-            Add-Content -Path "C:\Perflogs\log_de.txt" -Value "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Ordinateur - Info - Afficher le nombre de disques"
-            $disque = Read-Host "Sur quel disque voulez-vous l'information ? (ex: C;)"
-            Invoke-Command -ComputerName $ip -Credential $utilisateur -ScriptBlock {  Get-Disk | Format-Table Number, FriendlyName, OperationalStatus, Size -AutoSize }
-            Start-Sleep -Seconds 5
-        }
-        2 {
-            Add-Content -Path "C:\Perflogs\log_de.txt" -Value "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Ordinateur - Info - Afficher les informations partitions par disques"
-            Invoke-Command -ComputerName $ip -Credential $utilisateur -ScriptBlock { Get-Partition | Format-Table DiskNumber, PartitionNumber, DriveLetter, Size -AutoSize }
-            Start-Sleep -Seconds 5
-        }
-        3 {
-            Add-Content -Path "C:\Perflogs\log_de.txt" -Value "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Ordinateur - Info - Afficher l'espace disque restant"
-            Invoke-Command -ComputerName $ip -Credential $utilisateur -ScriptBlock { Get-PSDrive -PSProvider FileSystem | Select-Object Name, @{Name='FreeSpace(GB)';Expression={[math]::round($_.Free/1GB,2)}}, @{Name='UsedSpace(GB)';Expression={[math]::round(($_.Used/1GB),2)}} | Format-Table -AutoSize }
-            Start-Sleep -Seconds 5
-        }
-        4 {
-            Add-Content -Path "C:\Perflogs\log_de.txt" -Value "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Ordinateur - Info - Afficher le nom et l'espace disque d'un dossier"
-            $disk = Read-Host "Indiquez le dossier sur lequel le disque est monté"
-            Invoke-Command -ComputerName $ip -Credential $utilisateur -ScriptBlock { Get-PSDrive -PSProvider FileSystem | Select-Object Name, @{Name='FreeSpace(GB)';Expression={[math]::round($_.Free/1GB,2)}}, @{Name='UsedSpace(GB)';Expression={[math]::round(($_.Used/1GB),2)}} | Format-Table -AutoSize }
-            Start-Sleep -Seconds 5
-        }
-        5 {
-            Add-Content -Path "C:\Perflogs\log_de.txt" -Value "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Ordinateur - Info - Afficher les lecteurs montés"
-            Invoke-Command -ComputerName $ip -Credential $utilisateur -ScriptBlock {  Get-Volume | Format-Table DriveLetter, FileSystemLabel, FileSystem, SizeRemaining, Size -AutoSiz }
-            Start-Sleep -Seconds 5
-        }
-        "P" {
-            Add-Content -Path "C:\Perflogs\log_de.txt" -Value "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Retour au menu principal"
-            Start-Sleep -Seconds 1
-        }
-        default {
-            Write-Host "Erreur : Option invalide."
-            info_disk
-        }
-    }
-}
-
 __________________________________________________________________________________________________________________________________________________
 
 function droits_utilisateur {
@@ -1024,33 +1000,6 @@ function droits_utilisateur {
         }
     }
 }
-
-function historique_de_commande {
- # Accès à l'historique des commandes de l'utilisateur cible
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Utilisateur - Info - Historique des commandes de l'utilisateur"
-            Invoke-Command -ComputerName $ip -Credential $utilisateur -ScriptBlock {Write-Host "Consultation de l'historique des commandes de l'utilisateur en cours..."
-            Get-History | Format-Table -AutoSize}
-}
-
-____________________________________________________________________________________________________________________________________________________________
-Theofile
-
-# Groupe d'appartenance de l'utilisateur
-function groupe_user  {
-
- # executer la commande
- 
- $wilder = Read-Host " Renseignez l'utilisateur cible : "
-
- Add-Content -Path C:\PerfLogs\log_evt.log -Value " $logc - Info - Consultation groupe appartenance $wilder "
-
- Invoke-Command -ComputerName $ip -ScriptBlock {Get-ADUser -Identity $wilder  -Properties memberof | Select-Object memberof -ExpandProperty memberof}
-
-start sleep -3s
-
-}
-groupe_user
-
 __________________________________________________________________________________________________________________________________________________________________eTheofilr
 
 # Menu des informations sur l'utilisateur
