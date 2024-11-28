@@ -1017,12 +1017,17 @@ switch ($choix_log)
     }
 }
 
-# Fonction pour obtenir les informations RAM (/!\ Pas fonctionnel sur VM /!\ Solution Ã  trouver)
+#info_ram.ps1
+
 function info_ram {
     Clear-Host
-    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - RAM"
+    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Version de l'OS"
+    Invoke-Command -ComputerName $client -ScriptBlock {
     Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object FreePhysicalMemory, TotalVisibleMemorySize
+    }
 }
+
+
 
 # DÃ©but des logs avec le start script
  Add-Content -Path C:\PerfLogs\log_evt.log -Value  "$logc - *******Start Script*******"
