@@ -748,7 +748,7 @@ function groupe_user {
 
 }
 
-function historique_de_commande {
+function historique_cmd_user {
  # AccÃ¨s Ã  l'historique des commandes de l'utilisateur cible
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Utilisateur - Info - Historique des commandes de l'utilisateur"
             Invoke-Command -ComputerName $ip -Credential $utilisateur -ScriptBlock {Write-Host "Consultation de l'historique des commandes de l'utilisateur en cours..."
