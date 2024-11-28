@@ -53,8 +53,9 @@ Après vous être assurez du respect des prérequis vous pouvez :
 
 3.1.2 Lancement du script :  
 
-<img src="[]" width="100" height="100">
-
+   - Quand vous éxecuter le script, vous devez rentre les infotmation de l'utilisateur et de l'addrese IP :
+   <img src="https://github.com/WildCodeSchool/TSSR-ANGOU-2409-P2-G1/blob/script/Capture%20d'%C3%A9cran%202024-11-28%20144830.png?raw=true" width="600" height="100">
+   
 
 </details>
 
@@ -62,9 +63,32 @@ Après vous être assurez du respect des prérequis vous pouvez :
 <summary><strong>3.2 Windows 
 </stronge></summary>
 
+------
+   
+3.2.1 Connection WinRM 
+
+Pour vous connecter à une machine Windows via WinRM, vous avez besoin de l'adresse IP de la machine et des informations d'identification d'un utilisateur ayant des droits administratifs. Voici comment faire :
+
+Ouvrez un terminal PowerShell sur votre machine locale.
+Exécutez la commande suivante pour vous connecter à la machine distante :
+```powershell
+Enter-PSSession -ComputerName $client -Credential $utilisateur
+```
+Remplacez $client par le nom de l'ordinateur de la machine distante, et $utilisateur par les informations d'identification de l'utilisateur ayant les permissions nécessaires.
+
+------
+
+3.2.1 Lancement du Script
+
+ - Pour le lancement d'un script, c'est la même chose que pour la partie Linux. La commande pour lancer le script est :
+   ```powershell
+   .\test.ps1
+   ```
+   Ensuite, entrez les mêmes informations demandées, comme pour la partie Linux.
 
 </details>
-  
+
+
 </details>
 
 ______
@@ -73,9 +97,53 @@ ______
 <summary><stronge>Utilisation avancée : comment utiliser au mieux les options
 </stronge></summary>
 
-______
+#### Notion Avancer
+
+Cette partie sert a vous guider dans l'utilisation avancer des fonctionnaliter du script : 
 
 
-______
+
+<details>
+<summary><strong>1. Linux
+</stronge></summary>
+
+Le script ce découpe en plussieur type de Menu et Sous-Menu
+
+   - Menu Action
+     
+      I.    Gestions de l'utilisateur
+     
+      II.   Gestions de l'ordinateur
+     
+      III.  Prise de main à distance
+     
+   - Menu Information
+     
+      I.    Information Utilisateur
+     
+      II.   Information Ordinateur
+     
+      III.  Consulter les logs
+     
+      IV.   Effectuer une recherche sur les logs
+
+
+
+</details> 
+
+<details>
+<summary><strong>2. Windows 
+</stronge></summary>
+
+</details>   
+
+
+
+</details> 
+
+-----
+
 #### FAQ : solutions aux problèmes connus et communs liés à l’utilisation
-______
+
+
+
