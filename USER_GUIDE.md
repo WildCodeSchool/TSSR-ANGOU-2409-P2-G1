@@ -12,21 +12,67 @@ Pour une utilisation correcte du script, assurez-vous :
 * D'avoir récupéré le script depuis GitHub et de le mettre sur votre serveur
 * D'avoir les permissions nécessaires pour l'exécution du script et de ses commandes (Droits Administrateurs)
 
-#### Utilisation de base : comment utiliser les fonctionnalités clés
-______
+----------
 
-##### Démarrage
+<details>
+<summary><strong>Utilisation de base : comment utiliser les fonctionnalités clés
+</summary></strong>
+
+#### Démarrage
 
 Après vous être assurez du respect des prérequis vous pouvez :
 
-1. Ouvrir un invite de commande sur la machine hôte (_PowerShell pour Windows_)
-2. Vous rendre dans le répertoire où se situe le script
-3. Exécution du script :  
-   3.1 - Linux : `bash ./script.sh`  
-   3.2 - PowerShell : `.\script.ps1`  
+1. Ouvrir un invite de commande sur la machine hôte.
+2. Vous rendre dans le répertoire où se situe le script.
+3. Lancememt du script.
+
+<details>
+<summary><strong>3.1 Linux
+</stronge></summary>
+
+-------   
+
+3.1.1 Connetions SSH :
+
+   Pour vous connecter à une machine distante via SSH, vous avez besoin de l'adresse IP de la machine et du nom d'utilisateur. Voici comment faire :
+   Ouvrez un terminal sur votre machine locale.
+   
+   Tapez la commande suivante pour vous connecter à la machine distante :      
+   ```bash
+   ssh utilisateur@adresse_ip
+   ``` 
+   Remplaez utilisateur par le nom de l'utilisateur de la machine distante et adresse_ip par l'adresse IP ou le nom de domaine de la machine.
+   Exemple de connexion :
+   ```bash
+    ssh alice@192.168.1.10
+   ```
+   Lors de la première connexion, il vous sera demandé de confirmer l'empreinte numérique du serveur. Tapez `yes` pour accepter.
+   Entre le mot de passe lorsque cela est demandé. Vous serez alors connecté à la machine distante.
+
+-------
+
+3.1.2 Lancement du script :  
+
+<img src="[]" width="100" height="100">
+
+
+</details>
+
+<details>
+<summary><strong>3.2 Windows 
+</stronge></summary>
+
+
+</details>
+  
+</details>
 
 ______
-#### Utilisation avancée : comment utiliser au mieux les options
+
+<details> 
+<summary><stronge>Utilisation avancée : comment utiliser au mieux les options
+</stronge></summary>
+
 ______
 
 
