@@ -48,6 +48,28 @@ switch ($choix_action) {
           }
   }
 }
+#gestion_user.ps1
+
+# Fonction pour la création d'un utilisateur
+#function create_user {
+#    
+#    $wilder = Read-Host "Veuillez renseigner le nom de l'utilisateur à créer : "
+#    # Si utilisateur existe déjà alors retour au menu gestion utilisateur
+#    if (Invoke-Command -ComputerName $ip -ScriptBlock {Get-LocalUser -Name $wilder - True}) {
+#        Read-Host "$wilder existe déjà" ;
+#        Start-Sleep -Seconds 2 ;
+#        gestion_user
+#    }
+# Sinon création de l'utilisateur
+#    else {
+#        Invoke-Command -ComputerName $ip -ScriptBlock {New-LocalUser -Name $wilder}
+#        Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Utilisateur $wilder créé" ;
+#        Start-Sleep -Seconds 2
+#    }
+#    
+#}
+
+
 # Menu de Gestion Utilisateur
 function gestion_user {
     Clear-Host
@@ -66,83 +88,72 @@ function gestion_user {
     $choix_gestion = Read-Host "Faites votre choix : "
 
     switch ($choix_gestion) {
-        # AccÃ¨s Ã  la crÃ©ation d'utilisateur
+        # Accès à la création d'utilisateur
         1 { 
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - CrÃ©ation d'utilisateur" ;
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Création d'utilisateur" ;
             $petit_script = {
-            $wilder = Read-Host "Veuillez renseigner le nom de l'utilisateur Ã  crÃ©er";
-            $motdepasse = Read-Host "Renseignez le mot de passe pour l'utilisateur Ã  crÃ©er" -AsSecureString ;
                 param($wilder, $motdepasse)
                 New-LocalUser -Name $wilder -Password $motdepasse
-                Write-Host "CrÃ©ation de l'utilisateur local : $wilder" 
+                $wilder = Read-Host "Veuillez renseigner le nom de l'utilisateur à créer : " ;
+                $motdepasse = Read-Host "Renseignez le mot de passe pour l'utilisateur à créer : " -AsSecureString ;
             }
-            Invoke-Command -ComputerName $client -ScriptBlock $petit_script -ArgumentList $Nom, $motdepasse -Credential $utilisateur ;
-            ;
-            Start-Sleep -Seconds 5
+            Invoke-Command -ComputerName $ip -ScriptBlock $petit_script -ArgumentList $Nom, $motdepasse -Credential $credential ;
+            Write-Host "Création de l'utilisateur local : $wilder" ;
+            Start-Sleep -Seconds 2
+            #           create_user
         }
 
         # Modification du mot de passe de l'utilisateur cible
         2 {  
-            ;
-            Invoke-Command -ComputerName $client -ScriptBlock {
-             $wilder = Read-Host "De quel utilisateur souhaitez-vous modifier le mot de passe";
-             $NewPwd = Read-Host -AsSecureString ; Get-LocalUser -Name $wilder | Set-LocalUser -Password $NewPwd
-             Write-Host "Le mot de passe de $wilder a Ã©tÃ© modifiÃ© avec succÃ¨s"} -Credential $utilisateur ;
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Changement de mot de passe établi" ;
-          
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Changement de mot de passe" ;
+            Invoke-Command -ComputerName $ip -ScriptBlock {
+            $wilder = Read-Host "De quel utilisateur souhaitez-vous modifier le mot de passe" ;
+            $NewPwd = Read-Host -AsSecureString ; Get-LocalUser -Name $wilder | Set-LocalUser -Password $NewPwd ;
+            Write-Host "Le mot de passe de $wilder a été modifié avec succès" }
             Start-Sleep -Seconds 2
         }
 
         # Suppression de l'utilisateur cible
         3 {  
-           
-            Invoke-Command -ComputerName $client -ScriptBlock {
-             $wilder = Read-Host "Quel compte utilisateur souhaitez-vous supprimer ? " ;
-             Remove-LocalUser -Name $wilder
-              Write-Host "L'utilisateur $wilder a bien Ã©tÃ© supprimÃ©" } ;
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Suppression de l'utilisateur effectuée" ;
-           
-            Start-Sleep -Seconds 2
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Suppression d'un utilisateur'" ;
+            Invoke-Command -ComputerName $ip -ScriptBlock {
+            $wilder = Read-Host "Quel compte utilisateur souhaitez-vous supprimer ? " ;
+            Remove-LocalUser -Name $wilder ;
+            Write-Host "L'utilisateur $wilder a bien été supprimé" ;
+            Start-Sleep -Seconds 2}
         }
 
-        # DÃ©sactivation de l'utilisateur cible
+        # Désactivation de l'utilisateur cible
         4 {  
-            $wilder = Read-Host "Quel compte utilisateur souhaitez-vous dÃ©sactiver ? " ;
-            Invoke-Command -ComputerName $client -ScriptBlock {Disable-LocalUser -Name "$wilder"} ;
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - DÃ©sactivation du compte utilisateur $wilder" ;
-            Write-Host "DÃ©sactivation de $wilder rÃ©ussie" ;
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Désactivation d'un utilisateur" ;
+            Invoke-Command -ComputerName $ip -ScriptBlock {
+            $wilder = Read-Host "Quel compte utilisateur souhaitez-vous désactiver ? " ;
+            Disable-LocalUser -Name "$wilder" ;
+            Write-Host "Désactivation de $wilder réussie" ; }
             Start-Sleep -Seconds 2 ; 
         }
 
-        # AccÃ¨s Ã  la gestion des groupes
+        # Accès à la gestion des groupes
         5 {  
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Gestion des groupes" ;
             gestion_groupe
         }
 
-        # Retour au menu prÃ©cÃ©dent
+        # Retour au menu précédent
         x {  
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu prÃ©cÃ©dent " ;
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu précédent " ;
             Write-Host "Retour au menu précédent" ;
             Start-Sleep -Seconds 2 ;
             menu_aciton
         }
 
-        # Retour au menu prÃ©cÃ©dent
-        X {  
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu prÃ©cÃ©dent " ;
-            Write-Host "Retour au menu prÃ©cÃ©dent" ;
-            Start-Sleep -Seconds 2 ;
-            menu_action
-        }
-
-        # Retour au menu principal
-        p {  
+        #Retour au menu principal
+        P {  
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu principal " ;
             Write-Host "Retour au menu principal" ;
             Start-Sleep -Seconds 2 ;
+            #           menu_principal
         }
-
 
         # En cas d'erreur, retour au menu de la fonction
         Default {
@@ -150,6 +161,7 @@ function gestion_user {
         }
     }
 }
+
 # Menu de Gestion des groupes
 function gestion_groupe {
     Clear-Host
