@@ -1193,3 +1193,88 @@ switch ($choix_computer) {
     }
   }
 } 
+_________________________________________________________________________________________________________________________________________________________________
+
+
+# Menu de Gestion des groupes
+function gestion_groupe {
+  Clear-Host
+  Write-Host "=========================================="
+  Write-Host "|          Gestion des groupes           |"
+  Write-Host "=========================================="
+  Write-Host "| 1 - Ajout à un groupe d'administration|"
+  Write-Host "| 2 - Ajout à  un groupe local           |"
+  Write-Host "| 3 - Sortie d'un groupe local           |"
+  Write-Host "| x - Menu précédent                     |"
+  Write-Host "=========================================="
+
+
+switch ($choix_groupe) {
+      
+  # Ajout de l'utilisateur cible au groupe d'administration
+ 1 
+ {  
+ 
+      Invoke-Command -ComputerName $client -ScriptBlock { 
+        
+        $wilder = Read-Host "Indiquez quel utilisateur à ajouter au groupe d'administration" 
+        Add-LocalGroupMember -Group "Administrateurs" -Member "$wilder" }  -Credential Get-Credential -Credential $utilisateur
+   
+ 
+ Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Ajout d'un l'utilisateur au groupe administrateur" ;
+     
+         Start-Sleep -Seconds 2
+         
+ }
+  
+ 
+ 2 {
+ # Ajout de l'utilisateur cible au groupe local
+       
+         Invoke-Command -ComputerName $ client -ScriptBlock 
+         
+         { 
+           Add-LocalGroupMember -Group "$groupe" -Member "$wilder"
+         $wilder = Read-Host "Renseignez l'utilisateur sur lequel travailler : " ;
+         $groupe = Read-Host "Renseignez le groupe auquel vous souhaitez ajouter l'utilisateur : " ;
+        }
+        -Credential Get-Credential -Credential $utilisateur
+
+         Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Ajout de l'utilisateur : $wilder au groupe : $groupe" ;
+       
+         Start-Sleep -Seconds 2
+ }
+ # Sortie de l'utilisateur cible d'un groupe local
+ 3
+  {  $wilder = Read-Host "Renseignez l'utilisateur sur lequel travailler : " ;
+         $groupe = Read-Host "Renseignez le groupe auquel vous souhaitez supprimer l'utilisateur" ;
+      Invoke-Command -ComputerName $client -ScriptBlock { 
+        $wilder = Read-Host "Renseignez l'utilisateur sur lequel travailler : " ;
+        Remove-LocalGroupMember -Group "$groupe" -Member "$wilder" }  -Credential Get-Credential -Credential $utilisateur
+
+  Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc- Action - Suppression de l'utilisateur : $wilder du groupe : $groupe" ;
+     
+   Start-Sleep -Seconds 2
+ }
+ # Retour au menu précedent
+         x {
+ 
+   Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu précedent" ;
+             Write-Host "Retour au menu précedent" ;
+             Start-Sleep -Seconds 2
+         }
+         # En cas d'erreur, retour au menu de la fonction
+         
+         Default {
+          
+          gestion_groupe
+          
+         }
+        
+        }
+
+        }
+      
+             
+
+
