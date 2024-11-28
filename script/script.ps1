@@ -943,26 +943,29 @@ function activite_ordi {
     Switch ($choix_activite) {
 	# Affichage de la liste des applications/ paquets installÃ©s sur l'ordinateur cible
         1 {
-            Write-Host "Ordinateur - Info - Liste des applications / paquets installÃ©es :"
-            Get-Package
-	    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc"
-            Start-Sleep -Seconds 3
+            Invoke-Command -ComputerName $client -Scriptblock {
+		Write-Host "Ordinateur - Info - Liste des applications / paquets installÃ©es :"
+           	Get-Package }
+	    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Information - Liste des applications/paquets installés"
+            Start-Sleep -Seconds 5
             activite_ordi
         }
 	# Affichage de la liste des services en cours d'exÃ©cution
         2 { 
-            Write-Host "Ordinateur - Info - Liste des services en cours d'execution :"
-            Get-Service | Where-Object { $_.Status -eq "Running" }
-	    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc
-            Start-Sleep -Seconds 3
+            Invoke-Command -Computername $client -ScriptBlock  {
+		Write-Host "Ordinateur - Info - Liste des services en cours d'execution :"
+          	Get-Service | Where-Object { $_.Status -eq "Running" } 
+		}
+	    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Information - Liste des services en cours d'exécution"
+            Start-Sleep -Seconds 5
             activite_ordi
         }
 	# Affichage de la liste des utilisateurs locaux
         3 { 
             Write-Host "Ordinateur - Info - Liste des utilisateurs locaux :"
-            Get-LocalUser | Format-Table -AutoSize
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc
-            Start-Sleep -Seconds 3
+            Invoke-Command -Computerame $client -Scriptblock { Get-LocalUser | Format-Table -AutoSize }
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Information - Liste des utilisateurs locaux"
+            Start-Sleep -Seconds 5
             activite_ordi
         }
 	# Retour au menu prÃ©cÃ©dent
@@ -977,6 +980,7 @@ function activite_ordi {
 	}
     }
 }
+
 
 function search_log {
 Clear-Host
