@@ -288,14 +288,15 @@ function gestion_alim {
 
     switch ($choix_computer) {
         1 {
-            $confirm = Read-Host "ÃŠtes-vous sÃ»r de vouloir arrÃªter l'ordinateur ? (o/n)"
+            Invoke-Command -ComputerName $client -ScriptBlock {
+	    $confirm = Read-Host "Êtes-vous sûr de vouloir arrêter l'ordinateur ? (o/n)"
             if ($confirm -match '^(o|O)$') {
                 $log = "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Ordinateur - Action - ArrÃªt Ordinateur"
                 Add-Content -Path "C:\Logs\log_evt.txt" -Value $log
                 Stop-Computer -Force
             } else {
                 Write-Host "Action annulÃ©e."
-                Start-Sleep -Seconds 1
+                Start-Sleep -Seconds 1} 
                 gestion_alim
             }
         }
