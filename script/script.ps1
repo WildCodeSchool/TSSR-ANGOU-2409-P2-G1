@@ -931,11 +931,11 @@ function activite_ordi {
     Clear-Host
     Write-Host "
     ==================================================
-    | 		ActivitÃ© ordinateur	             |
-    | 1 : Liste des applications / paquets installÃ©s |
-    | 2 : Liste des services en cours d'exÃ©cution    |
+    | 		Activité ordinateur	             |
+    | 1 : Liste des applications / paquets installés |
+    | 2 : Liste des services en cours d'exécution    |
     | 3 : Liste des utilisateurs locaux		     |
-    | X : Retour au menu prÃ©cÃ©dent		     |
+    | X : Retour au menu précédent		     |
     ==================================================
         "
     $choix_activite = Read-Host "Faites votre choix"
@@ -946,7 +946,7 @@ function activite_ordi {
             Invoke-Command -ComputerName $client -Scriptblock {
 		Write-Host "Ordinateur - Info - Liste des applications / paquets installÃ©es :"
            	Get-Package }
-	    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Information - Liste des applications/paquets installés"
+	    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Information - 
             Start-Sleep -Seconds 5
             activite_ordi
         }
