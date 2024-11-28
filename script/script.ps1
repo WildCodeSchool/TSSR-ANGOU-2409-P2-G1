@@ -157,25 +157,31 @@ function gestion_groupe {
 
     switch ($choix_groupe) {
         # Ajout de l'utilisateur cible au groupe d'administration
-        1 {  $wilder = Read-Host "Indiquez quel utilisateur Ã  ajouter au groupe d'administration" ;
-        Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Ajout de l'utilisateur : $wilder au groupe administrateur" ;
-        Add-LocalGroupMember -Group "Administrateurs" -Member "$wilder" ;
+        1 {  
+        Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Ajout d'un utilisateur au groupe administrateur" ;	
+ 	    Invoke-Command -ComputerName $client -ScriptBlock {
+  	    $wilder = Read-Host "Indiquez quel utilisateur Ã  ajouter au groupe d'administration" ;
+        Add-LocalGroupMember -Group "Administrateurs" -Member "$wilder" ; }
         Start-Sleep -Seconds 2
         }
 
         # Ajout de l'utilisateur cible au groupe local
-        2 {  $wilder = Read-Host "Renseignez l'utilisateur sur lequel travailler : " ;
+        2 {  
+        Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Ajout d'un utilisateur à un groupe" ;
+        Invoke-Command -ComputerName $client -ScriptBlock {    
+        $wilder = Read-Host "Renseignez l'utilisateur sur lequel travailler : " ;
         $groupe = Read-Host "Renseignez le groupe auquel vous souhaitez ajouter l'utilisateur : " ;
-        Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Ajout de l'utilisateur : $wilder au groupe : $groupe" ;
-        Add-LocalGroupMember -Group "$groupe" -Member "$wilder" ;
+        Add-LocalGroupMember -Group $groupe -Member $wilder ;}
         Start-Sleep -Seconds 2
         }
 
         # Sortie de l'utilisateur cible d'un groupe local
-        3 {  $wilder = Read-Host "Renseignez l'utilisateur sur lequel travailler : " ;
+        3 {  
+        Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Suppression d'un utilisateur d'un groupe" ;
+        Invoke-Command -ComputerName $client -ScriptBlock {    
+        $wilder = Read-Host "Renseignez l'utilisateur sur lequel travailler : " ;
         $groupe = Read-Host "Renseignez le groupe auquel vous souhaitez supprimer l'utilisateur" ;
-        Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Suppression de l'utilisateur : $wilder du groupe : $groupe" ;
-        Remove-LocalGroupMember -Group "$groupe" -Member "$wilder" ;
+        Remove-LocalGroupMember -Group "$groupe" -Member "$wilder" ;}
         Start-Sleep -Seconds 2
         }
 
