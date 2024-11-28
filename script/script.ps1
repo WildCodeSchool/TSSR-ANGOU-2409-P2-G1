@@ -335,38 +335,40 @@ function gestion_alim {
 function gestion_directory {
     Clear-Host
     Write-Output "=================================="
-    Write-Output "|   Gestion des rÃ©pertoires      |"
+    Write-Output "|   Gestion des répertoires      |"
     Write-Output "=================================="
-    Write-Output "| 1 - CrÃ©ation de rÃ©pertoire     |"
-    Write-Output "| 2 - Modification de rÃ©pertoire |"
-    Write-Output "| 3 - Suppression de rÃ©pertoire  |"
-    Write-Output "| x - Menu prÃ©cÃ©dent             |"
+    Write-Output "| 1 - Création de répertoire     |"
+    Write-Output "| 2 - Modification de répertoire |"
+    Write-Output "| 3 - Suppression de répertoire  |"
+    Write-Output "| x - Menu précédent             |"
     Write-Output "=================================="
     
     $Choix_Directory = Read-Host "Faites votre choix : "
   
     switch ($Choix_Directory) {
-    # CrÃ©er le rÃ©pertoire Ã  partir du nom et du chemin renseignÃ©s
-        1 { $pathdir = Read-Host "Quel est le chemin du dossier que vous souhaitez crÃ©er ?" ; 
+    # Créer le répertoire Ã  partir du nom et du chemin renseigné
+        1 { Invoke-Command -Computername $client -ScriptBlock {$pathdir = Read-Host "Quel est le chemin du dossier que vous souhaitez crÃ©er ?" ; 
             $directory = Read-Host "Quel dossier souhaitez-vous crÃ©er Ã  partir de $pathdir ?" ; 
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - CrÃ©ation de RÃ©pertoire $directoy" ;
             New-Item -Path $pathdir\ -ItemType Directory -Name $directory ;
-            Write-Output "CrÃ©ation de $directory effectuÃ©e."
+            Write-Output "CrÃ©ation de $directory effectuÃ©e."}
+	    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - CrÃ©ation de RÃ©pertoire $directoy" ;
         }
     # Modifier le rÃ©pertoire Ã  partir du nom, du chemin et du nouveau nom renseignÃ©s
-        2 { $pathdir = Read-Host "Quel est le chemin du dossier que vous souhaitez modifier ?" ;
-            $directory = Read-Host "Quel est le nom du dossier que vous souhaitez modifier ?" ;
-            $dir_name = Read-Host "Quel nouveau nom souhaitez lui donner ?" ;
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Modification de RÃ©pertoire $directory" ;
-            Rename-Item -Path $pathdir\$directory -NewName $dir_name ;
-            Write-Output "Modification de $directory en $dir_name effectuÃ©e."
+        2 { Invoke-Command -ComputerName $client ScriptBlock {
+	$pathdir = Read-Host "Quel est le chemin du dossier que vous souhaitez modifier ?" ;
+        $directory = Read-Host "Quel est le nom du dossier que vous souhaitez modifier ?" ;
+        $dir_name = Read-Host "Quel nouveau nom souhaitez lui donner ?" ;
+        Rename-Item -Path $pathdir\$directory -NewName $dir_name ;
+        Write-Output "Modification de $directory en $dir_name effectuÃ©e."}
+	Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Modification de RÃ©pertoire $directory" ;
         }
     # Supprimer le rÃ©pertoire Ã  partir du nom et du chemin renseignÃ©s 
-        3 { $pathdir = Read-Host "Quel est le chemin du dossier que vous souhaitez supprimer ?" ; 
+        3 { Invoke-Command -ComputerName $client -ScriptBlock {
+	$pathdir = Read-Host "Quel est le chemin du dossier que vous souhaitez supprimer ?" ; 
             $directory = Read-Host "Quel dossier souhaitez-vous supprimer ?" ;
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Modification de RÃ©pertoire $directory" ;
             Remove-Item -Path $pathdir\$directory ;
-            Write-Output "Suppression de $directory effectuÃ©e"
+            Write-Output "Suppression de $directory effectuÃ©e"}
+	Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Modification de RÃ©pertoire $directory" ;
         }
     # Retour au menu prÃ©cÃ©dent
         x { Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu prÃ©cÃ©dent $directory" ;
@@ -375,7 +377,7 @@ function gestion_directory {
         }
     # Retour au menu prÃ©cÃ©dent
         X { Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu prÃ©cÃ©dent $directory" ;
-            Write-Host "Retour Menu PrÃ©cÃ©dent" ; 
+            Write-Host "Retour Menu Précédent" ; 
             menu_action
         }
     # En cas d'erreur, retour au menu de la fonction
@@ -384,6 +386,7 @@ function gestion_directory {
         }
     }
 }
+
 
 # Menu de Gestion du pare-feu
 function gestion_firewall {
