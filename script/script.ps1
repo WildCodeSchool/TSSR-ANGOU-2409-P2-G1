@@ -855,6 +855,7 @@ function version_OS {
     }
 }
 
+# Fonction des commande qui concerne les information disque
 function info_disk {
     Write-Host "
 ==============================================================
@@ -864,45 +865,50 @@ function info_disk {
 |   2 : Afficher les informations partitions par disque      |
 |   3 : Afficher l'espace disque restant                     |
 |   4 : Afficher le nom et l'espace disque d'un dossier      |
-|   5 : Afficher les lecteurs montÃ©s                         |
+|   5 : Afficher les lecteurs montÃ©s                        | 
 |   P : Retour au menu principal                             |
 =============================================================="
 
-    $choix_disque = Read-Host "Faites votre choix"
+    $choix_disque = Read-Host "Faites votre choix : "
 
     switch ($choix_disque) {
         1 {
-            Add-Content -Path "C:\Perflogs\log_de.txt" -Value "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Ordinateur - Info - Afficher le nombre de disques"
-            $disque = Read-Host "Sur quel disque voulez-vous l'information ? (ex: C;)"
-            Invoke-Command -ComputerName $client -Credential $utilisateur -ScriptBlock {  Get-Disk | Format-Table Number, FriendlyName, OperationalStatus, Size -AutoSize }
+            # Affiche le ou les disque
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Ordinateur - Info - Afficher le nombre de disques"
+            Invoke-Command -ComputerName $client -Credential $utilisateur -ScriptBlock { Get-Disk | Format-Table Number, FriendlyName, OperationalStatus, Size -AutoSize }
             Start-Sleep -Seconds 5
         }
         2 {
-            Add-Content -Path "C:\Perflogs\log_de.txt" -Value "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Ordinateur - Info - Afficher les informations partitions par disques"
+            # Affiche la table des partions du ou des disques 
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Ordinateur - Info - Afficher les informations partitions par disques"
             Invoke-Command -ComputerName $client -Credential $utilisateur -ScriptBlock { Get-Partition | Format-Table DiskNumber, PartitionNumber, DriveLetter, Size -AutoSize }
             Start-Sleep -Seconds 5
         }
         3 {
-            Add-Content -Path "C:\Perflogs\log_de.txt" -Value "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Ordinateur - Info - Afficher l'espace disque restant"
+            # Affiche l'espace disque utiliser et restant du ou des diques 
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Ordinateur - Info - Afficher l'espace disque restant"
             Invoke-Command -ComputerName $client -Credential $utilisateur -ScriptBlock { Get-PSDrive -PSProvider FileSystem | Select-Object Name, @{Name='FreeSpace(GB)';Expression={[math]::round($_.Free/1GB,2)}}, @{Name='UsedSpace(GB)';Expression={[math]::round(($_.Used/1GB),2)}} | Format-Table -AutoSize }
             Start-Sleep -Seconds 5
         }
-        4 {
-            Add-Content -Path "C:\Perflogs\log_de.txt" -Value "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Ordinateur - Info - Afficher le nom et l'espace disque d'un dossier"
-            $disk = Read-Host "Indiquez le dossier sur lequel le disque est montÃ©"
+        4 { 
+            # Affiche le nom et l'espace disque d'un dossier
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Ordinateur - Info - Afficher le nom et l'espace disque d'un dossier"
             Invoke-Command -ComputerName $client -Credential $utilisateur -ScriptBlock { Get-PSDrive -PSProvider FileSystem | Select-Object Name, @{Name='FreeSpace(GB)';Expression={[math]::round($_.Free/1GB,2)}}, @{Name='UsedSpace(GB)';Expression={[math]::round(($_.Used/1GB),2)}} | Format-Table -AutoSize }
             Start-Sleep -Seconds 5
         }
         5 {
-            Add-Content -Path "C:\Perflogs\log_de.txt" -Value "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Ordinateur - Info - Afficher les lecteurs montÃ©s"
-            Invoke-Command -ComputerName $client -Credential $utilisateur -ScriptBlock {  Get-Volume | Format-Table DriveLetter, FileSystemLabel, FileSystem, SizeRemaining, Size -AutoSiz }
+            # Affiche les lecteurs montès
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Ordinateur - Info - Afficher les lecteurs montÃ©s"
+            Invoke-Command -ComputerName $client -Credential $utilisateur -ScriptBlock { Get-Volume | Format-Table DriveLetter, FileSystemLabel, FileSystem, SizeRemaining, Size -AutoSiz }
             Start-Sleep -Seconds 5
         }
         "P" {
-            Add-Content -Path "C:\Perflogs\log_de.txt" -Value "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Retour au menu principal"
-            Start-Sleep -Seconds 1
+            # Retour au menu principal
+             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu principal"
+             Start-Sleep -Seconds 1
         }
         default {
+            # Option invalide
             Write-Host "Erreur : Option invalide."
             info_disk
         }
