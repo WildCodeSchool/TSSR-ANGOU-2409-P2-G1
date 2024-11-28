@@ -56,7 +56,7 @@ _______
 2. PowerShell : 
 > 2.1 Get-CimInstance -ClassName Win32_PhysicalMemory, commande pour obtenir les informations RAM, ne fonctionne pas sur les VMs  
 > 2.2 Problèmes avec les commandes SSH dans l'exécution du script  
-> 2.3 Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object FreePhysicalMemory, TotalVisibleMemorySize, affiche les informations RAM en Ko et non en Go ou Mo
+> 2.3 Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object FreePhysicalMemory, TotalVisibleMemorySize, affiche les informations RAM en Ko et non en Go ou Mo  
 > 2.4 Le pare-feu bloquait WinRM
 _______
 ## Solutions trouvées : Solutions et alternatives trouvées
@@ -69,7 +69,7 @@ _______
 2. PowerShell :
 > 2.1 Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object FreePhysicalMemory, TotalVisibleMemorySize, commande pour obtenir les informations RAM  
 > 2.2 Mise en place de WinRM et d'un AD  
-> 2.3 Pas de solution trouvée
+> 2.3 Pas de solution trouvée  
 > 2.4 Passer en mode RéseauNat avec un préfixe de réseau prédéfinie, connexion en domaine qui ne bloque plus le WinRM (Saint Esprit ?)
 _______
 ## Améliorations possibles : suggestions d’améliorations futures
