@@ -1,27 +1,19 @@
-
 $logc = "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - $env:COMPUTERNAME"
 
-function co_SSH {
-    # Demander nom utilisateur     
-    $utilisateur=Read-Host -Prompt  "indiquez l'utilisateur sur lequel vous connecter "                                                 
-    # Demander l'IP de l'utilisateur
-    $Client=Read-Host -Prompt "indiquer le nom du poste client"
-
-
-}
 
 #Menu action
 function menu_action {
+
 Clear-Host
 Write-Host
 "
 =========================================================
-|  		   	Menu Action	                                |
+|  		   	Menu Action	                |
 =========================================================
 |       1 : Gestion de l'utilisateur	                |
-|       2 : Gestion de l'ordinateur			            |
-|       3 : Prise de main à distance	(CLI)         	|
-|	    X : Retour au menu principal		         	|
+|       2 : Gestion de l'ordinateur		             	|
+|       3 : Prise de main Ã  distance	(CLI)         	|
+|	    X : Retour au menu principal		            |
 =========================================================
 "
 $choix_action = Read-Host "Faites votre choix"
@@ -39,8 +31,10 @@ switch ($choix_action) {
           gestion_computer
           }
     3 {
-          # Prise de main à distance
-          Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Prise de main à distance"
+          # Prise de main Ã  distance
+          Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Prise de main Ã  distance"
+	      Enter-PSSession -ComputerName $client -Credential $utilisateur
+          exit
           }
     X {
           # Retour au menu principal
@@ -72,66 +66,72 @@ function gestion_user {
     $choix_gestion = Read-Host "Faites votre choix : "
 
     switch ($choix_gestion) {
-        # Accès à la création d'utilisateur
+        # AccÃ¨s Ã  la crÃ©ation d'utilisateur
         1 { 
-            $wilder = Read-Host "Veuillez renseigner le nom de l'utilisateur à créer" ;
-            $motdepasse = Read-Host "Renseignez le mot de passe pour l'utilisateur à créer" -AsSecureString ;
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Création d'utilisateur" ;
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - CrÃ©ation d'utilisateur" ;
             $petit_script = {
+            $wilder = Read-Host "Veuillez renseigner le nom de l'utilisateur Ã  crÃ©er";
+            $motdepasse = Read-Host "Renseignez le mot de passe pour l'utilisateur Ã  crÃ©er" -AsSecureString ;
                 param($wilder, $motdepasse)
                 New-LocalUser -Name $wilder -Password $motdepasse
+                Write-Host "CrÃ©ation de l'utilisateur local : $wilder" 
             }
-            Invoke-Command -ComputerName $ip -ScriptBlock $petit_script -ArgumentList $Nom, $motdepasse -Credential $credential ;
-            Write-Host "Création de l'utilisateur local : $wilder" ;
-            Start-Sleep -Seconds 2
-#           create_user
+            Invoke-Command -ComputerName $client -ScriptBlock $petit_script -ArgumentList $Nom, $motdepasse -Credential $utilisateur ;
+            ;
+            Start-Sleep -Seconds 5
         }
 
         # Modification du mot de passe de l'utilisateur cible
         2 {  
-            $wilder = Read-Host "De quel utilisateur souhaitez-vous modifier le mot de passe" ;
-            Invoke-Command -ComputerName $ip -ScriptBlock {$NewPwd = Read-Host -AsSecureString ; Get-LocalUser -Name $wilder | Set-LocalUser -Password $NewPwd} ;
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Changement de mot de passe de $wilder établi" ;
-            Write-Host "Le mot de passe de $wilder a été modifié avec succès"
+            ;
+            Invoke-Command -ComputerName $client -ScriptBlock {
+             $wilder = Read-Host "De quel utilisateur souhaitez-vous modifier le mot de passe";
+             $NewPwd = Read-Host -AsSecureString ; Get-LocalUser -Name $wilder | Set-LocalUser -Password $NewPwd
+             Write-Host "Le mot de passe de $wilder a Ã©tÃ© modifiÃ© avec succÃ¨s"} -Credential $utilisateur ;
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Changement de mot de passe établi" ;
+          
             Start-Sleep -Seconds 2
         }
 
         # Suppression de l'utilisateur cible
         3 {  
-            $wilder = Read-Host "Quel compte utilisateur souhaitez-vous supprimer ? " ;
-            Invoke-Command -ComputerName $ip -ScriptBlock {Remove-LocalUser -Name $wilder} ;
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Suppression de $wilder effectuée" ;
-            Write-Host "L'utilisateur $wilder a bien été supprimé" ;
+           
+            Invoke-Command -ComputerName $client -ScriptBlock {
+             $wilder = Read-Host "Quel compte utilisateur souhaitez-vous supprimer ? " ;
+             Remove-LocalUser -Name $wilder
+              Write-Host "L'utilisateur $wilder a bien Ã©tÃ© supprimÃ©" } ;
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Suppression de l'utilisateur effectuée" ;
+           
             Start-Sleep -Seconds 2
         }
 
-        # Désactivation de l'utilisateur cible
+        # DÃ©sactivation de l'utilisateur cible
         4 {  
-            $wilder = Read-Host "Quel compte utilisateur souhaitez-vous désactiver ? " ;
-            Invoke-Command -ComputerName $ip -ScriptBlock {Disable-LocalUser -Name "$wilder"} ;
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Désactivation du compte utilisateur $wilder" ;
-            Write-Host "Désactivation de $wilder réussie" ;
+            $wilder = Read-Host "Quel compte utilisateur souhaitez-vous dÃ©sactiver ? " ;
+            Invoke-Command -ComputerName $client -ScriptBlock {Disable-LocalUser -Name "$wilder"} ;
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - DÃ©sactivation du compte utilisateur $wilder" ;
+            Write-Host "DÃ©sactivation de $wilder rÃ©ussie" ;
             Start-Sleep -Seconds 2 ; 
         }
 
-        # Accès à la gestion des groupes
+        # AccÃ¨s Ã  la gestion des groupes
         5 {  
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Gestion des groupes" ;
             gestion_groupe
         }
 
-        # Retour au menu précédent
+        # Retour au menu prÃ©cÃ©dent
         x {  
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu précédent " ;
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu prÃ©cÃ©dent " ;
             Write-Host "Retour au menu précédent" ;
             Start-Sleep -Seconds 2 ;
             menu_aciton
         }
 
-        # Retour au menu précédent
+        # Retour au menu prÃ©cÃ©dent
         X {  
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu précédent " ;
-            Write-Host "Retour au menu précédent" ;
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu prÃ©cÃ©dent " ;
+            Write-Host "Retour au menu prÃ©cÃ©dent" ;
             Start-Sleep -Seconds 2 ;
             menu_action
         }
@@ -156,8 +156,8 @@ function gestion_groupe {
     Write-Host "=========================================="
     Write-Host "|          Gestion des groupes           |"
     Write-Host "=========================================="
-    Write-Host "| 1 - Ajout à un groupe d'administration |"
-    Write-Host "| 2 - Ajout à un groupe local            |"
+    Write-Host "| 1 - Ajout Ã  un groupe d'administration|"
+    Write-Host "| 2 - Ajout Ã  un groupe local           |"
     Write-Host "| 3 - Sortie d'un groupe local           |"
     Write-Host "| x - Menu précédent                     |"
     Write-Host "=========================================="
@@ -166,7 +166,7 @@ function gestion_groupe {
 
     switch ($choix_groupe) {
         # Ajout de l'utilisateur cible au groupe d'administration
-        1 {  $wilder = Read-Host "Indiquez quel utilisateur à ajouter au groupe d'administration" ;
+        1 {  $wilder = Read-Host "Indiquez quel utilisateur Ã  ajouter au groupe d'administration" ;
         Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Ajout de l'utilisateur : $wilder au groupe administrateur" ;
         Add-LocalGroupMember -Group "Administrateurs" -Member "$wilder" ;
         Start-Sleep -Seconds 2
@@ -188,9 +188,9 @@ function gestion_groupe {
         Start-Sleep -Seconds 2
         }
 
-        # Retour au menu précédent
-        x {  Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu précédent" ;
-            Write-Host "Retour au menu précédent" ;
+        # Retour au menu prÃ©cÃ©dent
+        x {  Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu prÃ©cÃ©dent" ;
+            Write-Host "Retour au menu prÃ©cÃ©dent" ;
             Start-Sleep -Seconds 2
         }
         # En cas d'erreur, retour au menu de la fonction
@@ -219,39 +219,39 @@ function gestion_computer {
     $choix_computer = Read-Host "Faites votre choix : "
 
     switch ($choix_computer) {
-        # Accès au menu Gestion de l'alimentation de l'ordinateur cible
+        # AccÃ¨s au menu Gestion de l'alimentation de l'ordinateur cible
         1 {
             Add-Content -Path C:\PerfLogs\log_evt.log -Value " $logc - Action - Gestion de l'alimentation " ;
             gestion_alim
         }
 
-        # Accès au menu Gestion des répertoires de l'ordinateur cible
+        # AccÃ¨s au menu Gestion des rÃ©pertoires de l'ordinateur cible
         2 {
             Add-Content -Path C:\PerfLogs\log_evt.log -Value " $logc - Action - Gestion de l'alimentation " ;
             gestion_directory
         }
 
-        # Accès au menu Gestion du pare-feu de l'ordinateur
+        # AccÃ¨s au menu Gestion du pare-feu de l'ordinateur
         3 {
             Add-Content -Path C:\PerfLogs\log_evt.log -Value " $logc - Action - Gestion de l'alimentation " ;
             gestion_firewall
         }
 
-        # Accès au menu Gestion des logiciels de l'ordinateur cible
+        # AccÃ¨s au menu Gestion des logiciels de l'ordinateur cible
         4 {
             Add-Content -Path C:\PerfLogs\log_evt.log -Value " $logc - Action - Gestion de l'alimentation " ;
             gestion_logiciel
         }
 
-        # Accès à la Mise à jour du système cible
+        # AccÃ¨s Ã  la Mise Ã  jour du systÃ¨me cible
         5 {
             Add-Content -Path C:\PerfLogs\log_evt.log -Value " $logc - Action - Gestion de l'alimentation " ;
             maj_system
         }
 
-        # Retour au menu précédent
+        # Retour au menu prÃ©cÃ©dent
         x {
-            Write-Host "Retour au menu précédent" ;
+            Write-Host "Retour au menu prÃ©cÃ©dent" ;
             Start-Sleep -Seconds 2 ;
             menu_action
         }
@@ -278,35 +278,35 @@ function gestion_alim {
 =========================================================
 |               Gestion de l'alimentation               |
 =========================================================
-|     1 - Arrêter l'ordinateur                          |
-|     2 - Redémarrer l'ordinateur                       |
+|     1 - ArrÃªter l'ordinateur                          |
+|     2 - RedÃ©marrer l'ordinateur                       |
 |     3 - Verrouiller l'ordinateur                      |
-|     X - Menu précédent                                |
+|     X - Menu prÃ©cÃ©dent                                |
 =========================================================
 "
     $choix_computer = Read-Host "Faites votre choix"
 
     switch ($choix_computer) {
         1 {
-            $confirm = Read-Host "Êtes-vous sûr de vouloir arrêter l'ordinateur ? (o/n)"
+            $confirm = Read-Host "ÃŠtes-vous sÃ»r de vouloir arrÃªter l'ordinateur ? (o/n)"
             if ($confirm -match '^(o|O)$') {
-                $log = "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Ordinateur - Action - Arrêt Ordinateur"
+                $log = "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Ordinateur - Action - ArrÃªt Ordinateur"
                 Add-Content -Path "C:\Logs\log_evt.txt" -Value $log
                 Stop-Computer -Force
             } else {
-                Write-Host "Action annulée."
+                Write-Host "Action annulÃ©e."
                 Start-Sleep -Seconds 1
                 gestion_alim
             }
         }
         2 {
-            $confirm = Read-Host "Êtes-vous sûr de vouloir redémarrer l'ordinateur ? (o/n)"
+            $confirm = Read-Host "ÃŠtes-vous sÃ»r de vouloir redÃ©marrer l'ordinateur ? (o/n)"
             if ($confirm -match '^(o|O)$') {
-                $log = "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Ordinateur - Action - Redémarrage Ordinateur"
+                $log = "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Ordinateur - Action - RedÃ©marrage Ordinateur"
                 Add-Content -Path "C:\Logs\log_evt.txt" -Value $log
                 Restart-Computer -Force
             } else {
-                Write-Host "Action annulée."
+                Write-Host "Action annulÃ©e."
                 Start-Sleep -Seconds 1
                 gestion_alim
             }
@@ -317,64 +317,64 @@ function gestion_alim {
             rundll32.exe user32.dll, LockWorkStation
         }
          X {
-            $log = "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Retour au menu précédent"
+            $log = "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Retour au menu prÃ©cÃ©dent"
             Add-Content -Path "C:\PerfLogs\log_evt.log" -Value $log
-            Write-Host "Retour au menu précédent."
+            Write-Host "Retour au menu prÃ©cÃ©dent."
             gestion_computer
         }
         Default {
-            Write-Host "Option invalide. Veuillez réessayer."
+            Write-Host "Option invalide. Veuillez rÃ©essayer."
             Start-Sleep -Seconds 1
             gestion_alim
             }
     }
 }
 
-# Fonction pour la gestion de répertoires
+# Fonction pour la gestion de rÃ©pertoires
 function gestion_directory {
     Clear-Host
     Write-Output "=================================="
-    Write-Output "|   Gestion des répertoires      |"
+    Write-Output "|   Gestion des rÃ©pertoires      |"
     Write-Output "=================================="
-    Write-Output "| 1 - Création de répertoire     |"
-    Write-Output "| 2 - Modification de répertoire |"
-    Write-Output "| 3 - Suppression de répertoire  |"
-    Write-Output "| x - Menu précédent             |"
+    Write-Output "| 1 - CrÃ©ation de rÃ©pertoire     |"
+    Write-Output "| 2 - Modification de rÃ©pertoire |"
+    Write-Output "| 3 - Suppression de rÃ©pertoire  |"
+    Write-Output "| x - Menu prÃ©cÃ©dent             |"
     Write-Output "=================================="
     
     $Choix_Directory = Read-Host "Faites votre choix : "
   
     switch ($Choix_Directory) {
-    # Créer le répertoire à partir du nom et du chemin renseignés
-        1 { $pathdir = Read-Host "Quel est le chemin du dossier que vous souhaitez créer ?" ; 
-            $directory = Read-Host "Quel dossier souhaitez-vous créer à partir de $pathdir ?" ; 
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Création de Répertoire $directoy" ;
+    # CrÃ©er le rÃ©pertoire Ã  partir du nom et du chemin renseignÃ©s
+        1 { $pathdir = Read-Host "Quel est le chemin du dossier que vous souhaitez crÃ©er ?" ; 
+            $directory = Read-Host "Quel dossier souhaitez-vous crÃ©er Ã  partir de $pathdir ?" ; 
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - CrÃ©ation de RÃ©pertoire $directoy" ;
             New-Item -Path $pathdir\ -ItemType Directory -Name $directory ;
-            Write-Output "Création de $directory effectuée."
+            Write-Output "CrÃ©ation de $directory effectuÃ©e."
         }
-    # Modifier le répertoire à partir du nom, du chemin et du nouveau nom renseignés
+    # Modifier le rÃ©pertoire Ã  partir du nom, du chemin et du nouveau nom renseignÃ©s
         2 { $pathdir = Read-Host "Quel est le chemin du dossier que vous souhaitez modifier ?" ;
             $directory = Read-Host "Quel est le nom du dossier que vous souhaitez modifier ?" ;
             $dir_name = Read-Host "Quel nouveau nom souhaitez lui donner ?" ;
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Modification de Répertoire $directory" ;
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Modification de RÃ©pertoire $directory" ;
             Rename-Item -Path $pathdir\$directory -NewName $dir_name ;
-            Write-Output "Modification de $directory en $dir_name effectuée."
+            Write-Output "Modification de $directory en $dir_name effectuÃ©e."
         }
-    # Supprimer le répertoire à partir du nom et du chemin renseignés 
+    # Supprimer le rÃ©pertoire Ã  partir du nom et du chemin renseignÃ©s 
         3 { $pathdir = Read-Host "Quel est le chemin du dossier que vous souhaitez supprimer ?" ; 
             $directory = Read-Host "Quel dossier souhaitez-vous supprimer ?" ;
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Modification de Répertoire $directory" ;
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Modification de RÃ©pertoire $directory" ;
             Remove-Item -Path $pathdir\$directory ;
-            Write-Output "Suppression de $directory effectuée"
+            Write-Output "Suppression de $directory effectuÃ©e"
         }
-    # Retour au menu précédent
-        x { Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu précédent $directory" ;
-            Write-Host "Retour Menu Précédent" ; 
+    # Retour au menu prÃ©cÃ©dent
+        x { Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu prÃ©cÃ©dent $directory" ;
+            Write-Host "Retour Menu PrÃ©cÃ©dent" ; 
             menu_action
         }
-    # Retour au menu précédent
-        X { Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu précédent $directory" ;
-            Write-Host "Retour Menu Précédent" ; 
+    # Retour au menu prÃ©cÃ©dent
+        X { Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu prÃ©cÃ©dent $directory" ;
+            Write-Host "Retour Menu PrÃ©cÃ©dent" ; 
             menu_action
         }
     # En cas d'erreur, retour au menu de la fonction
@@ -391,8 +391,8 @@ function gestion_firewall {
     Write-Host "|     Gestion du pare-feu    |"
     Write-Host "=============================="
     Write-Host "| 1 - Activer le pare-feu    |"
-    Write-Host "| 2 - Désactiver le pare-feu |"
-    Write-Host "| x - Menu précédent         |"
+    Write-Host "| 2 - DÃ©sactiver le pare-feu |"
+    Write-Host "| x - Menu prÃ©cÃ©dent         |"
     Write-Host "=============================="
 
     $choix_firewall = Read-Host "Faites votre choix : "
@@ -402,20 +402,20 @@ function gestion_firewall {
         1{
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Activation du pare-feu" ;
             Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled True ;
-            Write-Host "Pare-feu activé" ;
+            Write-Host "Pare-feu activÃ©" ;
             Start-Sleep -Seconds 2
         }
-        # Désactiver le pare-feu
+        # DÃ©sactiver le pare-feu
         2 {
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Désactivation du pare-feu" ;
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - DÃ©sactivation du pare-feu" ;
             Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False ;
-            Write-Host "Pare-feu désactivé" ;
+            Write-Host "Pare-feu dÃ©sactivÃ©" ;
             Start-Sleep -Seconds 2
         }
-        # Retour au menu précédent
+        # Retour au menu prÃ©cÃ©dent
         x {
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu précédent" ;
-            Write-Host "Retour au menu précédent" ;
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu prÃ©cÃ©dent" ;
+            Write-Host "Retour au menu prÃ©cÃ©dent" ;
             Start-Sleep -Seconds 2 ;
             gestion_computer
         }
@@ -433,32 +433,32 @@ function gestion_logiciel {
     Write-Host "|       Gestion logiciel       |"
     Write-Host "================================"
     Write-Host "| 1 - Installation logiciel    |"
-    Write-Host "| 2 - Désinstallation logiciel |"
-    Write-Host "| x - Menu précédent           |"
+    Write-Host "| 2 - DÃ©sinstallation logiciel |"
+    Write-Host "| x - Menu prÃ©cÃ©dent           |"
     Write-Host "================================"
     
 
     switch ($choix_logiciel) {
         # Installer le logiciel cible
         1 {  
-            $app = Read-Host "Renseignez le nom de l'application à installer : " ;
+            $app = Read-Host "Renseignez le nom de l'application Ã  installer : " ;
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Installation du paquet $app" ;
             Invoke-Command -ComputerName $ip -ScriptBlock {Install-Package -Name $app -Verbose}
             Start-Sleep -Seconds 2
         }
         
-        # Désinstaller le logiciel cible
+        # DÃ©sinstaller le logiciel cible
         2 {  
-            $app = Read-Host "Renseignez le nom de l'application à installer : " ;
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Désinstallation du paquet $app" ;
+            $app = Read-Host "Renseignez le nom de l'application Ã  installer : " ;
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - DÃ©sinstallation du paquet $app" ;
             Invoke-Command -ComputerName $ip -ScriptBlock {Uninstall-Package -Name $app -Verbose}
             Start-Sleep -Seconds 2
         }
         
-        # Retour au menu précédent
+        # Retour au menu prÃ©cÃ©dent
         x {  
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu précédent " ;
-            Write-Host "Retour au menu précédent" ;
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu prÃ©cÃ©dent " ;
+            Write-Host "Retour au menu prÃ©cÃ©dent" ;
             Start-Sleep -Seconds 2
 	    gestion_computer
         }
@@ -470,9 +470,9 @@ function gestion_logiciel {
     }
 }
 
-# Mise à jour du système 
+# Mise Ã  jour du systÃ¨me 
 function maj_system {
-# Vérifier si le module PSWindowsUpdate est installé
+# VÃ©rifier si le module PSWindowsUpdate est installÃ©
     If (-Not (Get-Module -ListAvailable -Name PSWindowsUpdate)) {
         Write-Host "Installation du module PSWindowsUpdate..." 
         Install-Module -Name PSWindowsUpdate -Force -Scope CurrentUser
@@ -481,35 +481,35 @@ function maj_system {
     # Importer le module PSWindowsUpdate
     Import-Module PSWindowsUpdate
 
-    # Installer les mises à jour disponibles
-    Write-Host "Ordinateur - Action : Installation des mises à jour..." 
+    # Installer les mises Ã  jour disponibles
+    Write-Host "Ordinateur - Action : Installation des mises Ã  jour..." 
     Try {
         Get-WindowsUpdate -AcceptAll -Install
-        Write-Host "Mises à jour installées avec succès." 
+        Write-Host "Mises Ã  jour installÃ©es avec succÃ¨s." 
     } Catch {
-        Write-Error "Une erreur est survenue lors de l'installation des mises à jour : $_"
+        Write-Error "Une erreur est survenue lors de l'installation des mises Ã  jour : $_"
         Return
     }
 
-    # Demander à l'utilisateur s'il souhaite redémarrer
-    Write-Host "Le système doit être redémarré pour appliquer certaines mises à jour." 
-    $choix_action = Read-Host "Voulez-vous redémarrer votre ordinateur ? (o/n)"
+    # Demander Ã  l'utilisateur s'il souhaite redÃ©marrer
+    Write-Host "Le systÃ¨me doit Ãªtre redÃ©marrÃ© pour appliquer certaines mises Ã  jour." 
+    $choix_action = Read-Host "Voulez-vous redÃ©marrer votre ordinateur ? (o/n)"
 
-    # Utilisation de conditions If pour éviter les erreurs
+    # Utilisation de conditions If pour Ã©viter les erreurs
     If ($choix_action -eq "o" -or $choix_action -eq "oui" -or $choix_action -eq "y" -or $choix_action -eq "yes") {
-        Write-Host "Ordinateur - Action : Redémarrage du système..." 
+        Write-Host "Ordinateur - Action : RedÃ©marrage du systÃ¨me..." 
         Restart-Computer
     } Else {
-        Write-Host "Pensez à redémarrer votre ordinateur pour appliquer les mises à jour." 
+        Write-Host "Pensez Ã  redÃ©marrer votre ordinateur pour appliquer les mises Ã  jour." 
         Write-Host "Retour au menu principal." -ForegroundColor Cyan
         Start-Sleep -Seconds 2
     }
 
     # Journalisation des actions
     $log_file = "C:\PerfLogs\log_evt.log"
-    $log_message = "$(Get-Date): Mise à jour effectuée. Redémarrage demandé : $choix_action"
+    $log_message = "$(Get-Date): Mise Ã  jour effectuÃ©e. RedÃ©marrage demandÃ© : $choix_action"
     Add-Content -Path $log_file -Value $log_message
-    Write-Host "Journal des actions enregistré dans $log_file." 
+    Write-Host "Journal des actions enregistrÃ© dans $log_file." 
 }
 
 # Menu info
@@ -519,11 +519,11 @@ Write-Host "
 =========================================================
 |               Menu Information        		        |
 =========================================================
-|       1 : Information utilisateur		             	|
-| 	2 : Information ordinateur		                   	|
-|	3 : Consulter les logs                				|
-|	4 : Effectuer une recherche sur les logs          	|
-| 	5 : Retour au menu principal             			|
+|       1 : Information utilisateur		      	|
+| 	2 : Information ordinateur	            	|
+|	3 : Consulter les logs        			|
+|	4 : Effectuer une recherche sur les logs       	|
+| 	5 : Retour au menu principal             	|
 =========================================================
 "
 
@@ -546,7 +546,7 @@ switch($choix_info) {
     menu_info
     }
     4 {
-    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Information - Recherche d'évènements logs"
+    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Information - Recherche d'Ã©vÃ¨nements logs"
     search_log
     }
     p {
@@ -555,7 +555,7 @@ switch($choix_info) {
     Start-Sleep -Seconds 1
     }
     default {
-    Write-Host "Erreur, veuillez réessayer"
+    Write-Host "Erreur, veuillez rÃ©essayer"
     Start-Sleep -Seconds 1
     menu_info
     }
@@ -568,14 +568,14 @@ function info_user {
 	Write-Host 
 
 "
-     =========================================================
-        |		Menu Information Utilisateur		|
-     =========================================================
-        |	1 : Activité de l'utilisateur			        |
-        |	2 : Groupe d'appartenance de l'utilisateur	    |
-        |	3 : Historique des commandes de l'utilisateur	|
-        |	4 : Droits et permissions de l'utilisateur	    |
-        | 	x : Retour au menu précédent			        |
+=========================================================
+|		Menu Information Utilisateur		|
+=========================================================
+|	1 : ActivitÃ© de l'utilisateur		        |
+|	2 : Groupe d'appartenance de l'utilisateur      |
+|	3 : Historique des commandes de l'utilisateur	|
+|	4 : Droits et permissions de l'utilisateur	|
+| 	x : Retour au menu prÃ©cÃ©dent			|
 =========================================================
 
 "
@@ -585,11 +585,11 @@ switch ($choix_info) {
  
 
 	1 {
-    # Redirection vers l'activité d'utilisateur
+    # Redirection vers l'activitÃ© d'utilisateur
 
-    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Observation de l'activité utilisateur"
+    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Observation de l'activitÃ© utilisateur"
     
-    activité_user }
+    activitÃ©_user }
 
 
     2   { # Redirection vers Groupe d'appartenance de l'utilisateur
@@ -625,26 +625,26 @@ switch ($choix_info) {
 }
 }
 
-# Menu Informations de l'activité de l'utilisateur
+# Menu Informations de l'activitÃ© de l'utilisateur
 function activite_user {
     Clear-Host
     Write-Host "=============================================================="
     Write-Host "|           Information Activite Utilisateur                 |"
     Write-Host "=============================================================="
-    Write-Host "| 1 - Date des dernières connexions de l'utilisateur         |"
-    Write-Host "| 2 - Date des dernières changements de mot de passe         |"
+    Write-Host "| 1 - Date des derniÃ¨res connexions de l'utilisateur         |"
+    Write-Host "| 2 - Date des derniÃ¨res changements de mot de passe         |"
     Write-Host "| 3 - Liste des sessions ouvertes pour l'utilisateur         |"
-    Write-Host "| x - Retour au menu précédent                               |"
+    Write-Host "| x - Retour au menu prÃ©cÃ©dent                               |"
     Write-Host "=============================================================="
 
     $choix_user = Read-Host "Faites votre choix : "
 
     switch ($choix_user) {
-        # Informations sur les dernières connexions de l'utilisateur cible
+        # Informations sur les derniÃ¨res connexions de l'utilisateur cible
         1 {  
             $wilder = Read-Host "Renseignez le nom de l'utilisateur cible : " ;
-            Write-Host "Dates des dernières connexions de l'utilisateur $wilder : " ;
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Dernières connexions de l'utilisateur" ;
+            Write-Host "Dates des derniÃ¨res connexions de l'utilisateur $wilder : " ;
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - DerniÃ¨res connexions de l'utilisateur" ;
             Invoke-Command -ComputerName $ip -ScriptBlock {
                 $DCList = Get-ADDomainController -Filter * | Sort-Object Name | Select-Object Name
                 $TargetUser = $wilder
@@ -655,14 +655,14 @@ function activite_user {
              
                     Try {
                         
-                        # Récupérer la valeur de l'attribut lastLogon à partir d'un DC (chaque DC tour à tour)
+                        # RÃ©cupÃ©rer la valeur de l'attribut lastLogon Ã  partir d'un DC (chaque DC tour Ã  tour)
                         $LastLogonDC = Get-ADUser -Identity $TargetUser -Properties lastLogon -Server $DCName
             
                         # Convertir la valeur au format date/heure
                         $LastLogon = [Datetime]::FromFileTime($LastLogonDC.lastLogon)
             
-                        # Si la valeur obtenue est plus récente que celle contenue dans $TargetUserLastLogon
-                        # la variable est actualisée : ceci assure d'avoir le lastLogon le plus récent à la fin du traitement
+                        # Si la valeur obtenue est plus rÃ©cente que celle contenue dans $TargetUserLastLogon
+                        # la variable est actualisÃ©e : ceci assure d'avoir le lastLogon le plus rÃ©cent Ã  la fin du traitement
                         If ($LastLogon -gt $TargetUserLastLogon)
                         {
                             $TargetUserLastLogon = $LastLogon
@@ -677,7 +677,7 @@ function activite_user {
                     }
             }
             
-            Write-Host "Date de dernière connexion de $TargetUser :"
+            Write-Host "Date de derniÃ¨re connexion de $TargetUser :"
             Write-Host $TargetUserLastLogon
             } ;
             Start-Sleep -Seconds 2
@@ -686,7 +686,7 @@ function activite_user {
         # Informations sur les derniers changements de mot de passe de l'utilisateur cible
         2 {  
             $wilder = Read-Host "Renseignez le nom de l'utilisateur cible : " ;
-            Write-Host "Dates des dernières modifications du mot de passe pour $wilder : " ;
+            Write-Host "Dates des derniÃ¨res modifications du mot de passe pour $wilder : " ;
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Derniers changements de mot de passe" ;
             Invoke-Command -ComputerName $ip -ScriptBlock {Get-ADUser -filter $wilder -properties passwordlastset, passwordneverexpires |ft Name, passwordlastset, Passwordneverexpires} ;
             Start-Sleep -Seconds 2
@@ -701,10 +701,10 @@ function activite_user {
             Start-Sleep -Seconds 2
         }
         
-        # Retour au menu précédent
+        # Retour au menu prÃ©cÃ©dent
         x {  
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu précédent" ;
-            Write-Host "Retour au menu précédent" ;
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu prÃ©cÃ©dent" ;
+            Write-Host "Retour au menu prÃ©cÃ©dent" ;
             Start-Sleep -Seconds 2 ;
             info_user
         }
@@ -727,7 +727,7 @@ function groupe_user {
 }
 
 function historique_de_commande {
- # Accès à l'historique des commandes de l'utilisateur cible
+ # AccÃ¨s Ã  l'historique des commandes de l'utilisateur cible
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Utilisateur - Info - Historique des commandes de l'utilisateur"
             Invoke-Command -ComputerName $ip -Credential $utilisateur -ScriptBlock {Write-Host "Consultation de l'historique des commandes de l'utilisateur en cours..."
             Get-History | Format-Table -AutoSize}
@@ -737,9 +737,9 @@ function droits_user {
 =========================================================
 |              Gestion droits utilisateur               |
 =========================================================
-| 1 - Droits utilisateur fichier                        |
-| 2 - Droits utilisateur dossier                        |
-| x - Menu précédent                                    |
+| 	1 - Droits utilisateur fichier                  |
+|	2 - Droits utilisateur dossier                  |
+|	x - Menu prÃ©cÃ©dent                              |
 ========================================================="
 
     $choix_utilisateur = Read-Host "Quels informations souhaitez-vous ?"
@@ -748,7 +748,7 @@ function droits_user {
         1 {
             $nom_fichier = Read-Host "Entrez le nom du fichier"
             if (Test-Path -Path $nom_fichier -PathType Leaf) {
-                Write-Host "Droits attribués au fichier $nom_fichier :"
+                Write-Host "Droits attribuÃ©s au fichier $nom_fichier :"
                 Get-Acl -Path $nom_fichier | Format-List
             } else {
                 Write-Host "Le fichier $nom_fichier n'existe pas."
@@ -757,18 +757,18 @@ function droits_user {
         2 {
             $nom_dossier = Read-Host "Entrez le nom du dossier"
             if (Test-Path -Path $nom_dossier -PathType Container) {
-                Write-Host "Droits attribués au dossier $nom_dossier :"
+                Write-Host "Droits attribuÃ©s au dossier $nom_dossier :"
                 Get-Acl -Path $nom_dossier | Format-List
             } else {
                 Write-Host "Le dossier $nom_dossier n'existe pas."
             }
         }
         "x" { 
-            # Retour au menu précédent
+            # Retour au menu prÃ©cÃ©dent
             return
         }
         default {
-            Write-Host "Option invalide, veuillez réessayer."
+            Write-Host "Option invalide, veuillez rÃ©essayer."
             droits_user
         }
     }
@@ -782,44 +782,44 @@ Clear-Host
 Write-Host
 "
 ===========================================
-| 		Informations Ordinateur 		        |
+| 		Informations Ordinateur   |
 ===========================================
-| 1 - Version du système d'exploitation   |
+| 1 - Version du systÃ¨me d'exploitation   |
 | 2 - Informations des disques	          |
-| 3 - Activité de l'ordinateur		        |
+| 3 - ActivitÃ© de l'ordinateur		  |
 | 4 - Informations sur la RAM             |
-| x - Retour au menu précédent		        |
+| x - Retour au menu prÃ©cÃ©dent		  |
 ==========================================="
 
 $choix_computer = Read-Host "Faites votre choix : "
 
 switch ($choix_computer) {
-  # Accès aux informations sur la version du système d'exploitation du système cible
+  # AccÃ¨s aux informations sur la version du systÃ¨me d'exploitation du systÃ¨me cible
     1  { 
-    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Version du système d'exploitation" ;
+    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Version du systÃ¨me d'exploitation" ;
     version_os 
     }
   
-  # Accès aux informations des diques du système cible
+  # AccÃ¨s aux informations des diques du systÃ¨me cible
     2 {  
     Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info -  Informations des disques" ;
     info_disk
     }
 
-  # Accès aux informations de l'activité du système cible
+  # AccÃ¨s aux informations de l'activitÃ© du systÃ¨me cible
     3 { 
-    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Activité de l'ordinateur" ;
-    activité_ordi
+    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - ActivitÃ© de l'ordinateur" ;
+    activitÃ©_ordi
     }
   
-  # Accès aux informations de la RAM du système cible
+  # AccÃ¨s aux informations de la RAM du systÃ¨me cible
     4 { 
     Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Informations sur la RAM " ;
     info_ram
     }
 
     x {
-      Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu précédent " ;
+      Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu prÃ©cÃ©dent " ;
       Start-Sleep -Seconds 2 ;
       menu_info
     }
@@ -846,7 +846,7 @@ function info_disk {
 |   2 : Afficher les informations partitions par disque      |
 |   3 : Afficher l'espace disque restant                     |
 |   4 : Afficher le nom et l'espace disque d'un dossier      |
-|   5 : Afficher les lecteurs montés                         |
+|   5 : Afficher les lecteurs montÃ©s                         |
 |   P : Retour au menu principal                             |
 =============================================================="
 
@@ -856,28 +856,28 @@ function info_disk {
         1 {
             Add-Content -Path "C:\Perflogs\log_de.txt" -Value "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Ordinateur - Info - Afficher le nombre de disques"
             $disque = Read-Host "Sur quel disque voulez-vous l'information ? (ex: C;)"
-            Invoke-Command -ComputerName $ip -Credential $utilisateur -ScriptBlock {  Get-Disk | Format-Table Number, FriendlyName, OperationalStatus, Size -AutoSize }
+            Invoke-Command -ComputerName $client -Credential $utilisateur -ScriptBlock {  Get-Disk | Format-Table Number, FriendlyName, OperationalStatus, Size -AutoSize }
             Start-Sleep -Seconds 5
         }
         2 {
             Add-Content -Path "C:\Perflogs\log_de.txt" -Value "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Ordinateur - Info - Afficher les informations partitions par disques"
-            Invoke-Command -ComputerName $ip -Credential $utilisateur -ScriptBlock { Get-Partition | Format-Table DiskNumber, PartitionNumber, DriveLetter, Size -AutoSize }
+            Invoke-Command -ComputerName $client -Credential $utilisateur -ScriptBlock { Get-Partition | Format-Table DiskNumber, PartitionNumber, DriveLetter, Size -AutoSize }
             Start-Sleep -Seconds 5
         }
         3 {
             Add-Content -Path "C:\Perflogs\log_de.txt" -Value "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Ordinateur - Info - Afficher l'espace disque restant"
-            Invoke-Command -ComputerName $ip -Credential $utilisateur -ScriptBlock { Get-PSDrive -PSProvider FileSystem | Select-Object Name, @{Name='FreeSpace(GB)';Expression={[math]::round($_.Free/1GB,2)}}, @{Name='UsedSpace(GB)';Expression={[math]::round(($_.Used/1GB),2)}} | Format-Table -AutoSize }
+            Invoke-Command -ComputerName $client -Credential $utilisateur -ScriptBlock { Get-PSDrive -PSProvider FileSystem | Select-Object Name, @{Name='FreeSpace(GB)';Expression={[math]::round($_.Free/1GB,2)}}, @{Name='UsedSpace(GB)';Expression={[math]::round(($_.Used/1GB),2)}} | Format-Table -AutoSize }
             Start-Sleep -Seconds 5
         }
         4 {
             Add-Content -Path "C:\Perflogs\log_de.txt" -Value "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Ordinateur - Info - Afficher le nom et l'espace disque d'un dossier"
-            $disk = Read-Host "Indiquez le dossier sur lequel le disque est monté"
-            Invoke-Command -ComputerName $ip -Credential $utilisateur -ScriptBlock { Get-PSDrive -PSProvider FileSystem | Select-Object Name, @{Name='FreeSpace(GB)';Expression={[math]::round($_.Free/1GB,2)}}, @{Name='UsedSpace(GB)';Expression={[math]::round(($_.Used/1GB),2)}} | Format-Table -AutoSize }
+            $disk = Read-Host "Indiquez le dossier sur lequel le disque est montÃ©"
+            Invoke-Command -ComputerName $client -Credential $utilisateur -ScriptBlock { Get-PSDrive -PSProvider FileSystem | Select-Object Name, @{Name='FreeSpace(GB)';Expression={[math]::round($_.Free/1GB,2)}}, @{Name='UsedSpace(GB)';Expression={[math]::round(($_.Used/1GB),2)}} | Format-Table -AutoSize }
             Start-Sleep -Seconds 5
         }
         5 {
-            Add-Content -Path "C:\Perflogs\log_de.txt" -Value "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Ordinateur - Info - Afficher les lecteurs montés"
-            Invoke-Command -ComputerName $ip -Credential $utilisateur -ScriptBlock {  Get-Volume | Format-Table DriveLetter, FileSystemLabel, FileSystem, SizeRemaining, Size -AutoSiz }
+            Add-Content -Path "C:\Perflogs\log_de.txt" -Value "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Ordinateur - Info - Afficher les lecteurs montÃ©s"
+            Invoke-Command -ComputerName $client -Credential $utilisateur -ScriptBlock {  Get-Volume | Format-Table DriveLetter, FileSystemLabel, FileSystem, SizeRemaining, Size -AutoSiz }
             Start-Sleep -Seconds 5
         }
         "P" {
@@ -891,31 +891,31 @@ function info_disk {
     }
 }
 
-# Menu de l'activité de l'ordinateur cible
+# Menu de l'activitÃ© de l'ordinateur cible
 function activite_ordi {
 
     Clear-Host
     Write-Host "
     ==================================================
-    | 		Activité ordinateur	             |
-    | 1 : Liste des applications / paquets installés |
-    | 2 : Liste des services en cours d'exécution    |
+    | 		ActivitÃ© ordinateur	             |
+    | 1 : Liste des applications / paquets installÃ©s |
+    | 2 : Liste des services en cours d'exÃ©cution    |
     | 3 : Liste des utilisateurs locaux		     |
-    | X : Retour au menu précédent		     |
+    | X : Retour au menu prÃ©cÃ©dent		     |
     ==================================================
         "
     $choix_activite = Read-Host "Faites votre choix"
 
     Switch ($choix_activite) {
-	# Affichage de la liste des applications/ paquets installés sur l'ordinateur cible
+	# Affichage de la liste des applications/ paquets installÃ©s sur l'ordinateur cible
         1 {
-            Write-Host "Ordinateur - Info - Liste des applications / paquets installées :"
+            Write-Host "Ordinateur - Info - Liste des applications / paquets installÃ©es :"
             Get-Package
-	    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc
+	    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc"
             Start-Sleep -Seconds 3
             activite_ordi
         }
-	# Affichage de la liste des services en cours d'exécution
+	# Affichage de la liste des services en cours d'exÃ©cution
         2 { 
             Write-Host "Ordinateur - Info - Liste des services en cours d'execution :"
             Get-Service | Where-Object { $_.Status -eq "Running" }
@@ -931,9 +931,9 @@ function activite_ordi {
             Start-Sleep -Seconds 3
             activite_ordi
         }
-	# Retour au menu précédent
+	# Retour au menu prÃ©cÃ©dent
         x {
-	Write-Host "Retour Menu Précédent" ; 
+	Write-Host "Retour Menu PrÃ©cÃ©dent" ; 
         menu_action
 	}
 
@@ -948,12 +948,12 @@ function search_log {
 Clear-Host
 Write-Host "
 ===========================================
-| 	     Type de recherche	              |
+| 	     Type de recherche	          |
 ===========================================
 |  1 : Recherche sur l'utilisateur        |
 |  2 : Recherche sur l'ordinateur         |
-|  3 : Recherche par mots-clefs		      |
-|  x : Retour au menu précédent           |
+|  3 : Recherche par mots-clefs		  |
+|  x : Retour au menu prÃ©cÃ©dent           |
 ===========================================
     "
 
@@ -979,27 +979,33 @@ switch ($choix_log)
         Get-Content -Path .\log_evt.log | findstr "$recherche"
         }
     x {
-        Write-Host "Retour au menu précédent"
+        Write-Host "Retour au menu prÃ©cÃ©dent"
         menu_info
         }
 
     default {
-        Write-Host "Erreur, réessayer"
+        Write-Host "Erreur, rÃ©essayer"
         sleep -Seconds 1
         search_log
         }
     }
 }
 
-# Fonction pour obtenir les informations RAM (/!\ Pas fonctionnel sur VM /!\ Solution à trouver)
+# Fonction pour obtenir les informations RAM (/!\ Pas fonctionnel sur VM /!\ Solution Ã  trouver)
 function info_ram {
     Clear-Host
     Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - RAM"
     Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object FreePhysicalMemory, TotalVisibleMemorySize
 }
 
-# Début des logs avec le start script
+# DÃ©but des logs avec le start script
  Add-Content -Path C:\PerfLogs\log_evt.log -Value  "$logc - *******Start Script*******"
+
+    # Demander nom utilisateur     
+    $utilisateur = Read-Host "indiquez l'utilisateur sur lequel vous connecter "                                                 
+    # Demander l'IP de l'utilisateur
+    $client = Read-Host "indiquer le nom du poste client"
+
  # Menu principal
 
  While ($true) {
@@ -1007,11 +1013,11 @@ function info_ram {
  Write-Host 
  "
 =========================================================
-|               Menu Principal			                |
+|               Menu Principal			        |
 =========================================================
-|       1 : Obtenir une informations		            |
-|       2 : Effectuer une action		                |
-|       3 : Quitter			                            |
+|       1 : Obtenir une informations		        |
+|       2 : Effectuer une action		        |
+|       3 : Quitter			                |
 ========================================================="
 
 $choix = Read-Host "Faites votre choix"
