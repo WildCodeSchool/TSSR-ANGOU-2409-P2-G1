@@ -498,8 +498,9 @@ function gestion_logiciel {
 
 # Mise Ã  jour du systÃ¨me 
 function maj_system {
-# VÃ©rifier si le module PSWindowsUpdate est installÃ©
-    If (-Not (Get-Module -ListAvailable -Name PSWindowsUpdate)) {
+# Vérifier si le module PSWindowsUpdate est installÃ©
+   Invoke-Command -Computername $client -Scriptblock  {
+	If (-Not (Get-Module -ListAvailable -Name PSWindowsUpdate)) {
         Write-Host "Installation du module PSWindowsUpdate..." 
         Install-Module -Name PSWindowsUpdate -Force -Scope CurrentUser
     }
@@ -508,36 +509,31 @@ function maj_system {
     Import-Module PSWindowsUpdate
 
     # Installer les mises Ã  jour disponibles
-    Write-Host "Ordinateur - Action : Installation des mises Ã  jour..." 
+    Write-Host "Ordinateur - Action : Installation des mises à jour..." 
     Try {
         Get-WindowsUpdate -AcceptAll -Install
         Write-Host "Mises Ã  jour installÃ©es avec succÃ¨s." 
     } Catch {
-        Write-Error "Une erreur est survenue lors de l'installation des mises Ã  jour : $_"
+        Write-Error "Une erreur est survenue lors de l'installation des mises à jour : $_"
         Return
     }
 
-    # Demander Ã  l'utilisateur s'il souhaite redÃ©marrer
-    Write-Host "Le systÃ¨me doit Ãªtre redÃ©marrÃ© pour appliquer certaines mises Ã  jour." 
-    $choix_action = Read-Host "Voulez-vous redÃ©marrer votre ordinateur ? (o/n)"
+    # Demander à l'utilisateur s'il souhaite redémarrer
+    Write-Host "Le système doit être redémarrer pour appliquer certaines mises Ã  jour." 
+    $choix_action = Read-Host "Voulez-vous redémarrer votre ordinateur ? (o/n)"
 
-    # Utilisation de conditions If pour Ã©viter les erreurs
+    # Utilisation de conditions If pour éviter les erreurs
     If ($choix_action -eq "o" -or $choix_action -eq "oui" -or $choix_action -eq "y" -or $choix_action -eq "yes") {
-        Write-Host "Ordinateur - Action : RedÃ©marrage du systÃ¨me..." 
+        Write-Host "Ordinateur - Action : Redémarrage du système..." 
         Restart-Computer
     } Else {
-        Write-Host "Pensez Ã  redÃ©marrer votre ordinateur pour appliquer les mises Ã  jour." 
+        Write-Host "Pensez Ã  redémarrer votre ordinateur pour appliquer les mises à jour." 
         Write-Host "Retour au menu principal." -ForegroundColor Cyan
         Start-Sleep -Seconds 2
     }
-
-    # Journalisation des actions
-    $log_file = "C:\PerfLogs\log_evt.log"
-    $log_message = "$(Get-Date): Mise Ã  jour effectuÃ©e. RedÃ©marrage demandÃ© : $choix_action"
-    Add-Content -Path $log_file -Value $log_message
-    Write-Host "Journal des actions enregistrÃ© dans $log_file." 
+	}
+    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Mise à jour du système effectuée"
 }
-
 # Menu info
 function menu_info {
 Clear-Host
