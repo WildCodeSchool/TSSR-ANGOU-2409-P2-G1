@@ -643,10 +643,10 @@ function activite_user {
     switch ($choix_user) {
         # Informations sur les derniÃ¨res connexions de l'utilisateur cible
         1 {  
-            $wilder = Read-Host "Renseignez le nom de l'utilisateur cible : " ;
-            Write-Host "Dates des derniÃ¨res connexions de l'utilisateur $wilder : " ;
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - DerniÃ¨res connexions de l'utilisateur" ;
             Invoke-Command -ComputerName $ip -ScriptBlock {
+            $wilder = Read-Host "Renseignez le nom de l'utilisateur cible : " ;
+            Write-Host "Dates des derniÃ¨res connexions de l'utilisateur $wilder : " ;
                 $DCList = Get-ADDomainController -Filter * | Sort-Object Name | Select-Object Name
                 $TargetUser = $wilder
                 $TargetUserLastLogon = $null
@@ -686,19 +686,21 @@ function activite_user {
 
         # Informations sur les derniers changements de mot de passe de l'utilisateur cible
         2 {  
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Derniers changements de mot de passe" ;
+            Invoke-Command -ComputerName $ip -ScriptBlock {
             $wilder = Read-Host "Renseignez le nom de l'utilisateur cible : " ;
             Write-Host "Dates des derniÃ¨res modifications du mot de passe pour $wilder : " ;
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Derniers changements de mot de passe" ;
-            Invoke-Command -ComputerName $ip -ScriptBlock {Get-ADUser -filter $wilder -properties passwordlastset, passwordneverexpires |ft Name, passwordlastset, Passwordneverexpires} ;
+            Get-ADUser -filter $wilder -properties passwordlastset, passwordneverexpires |ft Name, passwordlastset, Passwordneverexpires} ;
             Start-Sleep -Seconds 2
         }
 
         # Informations liste des sessions ouvertes de l'utilisateur cible
         3 {
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Liste des sessions ouvertes de l'utilisateur" ;
+            Invoke-Command -ComputerName $ip -ScriptBlock {
             $wilder = Read-Host "Renseignez le nom de l'utilisateur cible : " ;
             Write-Host "Liste des sessions ouvertes pour l'utilisateur $wilder" ;
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Liste des sessions ouvertes de l'utilisateur" ;
-            Invoke-Command -ComputerName $ip -ScriptBlock {Get-localUser -name $using:utilisateur | Select-Object Enabled} -Credential Get-Credential -Credential $utilisateur ;
+            Get-localUser -name $using:utilisateur | Select-Object Enabled} -Credential Get-Credential -Credential $utilisateur ;
             Start-Sleep -Seconds 2
         }
         
@@ -717,6 +719,7 @@ function activite_user {
     }
 
 }
+
 
 function groupe_user {
     
