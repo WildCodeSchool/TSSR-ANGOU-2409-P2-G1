@@ -75,20 +75,21 @@ function gestion_user {
                 $wilder = Read-Host "Veuillez renseigner le nom de l'utilisateur à créer : " ;
                 $motdepasse = Read-Host "Renseignez le mot de passe pour l'utilisateur à créer : " -AsSecureString ;
 		New-LocalUser -Name $wilder -Password $motdepasse
+   		Write-Host "Création de l'utilisateur local : $wilder" 
             }
-            Invoke-Command -ComputerName $client -ScriptBlock $petit_script -ArgumentList $Nom, $motdepasse -Credential $credential ;
-            Write-Host "Création de l'utilisateur local : $wilder" ;
+            Invoke-Command -ComputerName $client -ScriptBlock $petit_script -ArgumentList $Nom, $motdepasse -Credential $utilisateur ;
+          ;
             Start-Sleep -Seconds 2
         }
 
         # Modification du mot de passe de l'utilisateur cible
         2 {  
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Changement de mot de passe" ;
-            Invoke-Command -ComputerName $client -ScriptBlock {
+	# La modification de mot de passe s'effectue pour un utilisateur sur le serveur nommé SERV1, afin de l'essayer sur un autre serveur, il faut modifier le nom du serveur dans le script
             $wilder = Read-Host "De quel utilisateur souhaitez-vous modifier le mot de passe" ;
-            $NewPwd = Read-Host -AsSecureString ;
-	    Get-LocalUser -Name $wilder | Set-LocalUser -Password $NewPwd ;
-            Write-Host "Le mot de passe de $wilder a été modifié avec succès" } -Credential $utilisateur
+	    $Newpwd = Read-Host "Renseignez le nouveau mot de passe pour $wilder" -AsSecureString ;
+	    Set-ADAccountPassword -Server SERV1 -Identity $wilder -Reset -NewPassword (ConvertTo-SecureString -AsPlainText $Newpwd -Force) ;
+            Write-Host "Le mot de passe de $wilder a été modifié avec succès" ;
+            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Changement de mot de passe pour $wilder" ;
             Start-Sleep -Seconds 2
         }
 
@@ -696,7 +697,7 @@ function activite_user {
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Derniers changements de mot de passe" ;
             $wilder = Read-Host "Renseignez le nom de l'utilisateur cible" ;
             Write-Host "Dates des derniÃ¨res modifications du mot de passe pour $wilder : " ;
-            Get-ADUser -filter $wilder -properties passwordlastset, passwordneverexpires |ft Name, passwordlastset, Passwordneverexpires
+            Get-ADUser -filter $wilder -properties passwordlastset, passwordneverexpires | ft Name, passwordlastset, Passwordneverexpires
             Start-Sleep -Seconds 5
         } 
 
@@ -1014,20 +1015,20 @@ switch ($choix_log)
         Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Logs - Recherche sur l'utilisateur"
         Write-Host "Recherche par utilisateur"
         $recherche = $env:USERNAME
-        Get-Content -Path .\log_evt.log | findstr "$recherche"
-	Start-Sleep -Seconds 10
+        Get-Content -Path C:\PerfLogs\log_evt.log | findstr "$recherche"
+	Start-Sleep -Seconds 8
         }
     2{
         Write-Host "Recherche par Ordinateur"
         $recherche = $env:COMPUTERNAME
-        Get-Content -Path .\log_evt.log | findstr "$recherche"
-	Start-Sleep -Seconds 10
+        Get-Content -Path C:\PerfLogs\log_evt.log | findstr "$recherche"
+	Start-Sleep -Seconds 8
         }
     3{
         Write-Host "Recherche par mots-clefs"
         $recherche = Read-Host "Renseignez le ou les mot(s) clef(s) "
-        Get-Content -Path .\log_evt.log | findstr "$recherche"
-	Start-Sleep -Seconds 10
+        Get-Content -Path C:\PerfLogs\log_evt.log | findstr "$recherche"
+	Start-Sleep -Seconds 8
         }
     x {
         Write-Host "Retour au menu prÃ©cÃ©dent"
