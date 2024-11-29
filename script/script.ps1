@@ -694,10 +694,9 @@ function activite_user {
         # Informations sur les derniers changements de mot de passe de l'utilisateur cible
         2 {  
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Derniers changements de mot de passe" ;
-            Invoke-Command -ComputerName $client -ScriptBlock {
             $wilder = Read-Host "Renseignez le nom de l'utilisateur cible" ;
             Write-Host "Dates des derniÃ¨res modifications du mot de passe pour $wilder : " ;
-            Get-ADUser -filter $wilder -properties passwordlastset, passwordneverexpires |ft Name, passwordlastset, Passwordneverexpires} -Credential $utilisateur ;
+            Get-ADUser -filter $wilder -properties passwordlastset, passwordneverexpires |ft Name, passwordlastset, Passwordneverexpires
             Start-Sleep -Seconds 5
         } 
 
