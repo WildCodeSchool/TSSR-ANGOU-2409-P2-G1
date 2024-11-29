@@ -11,9 +11,9 @@ Write-Host
 |  		   	Menu Action	                |
 =========================================================
 |       1 : Gestion de l'utilisateur	                |
-|       2 : Gestion de l'ordinateur		             	|
-|       3 : Prise de main Ã  distance	(CLI)         	|
-|	    X : Retour au menu principal		            |
+|       2 : Gestion de l'ordinateur		      	|
+|       3 : Prise de main à distance	(CLI)         	|
+|	X : Retour au menu principal	                |
 =========================================================
 "
 $choix_action = Read-Host "Faites votre choix"
@@ -79,7 +79,6 @@ function gestion_user {
             Invoke-Command -ComputerName $client -ScriptBlock $petit_script -ArgumentList $Nom, $motdepasse -Credential $credential ;
             Write-Host "Création de l'utilisateur local : $wilder" ;
             Start-Sleep -Seconds 2
-            #           create_user
         }
 
         # Modification du mot de passe de l'utilisateur cible
@@ -530,7 +529,7 @@ Write-Host "
 | 	2 : Information ordinateur	            	|
 |	3 : Consulter les logs        			|
 |	4 : Effectuer une recherche sur les logs       	|
-| 	5 : Retour au menu principal             	|
+| 	p : Retour au menu principal             	|
 =========================================================
 "
 
@@ -638,10 +637,10 @@ function activite_user {
     Write-Host "=============================================================="
     Write-Host "|           Information Activite Utilisateur                 |"
     Write-Host "=============================================================="
-    Write-Host "| 1 - Date des derniÃ¨res connexions de l'utilisateur         |"
-    Write-Host "| 2 - Date des derniÃ¨res changements de mot de passe         |"
+    Write-Host "| 1 - Date des dernières connexions de l'utilisateur         |"
+    Write-Host "| 2 - Date des derniers changements de mot de passe          |"
     Write-Host "| 3 - Liste des sessions ouvertes pour l'utilisateur         |"
-    Write-Host "| x - Retour au menu prÃ©cÃ©dent                               |"
+    Write-Host "| x - Retour au menu précédent                               |"
     Write-Host "=============================================================="
 
     $choix_user = Read-Host "Faites votre choix : "
@@ -867,7 +866,7 @@ Write-Host "
 |   2 : Afficher les informations partitions par disque      |
 |   3 : Afficher l'espace disque restant                     |
 |   4 : Afficher le nom et l'espace disque d'un dossier      |
-|   5 : Afficher les lecteurs montÃ©s                        | 
+|   5 : Afficher les lecteurs montés                         | 
 |   P : Retour au menu principal                             |
 =============================================================="
 
@@ -987,7 +986,7 @@ Write-Host "
 |  1 : Recherche sur l'utilisateur        |
 |  2 : Recherche sur l'ordinateur         |
 |  3 : Recherche par mots-clefs		  |
-|  x : Retour au menu prÃ©cÃ©dent           |
+|  x : Retour au menu précédent           |
 ===========================================
     "
 
