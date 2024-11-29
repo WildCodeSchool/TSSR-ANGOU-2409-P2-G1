@@ -597,7 +597,7 @@ switch ($choix_info) {
 
     Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Observation de l'activitÃ© utilisateur"
     
-    activitÃ©_user }
+    activite_user }
 
 
     2   { # Redirection vers Groupe d'appartenance de l'utilisateur
@@ -650,11 +650,10 @@ function activite_user {
     switch ($choix_user) {
         # Informations sur les derniÃ¨res connexions de l'utilisateur cible
         1 {  
-            Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - DerniÃ¨res connexions de l'utilisateur" ;
-            Invoke-Command -ComputerName $client -ScriptBlock {
+          
             $wilder = Read-Host "Renseignez le nom de l'utilisateur cible" ;
             Write-Host "Dates des derniÃ¨res connexions de l'utilisateur $wilder : " ;
-                $DCList = Get-ADDomainController -Filter * | Sort-Object Name | Select-Object Name
+                $DCList = Get-ADDomainController -Filter * | Sort-Object Date | Select-Object Name
                 $TargetUser = $wilder
                 $TargetUserLastLogon = $null
                 Foreach($DC in $DCList){
@@ -687,7 +686,8 @@ function activite_user {
             
             Write-Host "Date de derniÃ¨re connexion de $TargetUser :"
             Write-Host $TargetUserLastLogon
-            } ;
+           ;
+	  Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Dernières connexions de $wilder" ;
             Start-Sleep -Seconds 5
         }
 
@@ -730,10 +730,11 @@ function activite_user {
 
 function groupe_user {
     
-    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Consultation groupe d'appartenance de $wilder"
-    Invoke-Command -ComputerName $client -ScriptBlock {
-     $wilder = Read-Host "Renseignez l'utilisateur cible"
-     Get-ADUser -Identity $wilder -Properties memberof | Select-Object memberof -ExpandProperty memberof } -Credential $utilisateur
+ 
+
+    	$wilder = Read-Host "Renseignez l'utilisateur cible"
+    	 Get-ADUser -Identity $wilder -Properties memberof | Select-Object memberof -ExpandProperty memberof 
+	   Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Consultation groupe d'appartenance de $wilder"
     Start-Sleep -Seconds 5
 
 }
