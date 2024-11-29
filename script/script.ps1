@@ -98,7 +98,7 @@ function gestion_user {
             Invoke-Command -ComputerName $client -ScriptBlock {
             $wilder = Read-Host "Quel compte utilisateur souhaitez-vous supprimer ? " ;
             Remove-LocalUser -Name $wilder ;
-            Write-Host "L'utilisateur $wilder a bien été supprimé" ;
+            Write-Host "L'utilisateur $wilder a bien été supprimé" ;} -Credential $utilisateur
             Start-Sleep -Seconds 2 -Credential $utilisateur
         }
 
@@ -140,6 +140,7 @@ function gestion_user {
         }
     }
 }
+
 
 # Menu de Gestion des groupes
 function gestion_groupe {
@@ -294,7 +295,7 @@ function gestion_alim {
                 Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Ordinateur - Action - Arrêt Ordinateur"
                 Start-Sleep -Seconds 1
                 gestion_alim
-        
+        	}
         
         2 {
     Invoke-Command -ComputerName $client -ScriptBlock {
@@ -306,7 +307,7 @@ function gestion_alim {
                 Add-Content -Path C:\Logs\log_evt.log -Value "$logc - Ordinateur - Action - RedÃ©marrage Ordinateur"
                 Start-Sleep -Seconds 1  
                 gestion_alim
-            
+            }
         
         3 {
     Invoke-Command -ComputerName $client -ScriptBlock {
@@ -325,8 +326,9 @@ function gestion_alim {
             gestion_alim
             }
     }
+
 }
-}
+
 # Fonction pour la gestion de rÃ©pertoires
 function gestion_directory {
     Clear-Host
@@ -686,7 +688,7 @@ function activite_user {
             Write-Host "Date de derniÃ¨re connexion de $TargetUser :"
             Write-Host $TargetUserLastLogon
             } ;
-            Start-Sleep -Seconds 2
+            Start-Sleep -Seconds 5
         }
 
         # Informations sur les derniers changements de mot de passe de l'utilisateur cible
@@ -696,7 +698,7 @@ function activite_user {
             $wilder = Read-Host "Renseignez le nom de l'utilisateur cible" ;
             Write-Host "Dates des derniÃ¨res modifications du mot de passe pour $wilder : " ;
             Get-ADUser -filter $wilder -properties passwordlastset, passwordneverexpires |ft Name, passwordlastset, Passwordneverexpires} -Credential $utilisateur ;
-            Start-Sleep -Seconds 2
+            Start-Sleep -Seconds 5
         } 
 
         # Informations liste des sessions ouvertes de l'utilisateur cible
@@ -706,14 +708,14 @@ function activite_user {
             $wilder = Read-Host "Renseignez le nom de l'utilisateur cible : " ;
             Write-Host "Liste des sessions ouvertes pour l'utilisateur $wilder" ;
             Get-localUser -name $using:utilisateur | Select-Object Enabled } -Credential $utilisateur ;
-            Start-Sleep -Seconds 2
+            Start-Sleep -Seconds 5
         }
         
         # Retour au menu prÃ©cÃ©dent
         x {  
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu prÃ©cÃ©dent" ;
             Write-Host "Retour au menu précédent" ;
-            Start-Sleep -Seconds 2 ;
+            Start-Sleep -Seconds 5 ;
             info_user
         }
 
@@ -739,8 +741,9 @@ function groupe_user {
 function historique_cmd_user {
  # AccÃ¨s Ã  l'historique des commandes de l'utilisateur cible
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Utilisateur - Info - Historique des commandes de l'utilisateur"
-            Invoke-Command -ComputerName $client -Credential $utilisateur -ScriptBlock {Write-Host "Consultation de l'historique des commandes de l'utilisateur en cours..."
+            Invoke-Command -ComputerName $client -ScriptBlock {Write-Host "Consultation de l'historique des commandes de l'utilisateur en cours..."
             Get-History | Format-Table -AutoSize} -Credential $utilisateur
+	    Start-Sleep -Seconds 5
 }
 function droits_user {
 Clear-Host
@@ -767,6 +770,7 @@ Write-Host "
                 Write-Host "Le fichier $nom_fichier n'existe pas."
             }
 	} -Credential $utilisateur
+ 	Start-Sleep -Seconds 5
         }
         2 {
 	Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Information - Droits utilisateur dossier"
@@ -779,6 +783,7 @@ Write-Host "
                 Write-Host "Le dossier $nom_dossier n'existe pas."
             }
 	} -Credential $utilisateur
+ 	Start-Sleep -Seconds 5
         }
         "x" { 
             # Retour au menu prÃ©cÃ©dent
@@ -853,6 +858,7 @@ function version_OS {
     Invoke-Command -ComputerName $client -ScriptBlock {
     Get-WmiObject Win32_OperatingSystem | findstr /C:"Version"
     } -Credential $utilisateur
+    Start-Sleep -Seconds 5
 }
 
 # Fonction des commande qui concerne les information disque
@@ -976,6 +982,15 @@ function activite_ordi {
     }
 }
 
+function info_ram {
+    Clear-Host
+    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Version de l'OS"
+    Invoke-Command -ComputerName $client -ScriptBlock {
+    Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object FreePhysicalMemory, TotalVisibleMemorySize
+    } -Credential $utilisateur
+    Start-sleep -Seconds 5
+}
+
 
 function search_log {
 Clear-Host
@@ -1000,16 +1015,19 @@ switch ($choix_log)
         Write-Host "Recherche par utilisateur"
         $recherche = $env:USERNAME
         Get-Content -Path .\log_evt.log | findstr "$recherche"
+	Start-Sleep -Seconds 10
         }
     2{
         Write-Host "Recherche par Ordinateur"
         $recherche = $env:COMPUTERNAME
         Get-Content -Path .\log_evt.log | findstr "$recherche"
+	Start-Sleep -Seconds 10
         }
     3{
         Write-Host "Recherche par mots-clefs"
         $recherche = Read-Host "Renseignez le ou les mot(s) clef(s) "
         Get-Content -Path .\log_evt.log | findstr "$recherche"
+	Start-Sleep -Seconds 10
         }
     x {
         Write-Host "Retour au menu prÃ©cÃ©dent"
@@ -1023,17 +1041,6 @@ switch ($choix_log)
         }
     }
 }
-
-#info_ram.ps1
-
-function info_ram {
-    Clear-Host
-    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Version de l'OS"
-    Invoke-Command -ComputerName $client -ScriptBlock {
-    Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object FreePhysicalMemory, TotalVisibleMemorySize
-    } -Credential $utilisateur
-}
-
 
 
 # DÃ©but des logs avec le start script
