@@ -87,7 +87,7 @@ function gestion_user {
 	# La modification de mot de passe s'effectue pour un utilisateur sur le serveur nommé SERV1, afin de l'essayer sur un autre serveur, il faut modifier le nom du serveur dans le script
             $wilder = Read-Host "De quel utilisateur souhaitez-vous modifier le mot de passe" ;
 	    $Newpwd = Read-Host "Renseignez le nouveau mot de passe pour $wilder" -AsSecureString ;
-	    Set-ADAccountPassword -Server SERV1 -Identity $wilder -Reset -NewPassword (ConvertTo-SecureString -AsPlainText $Newpwd -Force) ;
+	    Set-ADAccountPassword -Server  ;
             Write-Host "Le mot de passe de $wilder a été modifié avec succès" ;
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Changement de mot de passe pour $wilder" ;
             Start-Sleep -Seconds 2
@@ -651,43 +651,9 @@ function activite_user {
     switch ($choix_user) {
         # Informations sur les derniÃ¨res connexions de l'utilisateur cible
         1 {  
-          
-            $wilder = Read-Host "Renseignez le nom de l'utilisateur cible" ;
-            Write-Host "Dates des derniÃ¨res connexions de l'utilisateur $wilder : " ;
-                $DCList = Get-ADDomainController -Filter * | Sort-Object Date | Select-Object Name
-                $TargetUser = $wilder
-                $TargetUserLastLogon = $null
-                Foreach($DC in $DCList){
+	Invoke-command -Computername $client -ScriptBlock {
+          Get-LocalUser -Name $wilder | Select-Object -ExpandProperty LastLogon } -Credential $utilisateur
 
-                    $DCName = $DC.Name
-             
-                    Try {
-                        
-                        # RÃ©cupÃ©rer la valeur de l'attribut lastLogon Ã  partir d'un DC (chaque DC tour Ã  tour)
-                        $LastLogonDC = Get-ADUser -Identity $TargetUser -Properties lastLogon -Server $DCName
-            
-                        # Convertir la valeur au format date/heure
-                        $LastLogon = [Datetime]::FromFileTime($LastLogonDC.lastLogon)
-            
-                        # Si la valeur obtenue est plus rÃ©cente que celle contenue dans $TargetUserLastLogon
-                        # la variable est actualisée : ceci assure d'avoir le lastLogon le plus récent Ã  la fin du traitement
-                        If ($LastLogon -gt $TargetUserLastLogon)
-                        {
-                            $TargetUserLastLogon = $LastLogon
-                        }
-             
-                        # Nettoyer la variable
-                        Clear-Variable LastLogon
-                        }
-            
-                    Catch {
-                        Write-Host $_.Exception.Message -ForegroundColor Red
-                    }
-            }
-            
-            Write-Host "Date de derniÃ¨re connexion de $TargetUser :"
-            Write-Host $TargetUserLastLogon
-           ;
 	  Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Dernières connexions de $wilder" ;
             Start-Sleep -Seconds 5
         }
@@ -695,9 +661,11 @@ function activite_user {
         # Informations sur les derniers changements de mot de passe de l'utilisateur cible
         2 {  
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Derniers changements de mot de passe" ;
-            $wilder = Read-Host "Renseignez le nom de l'utilisateur cible" ;
+          
             Write-Host "Dates des derniÃ¨res modifications du mot de passe pour $wilder : " ;
-            Get-ADUser -filter $wilder -properties passwordlastset, passwordneverexpires | ft Name, passwordlastset, Passwordneverexpires
+	    Invoke-Command -Computername $client -ScriptBlock {
+		$wilder = Read-Host "Renseignez le nom de l'utilisateur cible" } -Credential $utilisateur;
+        	Get-LocalUser -Name $wilder | Select-Object -ExpandProperty PasswordLastSet
             Start-Sleep -Seconds 5
         } 
 
@@ -832,7 +800,7 @@ switch ($choix_computer) {
   # AccÃ¨s aux informations de l'activitÃ© du systÃ¨me cible
     3 { 
     Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Activité de l'ordinateur" ;
-    activité_ordi
+    activite_ordi
     }
   
   # AccÃ¨s aux informations de la RAM du systÃ¨me cible
@@ -984,7 +952,6 @@ function activite_ordi {
 }
 
 function info_ram {
-    Clear-Host
     Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Version de l'OS"
     Invoke-Command -ComputerName $client -ScriptBlock {
     Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object FreePhysicalMemory, TotalVisibleMemorySize
