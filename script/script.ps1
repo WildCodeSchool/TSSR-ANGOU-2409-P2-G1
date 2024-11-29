@@ -72,9 +72,9 @@ function gestion_user {
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Création d'utilisateur" ;
             $petit_script = {
                 param($wilder, $motdepasse)
-                New-LocalUser -Name $wilder -Password $motdepasse
                 $wilder = Read-Host "Veuillez renseigner le nom de l'utilisateur à créer : " ;
                 $motdepasse = Read-Host "Renseignez le mot de passe pour l'utilisateur à créer : " -AsSecureString ;
+		New-LocalUser -Name $wilder -Password $motdepasse
             }
             Invoke-Command -ComputerName $client -ScriptBlock $petit_script -ArgumentList $Nom, $motdepasse -Credential $credential ;
             Write-Host "Création de l'utilisateur local : $wilder" ;
@@ -87,8 +87,9 @@ function gestion_user {
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Changement de mot de passe" ;
             Invoke-Command -ComputerName $client -ScriptBlock {
             $wilder = Read-Host "De quel utilisateur souhaitez-vous modifier le mot de passe" ;
-            $NewPwd = Read-Host -AsSecureString ; Get-LocalUser -Name $wilder | Set-LocalUser -Password $NewPwd ;
-            Write-Host "Le mot de passe de $wilder a été modifié avec succès" }
+            $NewPwd = Read-Host -AsSecureString ;
+	    Get-LocalUser -Name $wilder | Set-LocalUser -Password $NewPwd ;
+            Write-Host "Le mot de passe de $wilder a été modifié avec succès" } -Credential $utilisateur
             Start-Sleep -Seconds 2
         }
 
@@ -99,7 +100,7 @@ function gestion_user {
             $wilder = Read-Host "Quel compte utilisateur souhaitez-vous supprimer ? " ;
             Remove-LocalUser -Name $wilder ;
             Write-Host "L'utilisateur $wilder a bien été supprimé" ;
-            Start-Sleep -Seconds 2}
+            Start-Sleep -Seconds 2 -Credential $utilisateur
         }
 
         # Désactivation de l'utilisateur cible
@@ -108,7 +109,7 @@ function gestion_user {
             Invoke-Command -ComputerName $client -ScriptBlock {
             $wilder = Read-Host "Quel compte utilisateur souhaitez-vous désactiver ? " ;
             Disable-LocalUser -Name "$wilder" ;
-            Write-Host "Désactivation de $wilder réussie" ; }
+            Write-Host "Désactivation de $wilder réussie" ; } -Credential $utilisateur
             Start-Sleep -Seconds 2 ; 
         }
 
@@ -161,7 +162,7 @@ function gestion_groupe {
         Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Ajout d'un utilisateur au groupe administrateur" ;	
  	    Invoke-Command -ComputerName $client -ScriptBlock {
   	    $wilder = Read-Host "Indiquez quel utilisateur Ã  ajouter au groupe d'administration" ;
-        Add-LocalGroupMember -Group "Administrateurs" -Member "$wilder" ; }
+        Add-LocalGroupMember -Group "Administrateurs" -Member "$wilder" ; } -Credential $utilisateur
         Start-Sleep -Seconds 2
         }
 
@@ -171,7 +172,7 @@ function gestion_groupe {
         Invoke-Command -ComputerName $client -ScriptBlock {    
         $wilder = Read-Host "Renseignez l'utilisateur sur lequel travailler : " ;
         $groupe = Read-Host "Renseignez le groupe auquel vous souhaitez ajouter l'utilisateur : " ;
-        Add-LocalGroupMember -Group $groupe -Member $wilder ;}
+        Add-LocalGroupMember -Group $groupe -Member $wilder ;} -Credential $utilisateur
         Start-Sleep -Seconds 2
         }
 
@@ -181,7 +182,7 @@ function gestion_groupe {
         Invoke-Command -ComputerName $client -ScriptBlock {    
         $wilder = Read-Host "Renseignez l'utilisateur sur lequel travailler : " ;
         $groupe = Read-Host "Renseignez le groupe auquel vous souhaitez supprimer l'utilisateur" ;
-        Remove-LocalGroupMember -Group "$groupe" -Member "$wilder" ;}
+        Remove-LocalGroupMember -Group "$groupe" -Member "$wilder" ;} -Credential $utilisateur
         Start-Sleep -Seconds 2
         }
 
@@ -275,48 +276,47 @@ function gestion_alim {
 =========================================================
 |               Gestion de l'alimentation               |
 =========================================================
-|     1 - ArrÃªter l'ordinateur                          |
-|     2 - RedÃ©marrer l'ordinateur                       |
+|     1 - Arrêter l'ordinateur                          |
+|     2 - Redémarrer l'ordinateur                       |
 |     3 - Verrouiller l'ordinateur                      |
-|     X - Menu prÃ©cÃ©dent                                |
+|     X - Menu précédent                                |
 =========================================================
 "
-    $choix_computer = Read-Host "Faites votre choix"
+    $choix_alim = Read-Host "Faites votre choix"
 
-    switch ($choix_computer) {
+   switch ($choix_alim) {
         1 {
             Invoke-Command -ComputerName $client -ScriptBlock {
-	    $confirm = Read-Host "Êtes-vous sûr de vouloir arrêter l'ordinateur ? (o/n)"
+    $confirm = Read-Host "Êtes-vous sûr de vouloir arrêter l'ordinateur ? (o/n)"
             if ($confirm -match '^(o|O)$') {
-                $log = "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Ordinateur - Action - ArrÃªt Ordinateur"
-                Add-Content -Path "C:\Logs\log_evt.txt" -Value $log
                 Stop-Computer -Force
             } else {
-                Write-Host "Action annulÃ©e."
-                Start-Sleep -Seconds 1} 
-                gestion_alim
-            }
-        }
-        2 {
-            $confirm = Read-Host "ÃŠtes-vous sÃ»r de vouloir redÃ©marrer l'ordinateur ? (o/n)"
-            if ($confirm -match '^(o|O)$') {
-                $log = "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Ordinateur - Action - RedÃ©marrage Ordinateur"
-                Add-Content -Path "C:\Logs\log_evt.txt" -Value $log
-                Restart-Computer -Force
-            } else {
-                Write-Host "Action annulÃ©e."
+                Write-Host "Action annulÃ©e."} } -Credential $utilisateur
+                Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Ordinateur - Action - Arrêt Ordinateur"
                 Start-Sleep -Seconds 1
                 gestion_alim
-            }
-        }
+        
+        
+        2 {
+    Invoke-Command -ComputerName $client -ScriptBlock {
+            $confirm = Read-Host "ÃŠtes-vous sÃ»r de vouloir redÃ©marrer l'ordinateur ? (o/n)"
+            if ($confirm -match '^(o|O)$') {
+                Restart-Computer -Force}
+             else {
+                Write-Host "Action annulÃ©e." } } -Credential $utilisateur
+                Add-Content -Path C:\Logs\log_evt.log -Value "$logc - Ordinateur - Action - RedÃ©marrage Ordinateur"
+                Start-Sleep -Seconds 1  
+                gestion_alim
+            
+        
         3 {
-            $log = "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Ordinateur - Action - Verrouillage Ordinateur"
-            Add-Content -Path "C:\Logs\log_evt.txt" -Value $log
-            rundll32.exe user32.dll, LockWorkStation
+    Invoke-Command -ComputerName $client -ScriptBlock {
+            rundll32.exe user32.dll, LockWorkStation } -Credential $utilisateur
+            Add-Content -Path "C:\Logs\log_evt.txt" -Value "$logc - Ordinateur - Action - Verrouillage Ordinateur"
         }
          X {
-            $log = "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $env:USERNAME - Retour au menu prÃ©cÃ©dent"
-            Add-Content -Path "C:\PerfLogs\log_evt.log" -Value $log
+             Add-Content -Path "C:\PerfLogs\log_evt.log" -Value "$logc - Retour au menu prÃ©cÃ©dent"
+            
             Write-Host "Retour au menu prÃ©cÃ©dent."
             gestion_computer
         }
@@ -327,7 +327,7 @@ function gestion_alim {
             }
     }
 }
-
+}
 # Fonction pour la gestion de rÃ©pertoires
 function gestion_directory {
     Clear-Host
@@ -347,7 +347,7 @@ function gestion_directory {
         1 { Invoke-Command -Computername $client -ScriptBlock {$pathdir = Read-Host "Quel est le chemin du dossier que vous souhaitez crÃ©er ?" ; 
             $directory = Read-Host "Quel dossier souhaitez-vous crÃ©er Ã  partir de $pathdir ?" ; 
             New-Item -Path $pathdir\ -ItemType Directory -Name $directory ;
-            Write-Output "CrÃ©ation de $directory effectuÃ©e."}
+            Write-Output "CrÃ©ation de $directory effectuÃ©e."} -Credential $utilisateur
 	    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - CrÃ©ation de RÃ©pertoire $directoy" ;
         }
     # Modifier le rÃ©pertoire Ã  partir du nom, du chemin et du nouveau nom renseignÃ©s
@@ -356,7 +356,7 @@ function gestion_directory {
         $directory = Read-Host "Quel est le nom du dossier que vous souhaitez modifier ?" ;
         $dir_name = Read-Host "Quel nouveau nom souhaitez lui donner ?" ;
         Rename-Item -Path $pathdir\$directory -NewName $dir_name ;
-        Write-Output "Modification de $directory en $dir_name effectuÃ©e."}
+        Write-Output "Modification de $directory en $dir_name effectuÃ©e."} -Credential $utilisateur
 	Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Modification de RÃ©pertoire $directory" ;
         }
     # Supprimer le rÃ©pertoire Ã  partir du nom et du chemin renseignÃ©s 
@@ -364,7 +364,7 @@ function gestion_directory {
 	$pathdir = Read-Host "Quel est le chemin du dossier que vous souhaitez supprimer ?" ; 
             $directory = Read-Host "Quel dossier souhaitez-vous supprimer ?" ;
             Remove-Item -Path $pathdir\$directory ;
-            Write-Output "Suppression de $directory effectuÃ©e"}
+            Write-Output "Suppression de $directory effectuÃ©e"} -Credential $utilisateur
 	Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Modification de RÃ©pertoire $directory" ;
         }
     # Retour au menu prÃ©cÃ©dent
@@ -408,7 +408,7 @@ function gestion_firewall {
             Set-NetFirewallProfile -Profile Domain, Public, Private -Enabled True ;
             Write-Host "Pare-feu activé" ;
             Start-Sleep -Seconds 2
-            }
+            } -Credential $utilisateur
         }
         # Désactiver le pare-feu
         2 {
@@ -417,7 +417,7 @@ function gestion_firewall {
             Set-NetFirewallProfile -Profile Domain, Public, Private -Enabled False ;
             Write-Host "Pare-feu désactivé" ;
             Start-Sleep -Seconds 2
-            }
+            } -Credential $utilisateur
         }
         # Retour au menu précédent
         x {
@@ -454,7 +454,7 @@ function gestion_logiciel {
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Installation d'un paquet" ;
             Invoke-Command -ComputerName $client -ScriptBlock {
             $app = Read-Host "Renseignez le nom de l'application à installer : " ;
-            Install-Package -Name $app -Verbose }
+            Install-Package -Name $app -Verbose } -Credential $utilisateur
             Start-Sleep -Seconds 2
         }
         
@@ -463,7 +463,7 @@ function gestion_logiciel {
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Désinstallation d'un paquet" ;
             Invoke-Command -ComputerName $client -ScriptBlock {
             $app = Read-Host "Renseignez le nom de l'application à installer : " ;
-            Uninstall-Package -Name $app -Verbose } ;
+            Uninstall-Package -Name $app -Verbose } -Credential $utilisateur ;
             Start-Sleep -Seconds 2
         }
         
@@ -505,10 +505,10 @@ function maj_system {
 
     # Demander à l'utilisateur s'il souhaite redémarrer
     Write-Host "Le système doit être redémarrer pour appliquer certaines mises Ã  jour." 
-    $choix_action = Read-Host "Voulez-vous redémarrer votre ordinateur ? (o/n)"
+    $choix_system = Read-Host "Voulez-vous redémarrer votre ordinateur ? (o/n)"
 
     # Utilisation de conditions If pour éviter les erreurs
-    If ($choix_action -eq "o" -or $choix_action -eq "oui" -or $choix_action -eq "y" -or $choix_action -eq "yes") {
+    If ($choix_system -eq "o" -or $choix_action -eq "oui" -or $choix_action -eq "y" -or $choix_action -eq "yes") {
         Write-Host "Ordinateur - Action : Redémarrage du système..." 
         Restart-Computer
     } Else {
@@ -516,7 +516,7 @@ function maj_system {
         Write-Host "Retour au menu principal." -ForegroundColor Cyan
         Start-Sleep -Seconds 2
     }
-	}
+	} -Credential $utilisateur
     Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Action - Mise à jour du système effectuée"
 }
 # Menu info
@@ -524,7 +524,7 @@ function menu_info {
 Clear-Host
 Write-Host "
 =========================================================
-|               Menu Information        		        |
+|               Menu Information        		|
 =========================================================
 |       1 : Information utilisateur		      	|
 | 	2 : Information ordinateur	            	|
@@ -578,11 +578,11 @@ function info_user {
 =========================================================
 |		Menu Information Utilisateur		|
 =========================================================
-|	1 : ActivitÃ© de l'utilisateur		        |
+|	1 : Activité de l'utilisateur		        |
 |	2 : Groupe d'appartenance de l'utilisateur      |
 |	3 : Historique des commandes de l'utilisateur	|
 |	4 : Droits et permissions de l'utilisateur	|
-| 	x : Retour au menu prÃ©cÃ©dent			|
+| 	x : Retour au menu précédent			|
 =========================================================
 
 "
@@ -651,7 +651,7 @@ function activite_user {
         1 {  
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - DerniÃ¨res connexions de l'utilisateur" ;
             Invoke-Command -ComputerName $client -ScriptBlock {
-            $wilder = Read-Host "Renseignez le nom de l'utilisateur cible : " ;
+            $wilder = Read-Host "Renseignez le nom de l'utilisateur cible" ;
             Write-Host "Dates des derniÃ¨res connexions de l'utilisateur $wilder : " ;
                 $DCList = Get-ADDomainController -Filter * | Sort-Object Name | Select-Object Name
                 $TargetUser = $wilder
@@ -669,7 +669,7 @@ function activite_user {
                         $LastLogon = [Datetime]::FromFileTime($LastLogonDC.lastLogon)
             
                         # Si la valeur obtenue est plus rÃ©cente que celle contenue dans $TargetUserLastLogon
-                        # la variable est actualisÃ©e : ceci assure d'avoir le lastLogon le plus rÃ©cent Ã  la fin du traitement
+                        # la variable est actualisée : ceci assure d'avoir le lastLogon le plus récent Ã  la fin du traitement
                         If ($LastLogon -gt $TargetUserLastLogon)
                         {
                             $TargetUserLastLogon = $LastLogon
@@ -694,11 +694,11 @@ function activite_user {
         2 {  
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Derniers changements de mot de passe" ;
             Invoke-Command -ComputerName $client -ScriptBlock {
-            $wilder = Read-Host "Renseignez le nom de l'utilisateur cible : " ;
+            $wilder = Read-Host "Renseignez le nom de l'utilisateur cible" ;
             Write-Host "Dates des derniÃ¨res modifications du mot de passe pour $wilder : " ;
-            Get-ADUser -filter $wilder -properties passwordlastset, passwordneverexpires |ft Name, passwordlastset, Passwordneverexpires} ;
+            Get-ADUser -filter $wilder -properties passwordlastset, passwordneverexpires |ft Name, passwordlastset, Passwordneverexpires} -Credential $utilisateur ;
             Start-Sleep -Seconds 2
-        }
+        } 
 
         # Informations liste des sessions ouvertes de l'utilisateur cible
         3 {
@@ -706,14 +706,14 @@ function activite_user {
             Invoke-Command -ComputerName $client -ScriptBlock {
             $wilder = Read-Host "Renseignez le nom de l'utilisateur cible : " ;
             Write-Host "Liste des sessions ouvertes pour l'utilisateur $wilder" ;
-            Get-localUser -name $using:utilisateur | Select-Object Enabled} -Credential Get-Credential -Credential $utilisateur ;
+            Get-localUser -name $using:utilisateur | Select-Object Enabled } -Credential $utilisateur ;
             Start-Sleep -Seconds 2
         }
         
         # Retour au menu prÃ©cÃ©dent
         x {  
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Retour au menu prÃ©cÃ©dent" ;
-            Write-Host "Retour au menu prÃ©cÃ©dent" ;
+            Write-Host "Retour au menu précédent" ;
             Start-Sleep -Seconds 2 ;
             info_user
         }
@@ -729,9 +729,10 @@ function activite_user {
 
 function groupe_user {
     
-    $wilder = Read-Host "Renseignez l'utilisateur cible : "
     Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Consultation groupe d'appartenance de $wilder"
-    Invoke-Command -ComputerName $client -ScriptBlock { Get-ADUser -Identity $wilder -Properties memberof | Select-Object memberof -ExpandProperty memberof }
+    Invoke-Command -ComputerName $client -ScriptBlock {
+     $wilder = Read-Host "Renseignez l'utilisateur cible"
+     Get-ADUser -Identity $wilder -Properties memberof | Select-Object memberof -ExpandProperty memberof } -Credential $utilisateur
     Start-Sleep -Seconds 5
 
 }
@@ -740,10 +741,11 @@ function historique_cmd_user {
  # AccÃ¨s Ã  l'historique des commandes de l'utilisateur cible
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Utilisateur - Info - Historique des commandes de l'utilisateur"
             Invoke-Command -ComputerName $client -Credential $utilisateur -ScriptBlock {Write-Host "Consultation de l'historique des commandes de l'utilisateur en cours..."
-            Get-History | Format-Table -AutoSize}
+            Get-History | Format-Table -AutoSize} -Credential $utilisateur
 }
 function droits_user {
-    Write-Host "
+Clear-Host
+Write-Host "
 =========================================================
 |             Information droits utilisateur            |
 =========================================================
@@ -798,13 +800,13 @@ Clear-Host
 Write-Host
 "
 ===========================================
-| 		Informations Ordinateur   |
+|	Informations Ordinateur  	  |
 ===========================================
-| 1 - Version du systÃ¨me d'exploitation   |
+| 1 - Version du système d'exploitation   |
 | 2 - Informations des disques	          |
-| 3 - ActivitÃ© de l'ordinateur		  |
+| 3 - Activité de l'ordinateur		  |
 | 4 - Informations sur la RAM             |
-| x - Retour au menu prÃ©cÃ©dent		  |
+| x - Retour au menu précédent		  |
 ==========================================="
 
 $choix_computer = Read-Host "Faites votre choix : "
@@ -824,8 +826,8 @@ switch ($choix_computer) {
 
   # AccÃ¨s aux informations de l'activitÃ© du systÃ¨me cible
     3 { 
-    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - ActivitÃ© de l'ordinateur" ;
-    activitÃ©_ordi
+    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Activité de l'ordinateur" ;
+    activité_ordi
     }
   
   # AccÃ¨s aux informations de la RAM du systÃ¨me cible
@@ -848,16 +850,16 @@ switch ($choix_computer) {
 
 # Afficher la version de l'OS
 function version_OS {
-    Clear-Host
     Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Version de l'OS"
     Invoke-Command -ComputerName $client -ScriptBlock {
     Get-WmiObject Win32_OperatingSystem | findstr /C:"Version"
-    }
+    } -Credential $utilisateur
 }
 
 # Fonction des commande qui concerne les information disque
 function info_disk {
-    Write-Host "
+Clear-Host
+Write-Host "
 ==============================================================
 |              Information Disque                            |
 ==============================================================
@@ -881,19 +883,23 @@ function info_disk {
         2 {
             # Affiche la table des partions du ou des disques 
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Ordinateur - Info - Afficher les informations partitions par disques"
-            Invoke-Command -ComputerName $client -Credential $utilisateur -ScriptBlock { Get-Partition | Format-Table DiskNumber, PartitionNumber, DriveLetter, Size -AutoSize }
+            Invoke-Command -ComputerName $client -Credential $utilisateur -ScriptBlock { Get-Partition | Format-Table DiskNumber, PartitionNumber, DriveLetter, Size -AutoSize } 
             Start-Sleep -Seconds 5
         }
         3 {
             # Affiche l'espace disque utiliser et restant du ou des diques 
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Ordinateur - Info - Afficher l'espace disque restant"
-            Invoke-Command -ComputerName $client -Credential $utilisateur -ScriptBlock { Get-PSDrive -PSProvider FileSystem | Select-Object Name, @{Name='FreeSpace(GB)';Expression={[math]::round($_.Free/1GB,2)}}, @{Name='UsedSpace(GB)';Expression={[math]::round(($_.Used/1GB),2)}} | Format-Table -AutoSize }
+            Invoke-Command -ComputerName $client -Credential $utilisateur -ScriptBlock { Get-PSDrive -PSProvider FileSystem | Select-Object Name, @{Name='FreeSpace(GB)';
+	    Expression={[math]::round($_.Free/1GB,2)}}, @{Name='UsedSpace(GB)';
+     	    Expression={[math]::round(($_.Used/1GB),2)}} | Format-Table -AutoSize } 
             Start-Sleep -Seconds 5
         }
         4 { 
             # Affiche le nom et l'espace disque d'un dossier
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Ordinateur - Info - Afficher le nom et l'espace disque d'un dossier"
-            Invoke-Command -ComputerName $client -Credential $utilisateur -ScriptBlock { Get-PSDrive -PSProvider FileSystem | Select-Object Name, @{Name='FreeSpace(GB)';Expression={[math]::round($_.Free/1GB,2)}}, @{Name='UsedSpace(GB)';Expression={[math]::round(($_.Used/1GB),2)}} | Format-Table -AutoSize }
+            Invoke-Command -ComputerName $client -Credential $utilisateur -ScriptBlock { 
+	    Get-PSDrive -PSProvider FileSystem | Select-Object Name, @{Name='FreeSpace(GB)';
+	    Expression={[math]::round($_.Free/1GB,2)}}, @{Name='UsedSpace(GB)';Expression={[math]::round(($_.Used/1GB),2)}} | Format-Table -AutoSize }
             Start-Sleep -Seconds 5
         }
         5 {
@@ -935,17 +941,17 @@ function activite_ordi {
         1 {
             Invoke-Command -ComputerName $client -Scriptblock {
 		Write-Host "Ordinateur - Info - Liste des applications / paquets installÃ©es :"
-           	Get-Package }
-	    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Information - 
+           	Get-Package } -Credential $utilisateur
+	    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Information - Liste des applications/paquets installés"
             Start-Sleep -Seconds 5
             activite_ordi
-        }
+        	}
 	# Affichage de la liste des services en cours d'exÃ©cution
         2 { 
             Invoke-Command -Computername $client -ScriptBlock  {
 		Write-Host "Ordinateur - Info - Liste des services en cours d'execution :"
           	Get-Service | Where-Object { $_.Status -eq "Running" } 
-		}
+		} -Credential $utilisateur
 	    Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Information - Liste des services en cours d'exécution"
             Start-Sleep -Seconds 5
             activite_ordi
@@ -953,7 +959,7 @@ function activite_ordi {
 	# Affichage de la liste des utilisateurs locaux
         3 { 
             Write-Host "Ordinateur - Info - Liste des utilisateurs locaux :"
-            Invoke-Command -Computerame $client -Scriptblock { Get-LocalUser | Format-Table -AutoSize }
+            Invoke-Command -Computerame $client -Scriptblock { Get-LocalUser | Format-Table -AutoSize } -Credential $utilisateur
             Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Information - Liste des utilisateurs locaux"
             Start-Sleep -Seconds 5
             activite_ordi
@@ -1026,7 +1032,7 @@ function info_ram {
     Add-Content -Path C:\PerfLogs\log_evt.log -Value "$logc - Info - Version de l'OS"
     Invoke-Command -ComputerName $client -ScriptBlock {
     Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object FreePhysicalMemory, TotalVisibleMemorySize
-    }
+    } -Credential $utilisateur
 }
 
 
