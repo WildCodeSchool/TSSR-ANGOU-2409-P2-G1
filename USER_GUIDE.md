@@ -110,30 +110,91 @@ Cette partie sert a vous guider dans l'utilisation avancer des fonctionnaliter d
 Le script ce découpe en plussieur type de Menu et Sous-Menu
 
    - Menu Action
-     
-      I.    Gestions de l'utilisateur
-     
+
+     <img src="https://github.com/WildCodeSchool/TSSR-ANGOU-2409-P2-G1/blob/script/Capture%20d'%C3%A9cran%202024-11-29%20114447.png?raw=true" width="400" height="200">
+
+
+      I.   Gestions de l'utilisateur
+
+      <img src="https://github.com/WildCodeSchool/TSSR-ANGOU-2409-P2-G1/blob/script/Capture%20d'%C3%A9cran%202024-11-29%20125255.png?raw=true" width="400" height="200">
+
       II.   Gestions de l'ordinateur
-     
+
+      <img src="https://github.com/WildCodeSchool/TSSR-ANGOU-2409-P2-G1/blob/script/Capture%20d'%C3%A9cran%202024-11-29%20125400.png?raw=true" width="400" height="200">
+
       III.  Prise de main à distance
+
+     <img src="" width="600" height="100">
+
      
    - Menu Information
-     
+
+     <img src="https://github.com/WildCodeSchool/TSSR-ANGOU-2409-P2-G1/blob/script/Capture%20d'%C3%A9cran%202024-11-29%20114403.png?raw=true" width="400" height="200">
+
+
       I.    Information Utilisateur
-     
+
+      <img src="https://github.com/WildCodeSchool/TSSR-ANGOU-2409-P2-G1/blob/script/Capture%20d'%C3%A9cran%202024-11-29%20125453.png?raw=true" width="400" height="200">
+
       II.   Information Ordinateur
-     
+
+      <img src="https://github.com/WildCodeSchool/TSSR-ANGOU-2409-P2-G1/blob/script/Capture%20d'%C3%A9cran%202024-11-29%20125510.png?raw=true" width="400" height="200">
+
       III.  Consulter les logs
+
+      <img src="" width="600" height="100">
      
       IV.   Effectuer une recherche sur les logs
 
-
+      <img src="https://github.com/WildCodeSchool/TSSR-ANGOU-2409-P2-G1/blob/script/Capture%20d'%C3%A9cran%202024-11-29%20125546.png?raw=true" width="400" height="200">
 
 </details> 
 
 <details>
 <summary><strong>2. Windows 
 </stronge></summary>
+
+Le script ce découpe en plussieur type de Menu et Sous-Menu
+
+   - Menu Action
+
+     <img src="https://github.com/WildCodeSchool/TSSR-ANGOU-2409-P2-G1/blob/script/Capture%20d'%C3%A9cran%202024-11-29%20114447.png?raw=true" width="400" height="200">
+
+
+      I.   Gestions de l'utilisateur
+
+      <img src="https://github.com/WildCodeSchool/TSSR-ANGOU-2409-P2-G1/blob/script/Capture%20d'%C3%A9cran%202024-11-29%20125255.png?raw=true" width="400" height="200">
+
+      II.   Gestions de l'ordinateur
+
+      <img src="https://github.com/WildCodeSchool/TSSR-ANGOU-2409-P2-G1/blob/script/Capture%20d'%C3%A9cran%202024-11-29%20125400.png?raw=true" width="400" height="200">
+
+      III.  Prise de main à distance
+
+     <img src="" width="600" height="100">
+
+     
+   - Menu Information
+
+     <img src="https://github.com/WildCodeSchool/TSSR-ANGOU-2409-P2-G1/blob/script/Capture%20d'%C3%A9cran%202024-11-29%20114403.png?raw=true" width="400" height="200">
+
+
+      I.    Information Utilisateur
+
+      <img src="https://github.com/WildCodeSchool/TSSR-ANGOU-2409-P2-G1/blob/script/Capture%20d'%C3%A9cran%202024-11-29%20125453.png?raw=true" width="400" height="200">
+
+      II.   Information Ordinateur
+
+      <img src="https://github.com/WildCodeSchool/TSSR-ANGOU-2409-P2-G1/blob/script/Capture%20d'%C3%A9cran%202024-11-29%20125510.png?raw=true" width="400" height="200">
+
+      III.  Consulter les logs
+
+      <img src="" width="600" height="100">
+     
+      IV.   Effectuer une recherche sur les logs
+
+      <img src="https://github.com/WildCodeSchool/TSSR-ANGOU-2409-P2-G1/blob/script/Capture%20d'%C3%A9cran%202024-11-29%20125546.png?raw=true" width="400" height="200">
+
 
 </details>   
 
