@@ -124,7 +124,7 @@ Le script ce découpe en plussieur type de Menu et Sous-Menu
 
       III.  Prise de main à distance
 
-     <img src="" width="600" height="100">
+     
 
      
    - Menu Information
